@@ -7,7 +7,7 @@ function analyzeLatency(nSamples)
     pause(nSamples*5 / 30 + 5);
     figure(trackingParams.otherFig);
     subplot(2,1,1); 
-    title('Linux Head Tracking Latency')
+    title('Windows Body Tracking Latency')
     subplot(2,1,2);
     N = hist(LL*1000,30:1:120);
     plot(30:1:120,N./max(N),'r'); hold on;
