@@ -1,0 +1,49 @@
+function serialReceiver(obj,event)
+
+    global trackingParams;
+
+    displayTemp = false;
+    
+    bytesHere = obj.BytesAvailable;
+    blocksHere = floor(bytesHere/5);
+    if (blocksHere > 0)
+        x = fread(obj,blocksHere*5);
+        for n = 1:blocksHere
+            code = x((n-1)*5+1);
+            time =  bitshift(x((n-1)*5+2),24) + ...
+                    bitshift(x((n-1)*5+3),16) + ...
+                    bitshift(x((n-1)*5+4), 8) + ...
+                    bitshift(x((n-1)*5+5), 0);
+            if isfield(trackingParams,'recordingSerial')  
+                if trackingParams.recordingSerial
+                    trackingParams.serialRecord(end+1,:) = [code,time];
+                end
+            end
+            if x((n-1)*5+1) == hex2dec('ff')
+                trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
+                    bitshift(x((n-1)*5+3),16) + ...
+                    bitshift(x((n-1)*5+4),8) + ...
+                    bitshift(x((n-1)*5+5),0))/2;
+                if displayTemp
+                    disp([num2str(trackingParams.mirrorTemp,'%2.1f'),' C']);
+                end
+            elseif x((n-1)*5+1) == hex2dec('fe')
+                trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
+                    bitshift(x((n-1)*5+3),16) + ...
+                    bitshift(x((n-1)*5+4),8) + ...
+                    bitshift(x((n-1)*5+5),0))/2;
+                alertString = ['Mirrors locked at t= ',num2str(trackingParams.mirrorTemp,'%2.1f'),...
+                     ' C    ',datestr(now)];
+                % Only send the alert on the first occurence
+                if (~trackingParams.tempFault)
+                    trackingParams.scanMirrors = false;
+                    trackingParams.tempFault = true;
+                    notifyOfFault(alertString);
+                    pushNow = true;
+                    updateWebStatus(alertString, pushNow);
+                end
+            end
+        end
+    end
+
+
