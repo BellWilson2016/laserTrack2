@@ -41,15 +41,18 @@ function vid = setupTrackingCamera()
     % trigger.  It's ugly, but works.  Otherwise the cam drives the
     % computer too fast.
     if ispc()
-        set(vid.Source, 'NormalizedBytesPerPacket',128);  
+        set(vid.Source, 'NormalizedBytesPerPacket',128); 
+        set(trackingParams.previewFigure, 'Name', 'Live video...', ...
+            'Position',[1057, 356, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
+            'none','CloseRequestFcn','haltVideo','Units','pixels');
     elseif isunix()
         set(vid.Source, 'BytesPerPacket',524); 
+        set(trackingParams.previewFigure, 'Name', 'Live video...', ...
+            'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
+            'none','CloseRequestFcn','haltVideo','Units','pixels');
     end
     
-    set(trackingParams.previewFigure, 'Name', 'Live video...', ...
-        'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
-        'none','CloseRequestFcn','haltVideo','Units','pixels');
-         
+        
     warning('off','MATLAB:HandleGraphics:ObsoletedProperty:JavaFrame');
     
     % Create the axes and image for the video feed and timestamp
