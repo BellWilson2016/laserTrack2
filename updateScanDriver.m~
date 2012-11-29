@@ -3,7 +3,7 @@
 % This outputs in terms of 16-bit DAC index numbers   
 %
 % JSB 11/2012
-function transmissionID = updateScanDriver(xVals,yVals,pVals) 
+function updateScanDriver(xVals,yVals,pVals) 
 
     global USBscanController;   % The arduino to talk to
     

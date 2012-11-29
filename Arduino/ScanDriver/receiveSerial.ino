@@ -8,12 +8,14 @@ void receiveSerial() {
   byte byte1;
   byte byte2;
   byte byte3;
+  byte transmissionID;
   
   SERIALPINON;
   
   transmissionSize = Serial.read();
   
   if (transmissionSize == POSPOWERSIZE) {
+    transmissionID = Serial.read();
     Serial.readBytes(((char *) Xpositions), 16);
     Serial.readBytes(((char *) Ypositions), 16);
     Serial.readBytes(((char *) LaserPowers),8);   
@@ -23,7 +25,7 @@ void receiveSerial() {
       nextDACIndex = 0;
     }
     lastComputerContact = prevTimePoint;
-    queueSerialReturn(0x20, prevTimePoint);
+    queueSerialReturn(0x24 + transmissionID, prevTimePoint);
     // If the max-temperature flag is tripped, keep the mirrors locked.
     if (tempLock) {
       sleepMode();

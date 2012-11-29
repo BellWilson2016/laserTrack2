@@ -2,7 +2,7 @@
 % This function outputs in terms of screen pixel position.
 %
 %
-function transmissionID = outputPositions(xPos,yPos,powers)
+function outputPositions(xPos,yPos,powers)
 
     global trackingParams;
 
@@ -14,4 +14,4 @@ function transmissionID = outputPositions(xPos,yPos,powers)
         yV = zeros(8,1);
     end
 
-    transmissionID = updateScanDriver(xV',yV',powers);
+    updateScanDriver(xV',yV',powers);

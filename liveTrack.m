@@ -143,19 +143,20 @@ function liveTrack(obj, event)
 		trackingParams.dYdT = dYdT;
 	end
  
+	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
             % Output to the scanController
            powers = feval(trackingParams.laseredZoneFcn{1},...
                trackingParams.laseredZoneFcn{2});
-               outputPositions(xPos,yPos,powers);
+               transmissionID = outputPositions(xPos,yPos,powers);
     end
 
     % Save the data
     if (trackingParams.recording)
-        sample = [bodyX;bodyY;headX;headY;ones(1,8).*now]; 
+        sample = [bodyX;bodyY;headX;headY; ones(1,8).*transmissionID; ones(1,8).*now]; 
 	     %  Sample# Field# Fly#
-        trackingParams.tempData(end+1,1:5,:) = sample;
+        trackingParams.tempData(end+1,1:6,:) = sample;
     end
     
     % If we're looking at frame intervals, update the interval list

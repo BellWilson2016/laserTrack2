@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include "ScanDriverPinDefs.h"
 #define BAUDRATE 115200        // Serial baudrate
-#define POSPOWERSIZE 40        // Size of data transmissions blocks
+#define POSPOWERSIZE 41        // Size of data transmissions blocks
 #define SCANPARAMSIZE 27
 #define MODEPARAMSIZE 3        // Size of special mode parameters
 #define WRITECODE B00110000    // Writes and updates to DAC
