@@ -94,7 +94,7 @@ function finishEpoch(obj, event, exp, epochN)
 		    	feval(cmd,args);
 		    end
 
-			% Stop updating the data buffers
+			% Stop updating the data
 			trackingParams.recording = false;
 			trackingParams.recordingSerial = false;
 			trackingParams.tempData = [];

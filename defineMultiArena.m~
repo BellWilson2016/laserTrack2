@@ -42,9 +42,7 @@ function defineMultiArena()
         reg(i,4) = round(laneCenter + laneWidthPx/2);
         trackingParams.xPos(i) = leftBound(1) + 5; 
         trackingParams.yPos(i) = laneCenter; 
-		trackingParams.bodyX(i) = leftBound(1) + 5;
-		trackingParams.bodyY(i) = laneCenter;
-        trackingParams.headX(i) = 0;
+        trackingParams.headX(i) = trackingParams.headLength;
         trackingParams.headY(i) = 0;
         trackingParams.dXdT(i) = 0;
         trackingParams.dYdT(i) = 0;

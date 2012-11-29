@@ -3,8 +3,6 @@
 % JSB 11/2012
 
 global vid;
-global USBscanController;
-global trackingParams;
 
 clearPorts();
 

@@ -34,8 +34,8 @@ function trackingParams = initTrackingParams()
 	% Tracked info for each fly
 		trackingParams.xPos(region) = 1;	   % Position of tracked feature
 		trackingParams.yPos(region) = 1;
-		trackingParams.headX(region) = 0;	   % Position of head (if detected)
-		trackingParams.headY(region) = 0;
+		trackingParams.headX(region) = 1;	   % Position of head (if detected)
+		trackingParams.headY(region) = 1;
 		trackingParams.bodyX(region) = 1;	   % Position of body
 		trackingParams.bodyY(region) = 1;
 		trackingParams.dXdT(region) = 0;	   % Body speed in head direction coordinates 

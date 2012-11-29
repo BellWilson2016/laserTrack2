@@ -155,7 +155,7 @@ function liveTrack(obj, event)
     if (trackingParams.recording)
         sample = [bodyX;bodyY;headX;headY;ones(1,8).*now]; 
 	     %  Sample# Field# Fly#
-        trackingParams.tempData(end+1,1:5,:) = sample;
+        tempData(end+1,1:5,:) = sample;
     end
     
     % If we're looking at frame intervals, update the interval list
