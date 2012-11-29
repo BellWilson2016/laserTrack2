@@ -29,7 +29,7 @@ tableTop = ['<table border="1"><CAPTION><EM>RTFW Status:</EM></CAPTION>',...
           '<tr><th>Time: </th><th>Message:</th></tr>'];
 if isunix()
 	[status, currentIP] = system('ip addr show eth0 | grep -Po ''(?<=inet )[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*''');
-	linkToSSH = ['<a href="chrome-extension://pnhechapfaindjhompbnflcldabbghjo/html/nassh.html#joe@',currentIP,'"> SSH to RTFW </a>'];	
+	linkToSSH = ['<a href="http://google.com"> Google </a>'];	
 else 
 	linkToSSH = '';
 end
