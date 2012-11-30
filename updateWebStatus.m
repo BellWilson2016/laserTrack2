@@ -28,13 +28,15 @@ header = ['<style type="text/css"><!-- body, div, table, span { font-size: 32px;
 tableTop = ['<table border="1"><CAPTION><EM>RTFW Status:</EM></CAPTION>',...
           '<tr><th>Time: </th><th>Message:</th></tr>'];
 if isunix()
+	linkToVPN = ['<a href="https://secure.med.harvard.edu/dana/home/index.cgi">VPN</a><br>'];
 	[status, currentIP] = system('ip addr show eth0 | grep -Po ''(?<=inet )[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*''');
 	linkToSSH = ['<a href="chrome-extension://pnhechapfaindjhompbnflcldabbghjo/html/nassh.html#joe@',currentIP,'"> SSH to RTFW </a>'];	
 else 
 	linkToSSH = '';
+	linkToVPN = '';
 end
 
-fprintf(fileID,'%s',[header,linkToSSH,tableTop]);
+fprintf(fileID,'%s',[header,linkToVPN,linkToSSH,tableTop]);
 if size(messageList,1) < maxMessages
     maxMessages = size(messageList,1);
 end
