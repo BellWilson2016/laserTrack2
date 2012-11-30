@@ -1,4 +1,9 @@
 function correlateSerial()
+    
+    global transID;
+    global fineDiffs;
+    global frameCodes;
+    global frameDiffs; 
 
 	load('RTFW1.mat');
 
@@ -29,9 +34,45 @@ function correlateSerial()
 
 	fineDiffs = fineDiffs./(16*10^6); % Scale to seconds
 
-	serialSeries = timeseries(transID,fineDiffs);
-	videoSeries  = timeseries(frameCodes,frameDiffs);
+    scale = 1; lag = -.14;
+    v = [lag, scale];
+    [v,fval,exitflag,output] = fminsearch(@alignment,v);
+    
+    bestLag = v(1);
+    bestScale = v(2);
+    disp(num2str(bestLag,10));
+    disp(num2str(bestScale,10));
+    
+       
+    serialSeries = timeseries(transID,fineDiffs*bestScale + bestLag);
+    videoSeries  = timeseries(frameCodes,frameDiffs);  
+    
+    plot(serialSeries,'b');
+    hold on;
+    plot(videoSeries,'r');
+    
+    
 
+    
+    function score = alignment(v)
 
-	plot(serialSeries,'b'); hold on;
-	plot(videoSeries,'r');
+        interval = 1/(10^3);
+        lag   = v(1);
+        scale = v(2);
+
+        global transID;
+        global fineDiffs;
+        global frameCodes;
+        global frameDiffs;
+    
+        serialSeries = timeseries(transID,fineDiffs*scale + lag);
+        videoSeries  = timeseries(frameCodes,frameDiffs);    
+        [scSer, scVid] = synchronize(serialSeries, videoSeries, 'Uniform','Interval',interval);
+        diffs = scSer.Data - scVid.Data;
+        score = sum(diffs.*diffs);
+
+    
+    
+        
+% 	plot(scSer.Time,scSer.Data,'b'); hold on;
+% 	plot(scVid.Time,scVid.Data,'r');
