@@ -44,8 +44,12 @@ function trackingParams = initTrackingParams()
 		trackingParams.stdY(region) = 1;
 		trackingParams.nPixels(region) = 0;
 		trackingParams.lastLine(region)    = line([0 0],[1 1]);
-		trackingParams.boundingBox(region) = line([0 0],[1 1]);
 	end
+
+	% Setup calibration marks
+	trackingParams.calPoints = [];
+	trackingParams.calMarks = [];
+
 
     % Video tracking data logging
 	trackingParams.recording = false;

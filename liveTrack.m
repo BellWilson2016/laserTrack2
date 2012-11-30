@@ -71,10 +71,9 @@ function liveTrack(obj, event)
                 col = col(1:trackingParams.maxPixels);
 				nPixels(regionN) = trackingParams.maxPixels;
             end
-            
-		    % Place positions back in screen coordinates            
-        	bodyX(regionN) = mean(col) + reg(regionN,1) - 1;  
-            bodyY(regionN) = mean(row) + reg(regionN,3) - 1; 
+                   
+			bodyX(regionN) = mean(col);
+			bodyY(regionN) = mean(row);
             
 			% Track the head if necessary
             if (trackingParams.trackHead)
@@ -111,11 +110,11 @@ function liveTrack(obj, event)
                     disp(['Flipped fly head #',num2str(regionN)]);
                     updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
-				xPos(regionN) = bodyX(regionN) + headX(regionN);
-				yPos(regionN) = bodyY(regionN) + headY(regionN);
+				xPos(regionN) = bodyX(regionN) + headX(regionN) + reg(regionN,1) - 1;
+				yPos(regionN) = bodyY(regionN) + headY(regionN) + reg(regionN,3) - 1;
 			else % If not tracking head...
-				xPos(regionN) = bodyX(regionN);
-				yPos(regionN) = bodyY(regionN);
+				xPos(regionN) = bodyX(regionN) + reg(regionN,1) - 1;
+				yPos(regionN) = bodyY(regionN) + reg(regionN,3) - 1;
 				headX(regionN) = 0;
 				headY(regionN) = 0;
 				dXdT(regionN) = 0;
@@ -152,9 +151,14 @@ function liveTrack(obj, event)
                transmissionID = outputPositions(xPos,yPos,powers);
     end
 
-    % Save the data
+    % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
-        sample = [bodyX;bodyY;headX;headY; ones(1,8).*transmissionID; ones(1,8).*now]; 
+        sample = [(bodyX - trackingParams.laneOriginX)./trackingParams.pxPerMM;...
+				  (bodyY - trackingParams.laneOriginY)./trackingParams.pxPerMM;...
+				  (headX)./trackingParams.pxPerMM;...
+				  (headY)./trackingParams.pxPerMM;...
+				  ones(1,8).*transmissionID; 
+				  ones(1,8).*now]; 
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
     end

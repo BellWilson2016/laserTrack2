@@ -12,7 +12,7 @@ function returnPower = laserFlatHalves(args)
     LB = trackingParams.calPoints.leftBound(1);
     RB = trackingParams.calPoints.rightBound(1);
 
-        xPos = trackingParams.xPos;
+    xPos = trackingParams.xPos;
 
             
     lp = leftP.*((xPos - LB + 1 - (RB - LB)/2) <= 0) + ...

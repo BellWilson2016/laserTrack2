@@ -34,8 +34,8 @@ function trackingParams = initTrackingParams()
 	% Tracked info for each fly
 		trackingParams.xPos(region) = 1;	   % Position of tracked feature
 		trackingParams.yPos(region) = 1;
-		trackingParams.headX(region) = 1;	   % Position of head (if detected)
-		trackingParams.headY(region) = 1;
+		trackingParams.headX(region) = 0;	   % Position of head (if detected)
+		trackingParams.headY(region) = 0;
 		trackingParams.bodyX(region) = 1;	   % Position of body
 		trackingParams.bodyY(region) = 1;
 		trackingParams.dXdT(region) = 0;	   % Body speed in head direction coordinates 
@@ -46,6 +46,14 @@ function trackingParams = initTrackingParams()
 		trackingParams.lastLine(region)    = line([0 0],[1 1]);
 		trackingParams.boundingBox(region) = line([0 0],[1 1]);
 	end
+
+	% Setup calibration marks
+	trackingParams.calPoints = [];
+	trackingParams.calMarks(1) = line([0 0],[1 1]);
+	trackingParams.calMarks(2) = line([0 0],[1 1]);
+	trackingParams.calMarks(3) = line([0 0],[1 1]);
+	trackingParams.calMarks(4) = line([0 0],[1 1]);
+
 
     % Video tracking data logging
 	trackingParams.recording = false;

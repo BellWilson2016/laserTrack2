@@ -8,9 +8,9 @@ function exp = laser_1_1L(laserDistribution, laserParams)
     exp.laserDistributionName = func2str(laserDistribution);
     exp.laserParams1      = laserParams1;
     exp.laserParams2      = laserParams2;
-    exp.nullEpochs   = [1];
+    exp.nullEpochs   = [1,3];
     exp.leftEpochs   = [2];
-
+    exp.rightEpochs  = [4];
     
     setLaserOff = {@setLaserDistribution,{@laserOff,[]}};
     setLaserL   = {@setLaserDistribution,{laserDistribution,[laserParams1, laserParams2]}};
