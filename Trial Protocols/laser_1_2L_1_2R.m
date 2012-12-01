@@ -27,6 +27,6 @@ function exp = laser_1_2L_1_2R(laserDistribution, laserParams)
 
 };
 
-    exp.nEpochs = size(exp.protocolDesign,1);
+    exp.nEpochs = size(exp.protocolDesign,1) - 1;
 
 

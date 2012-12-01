@@ -72,7 +72,7 @@ function finishEpoch(obj, event, exp, epochN)
     	global trackingParams;    
  
 		% Log data outof the temporary buffer, clear it.
-        exp.epoch(epochN).track = trackingParams.tempData(1:end,1:6,:);
+        exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
 		trackingParams.tempData = [];
 		exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
 		trackingParams.serialRecord = [];
