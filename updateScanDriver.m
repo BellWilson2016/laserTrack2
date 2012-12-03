@@ -11,8 +11,9 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     xPosCal = [69,92,3,-2,54,47,7,-61];
     yPosCal = [-17,11,16,75,-74,-213,-118,-160];
     
-    % Limit powers below 6/255 -> causes controller fault
-    pVals = round(pVals);
+    % Make sure the size is correct
+    pVals = zeros(1,8) + round(pVals);
+
     
      % Format a byte string
 	transmissionID = randi(64)-1;

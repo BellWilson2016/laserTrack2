@@ -6,9 +6,9 @@ function returnPower = laserFlatHalves(X,Y,args)
     
     leftP  = args(1);
     rightP = args(2);
+	
+   
     
-    
-    lp = (X < 0).*leftP + (X >= 0).*rightP;
+    returnPower = (X < 0).*leftP + (X >= 0).*rightP;
 
 
-    returnPower = lp;

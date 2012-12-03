@@ -126,6 +126,10 @@ function liveTrack(obj, event)
 				trackingParams.bodyY(regionN) = -(bodyYpix(regionN) - trackingParams.laneCenterY)./trackingParams.pxPerMM;
 				trackingParams.headX(regionN) =  0;
 				trackingParams.headY(regionN) =  0;
+
+		   		laserFcn = trackingParams.laseredZoneFcn{1};
+		   		laserArgs = trackingParams.laseredZoneFcn{2};
+				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN),trackingParams.bodyY(regionN),laserArgs);			
             end
             
 			% Optionally get the std for X and Y
@@ -136,6 +140,8 @@ function liveTrack(obj, event)
         end % End if pixels are found
     end  % End for each lane
 
+
+	trackingParams.power
 
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors

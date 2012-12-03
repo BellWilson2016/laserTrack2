@@ -127,6 +127,8 @@ function liveTrack(obj, event)
 				trackingParams.headX(regionN) =  0;
 				trackingParams.headY(regionN) =  0;
 
+		   		laserFcn = trackingParams.laseredZoneFcn{1};
+		   		laserArgs = trackingParams.laseredZoneFcn{2};
 				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN),trackingParams.bodyY(regionN),laserArgs);			
             end
             
