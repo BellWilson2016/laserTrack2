@@ -1,12 +1,11 @@
 %% exp = catScaleSyncTracks(exp).m
 %
 % This function:
-%   (1) Scales and orients rawTrack so + is up and right
-%   (2) Scales track times into timeseries objects so they can be 
+%   (1) Scales track times into timeseries objects so they can be 
 %           conveniently resampled in different timebases
-%   (3) Synchronizes serialID time codes to videoID time codes and places
+%   (2) Synchronizes serialID time codes to videoID time codes and places
 %           them in the videoTime timecode.
-%   (4) Concatenates all data into a wholeTrack
+%   (3) Concatenates all data into a wholeTrack
 %
 % Need to compute angles AFTER interpolation!
 % Compute the head angle over a range of 0-2pi
@@ -33,10 +32,10 @@ function exp = catScaleSyncTracks(exp)
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
         serialRecord = exp.epoch(epochN).serialRecord;
-        rawBodyX     = rawTrack(:,1,:);
-        rawBodyY     = rawTrack(:,2,:);
-        rawHeadX     = rawTrack(:,3,:);
-        rawHeadY     = rawTrack(:,4,:);
+        bodyX     = rawTrack(:,1,:);
+        bodyY     = rawTrack(:,2,:);
+        headX     = rawTrack(:,3,:);
+        headY     = rawTrack(:,4,:);
         videoID      = rawTrack(:,5,1);
         rawVideoTime    = rawTrack(:,6,1);
         rawSerialID     = serialRecord(:,1);
@@ -45,10 +44,6 @@ function exp = catScaleSyncTracks(exp)
         % Normalize videoTime to start at 0, scale to seconds
         videoTime = (rawVideoTime - rawVideoTime(1)).*(24*60*60);
         % Scale coordinates to lane center, mm
-        bodyX =  (rawBodyX - exp.trackingParams.laneCenterX)./exp.trackingParams.pxPerMM;
-        bodyY = -(rawBodyY - exp.trackingParams.laneCenterY)./exp.trackingParams.pxPerMM;
-        headX =  rawHeadX./exp.trackingParams.pxPerMM;
-        headY = -rawHeadY./exp.trackingParams.pxPerMM;
         ts1 = timeseries(bodyX, videoTime, 'Name', 'bodyX');
         ts2 = timeseries(bodyY, videoTime, 'Name', 'bodyY');
         ts3 = timeseries(headX, videoTime, 'Name', 'headX');
