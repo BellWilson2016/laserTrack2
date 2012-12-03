@@ -88,7 +88,6 @@ function trackingParams = initTrackingParams()
 	% Start a timer to measure frame intervals    
     trackingParams.intervalList = [];
     trackingParams.intervalsLeft = 0;
-    tic;
 
 
 

@@ -30,8 +30,8 @@ function liveTrack(obj, event)
     reg = trackingParams.reg;    
 	numRegions = size(reg,1);
     runAvg = trackingParams.runningAvg;
-	lastXpix = trackingParams.xPix;
-	lastYpix = trackingParams.yPix;
+	lastXtarget = trackingParams.xTarget;
+	lastYtarget = trackingParams.yTarget;
 	lastHeadXpix = trackingParams.headXpix;
 	lastHeadYpix = trackingParams.headYpix;
 
@@ -87,8 +87,8 @@ function liveTrack(obj, event)
                     trackingParams.headYpix(regionN) = head2(2);
                 end
 
-				trackingParams.xPix(regionN)  =  bodyXpix(regionN) + trackingParams.headXpix(regionN) + reg(regionN,1) - 1;
-				trackingParams.yPix(regionN)  =  bodyYpix(regionN) + trackingParams.headYpix(regionN) + reg(regionN,3) - 1;
+				trackingParams.xTarget(regionN)  =  bodyXpix(regionN) + trackingParams.headXpix(regionN) + reg(regionN,1) - 1;
+				trackingParams.yTarget(regionN)  =  bodyYpix(regionN) + trackingParams.headYpix(regionN) + reg(regionN,3) - 1;
 				trackingParams.bodyX(regionN) =  (bodyXpix(regionN) - trackingParams.laneCenterX)./trackingParams.pxPerMM;
 				trackingParams.bodyY(regionN) = -(bodyYpix(regionN) - trackingParams.laneCenterY)./trackingParams.pxPerMM;
 				trackingParams.headX(regionN) =  trackingParams.headXpix(regionN)./trackingParams.pxPerMM;
@@ -116,8 +116,8 @@ function liveTrack(obj, event)
                 end
 
 			else % If we're not tracking head...
-				trackingParams.xPix(regionN)  =  bodyXpix(regionN) + reg(regionN,1) - 1;
-				trackingParams.yPix(regionN)  =  bodyYpix(regionN) + reg(regionN,3) - 1;
+				trackingParams.xTarget(regionN)  =  bodyXpix(regionN) + reg(regionN,1) - 1;
+				trackingParams.yTarget(regionN)  =  bodyYpix(regionN) + reg(regionN,3) - 1;
 				trackingParams.bodyX(regionN) =  (bodyXpix(regionN) - trackingParams.laneCenterX)./trackingParams.pxPerMM;
 				trackingParams.bodyY(regionN) = -(bodyYpix(regionN) - trackingParams.laneCenterY)./trackingParams.pxPerMM;
 				trackingParams.headX(regionN) =  0;
@@ -138,19 +138,19 @@ function liveTrack(obj, event)
     if (trackingParams.scanMirrors)
             % Output to the scanController
            powers = feval(trackingParams.laseredZoneFcn{1},trackingParams.laseredZoneFcn{2});
-           transmissionID = outputPositions(trackingParams.xPix,trackingParams.yPix,powers);
+           transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,powers);
     end
 
 
     % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
 
-		sample = [trackingParams.bodyX;
-				  trackingParams.bodyY;
+		sample = [	trackingParams.bodyX;
+				  	trackingParams.bodyY;
 					trackingParams.headX;
 					trackingParams.headY;
 					ones(1,8).*transmissionID;
-					ones(1,8).*now];
+					ones(1,8).*now              ];
 			
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
@@ -165,15 +165,15 @@ function liveTrack(obj, event)
         delete(trackingParams.lastLine(regionN));
         if trackingParams.trackHead
             trackingParams.lastLine(regionN) = patch(...
-                trackingParams.xPix(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
+                trackingParams.xTarget(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
 				-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN),  NaN],...
-                trackingParams.yPix(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
+                trackingParams.yTarget(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
 				trackingParams.headXpix(regionN), -trackingParams.headXpix(regionN),  NaN],...
                 'k','EdgeColor','w','EdgeAlpha',.5);
         else
             trackingParams.lastLine(regionN) = patch(...
-                trackingParams.xPix(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
-                trackingParams.yPix(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
+                trackingParams.xTarget(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
+                trackingParams.yTarget(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
                 'k','EdgeColor','w','EdgeAlpha',.5);
         end
 

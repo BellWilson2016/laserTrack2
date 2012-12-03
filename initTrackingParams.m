@@ -32,8 +32,8 @@ function trackingParams = initTrackingParams()
     trackingParams.reg(1,:) = [5,trackingParams.width-5,5,trackingParams.height-5];
     for region = 1:size(trackingParams.reg,1)
 	% Tracked info for each fly
-		trackingParams.xPix(region) = 1;	   % Position of tracked feature in pixel space
-		trackingParams.yPix(region) = 1;
+		trackingParams.xTarget(region) = 1;	   % Position of tracked feature in pixel space
+		trackingParams.yTarget(region) = 1;
 		trackingParams.headXpix(region) = 0;   % Position of head (if detected) in pixels
 		trackingParams.headYpix(region) = 0;
 		trackingParams.headX(region) = 0;	   % Position of head (if detected) in mm
