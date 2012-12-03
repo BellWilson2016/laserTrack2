@@ -101,6 +101,9 @@ function finishEpoch(obj, event, exp, epochN)
 			trackingParams.tempData = [];
 			trackingParams.serialRecord = [];
 
+			% Synchronize clocks and concatenate data epochs.
+			exp = catSyncTracks(exp);
+
 		    % Save data
 		    filename = ['RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
 		    expName  = exp.expName;

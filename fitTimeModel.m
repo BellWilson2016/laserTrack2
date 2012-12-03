@@ -1,10 +1,7 @@
 % All of the rawSerialTimes must contain valid time info and not wrap
 % Both times should start at 0
-function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime)
+function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime) 
 
-	% Scale to seconds
-	serialTime = serialTime ./ (16*10^6);
-    
 	% Find serial data transmission codes
 	ix = find( (serialID >= hex2dec('24')) & (serialID < (hex2dec('24') + 64)) );
 	transSerialID = serialID(ix) - hex2dec('24');
