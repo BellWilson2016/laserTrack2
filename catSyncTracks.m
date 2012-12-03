@@ -32,10 +32,10 @@ function exp = catScaleSyncTracks(exp)
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
         serialRecord = exp.epoch(epochN).serialRecord;
-        bodyX     = rawTrack(:,1,:);
-        bodyY     = rawTrack(:,2,:);
-        headX     = rawTrack(:,3,:);
-        headY     = rawTrack(:,4,:);
+        bodyX     = squeeze(rawTrack(:,1,:));
+        bodyY     = squeeze(rawTrack(:,2,:));
+        headX     = squeeze(rawTrack(:,3,:));
+        headY     = squeeze(rawTrack(:,4,:));
         videoID      = rawTrack(:,5,1);
         rawVideoTime    = rawTrack(:,6,1);
         rawSerialID         = serialRecord(:,1);
@@ -125,7 +125,7 @@ function exp = catScaleSyncTracks(exp)
                                 wholeRawTrack.serialID, serialTime - serialTime(1));
     fitSerialTime = timeModel(serialTime - serialTime(1));
     ts6 = timeseries(wholeRawTrack.serialID, fitSerialTime,'Name','serialID');
-	ts7 = timeseries(wrappedSerialTimeCode, fitSerialTime,'Name','serialTime');
+	ts7 = timeseries( wrappedSerialTimeCode, fitSerialTime,'Name','serialTime');
 
     % Collect the time series objects into a collection
     exp.wholeTrack.bodyX = ts1;
