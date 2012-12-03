@@ -67,7 +67,7 @@ function trackingParams = initTrackingParams()
 	% Mirror temp safety
     trackingParams.scanMirrors = true;
     trackingParams.calibrationSet = false;
-    trackingParams.laseredZoneFcn = {@laserLinearGrad,[0,15]};
+    trackingParams.laseredZoneFcn = {@laserOff,[]};
     trackingParams.tempFault = false;
     trackingParams.mirrorTemp = 0;
 	   

@@ -94,6 +94,7 @@ function defineMultiArena(varargin)
         trackingParams.headY(i) = 0;
         trackingParams.dXdT(i) = 0;
         trackingParams.dYdT(i) = 0;
+		trackingParams.power(i) = 0;
     end
     
 
