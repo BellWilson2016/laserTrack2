@@ -30,20 +30,10 @@ function liveTrack(obj, event)
     reg = trackingParams.reg;    
 	numRegions = size(reg,1);
     runAvg = trackingParams.runningAvg;
-	xPos  = trackingParams.xPos;
-	yPos  = trackingParams.yPos;
-	bodyX = trackingParams.bodyX;
-	bodyY = trackingParams.bodyY;
-	headX = trackingParams.headX;
-    headY = trackingParams.headY;
-    if trackingParams.trackHead
-        lastXpos = xPos;
-        lastYpos = yPos;
-        lastHeadX = headX;
-        lastHeadY = headY;
-        dXdT = trackingParams.dXdT;
-        dYdT = trackingParams.dYdT;
-    end
+	lastXpix = trackingParams.xPix;
+	lastYpix = trackingParams.yPix;
+	lastHeadXpix = trackingParams.headXpix;
+	lastHeadYpix = trackingParams.headYpix;
 
     % For each subregion
 	for regionN = 1:numRegions
@@ -72,8 +62,8 @@ function liveTrack(obj, event)
 				nPixels(regionN) = trackingParams.maxPixels;
             end
                    
-			bodyX(regionN) = mean(col);
-			bodyY(regionN) = mean(row);
+			bodyXpix(regionN) = mean(col);
+			bodyYpix(regionN) = mean(row);
             
 			% Track the head if necessary
             if (trackingParams.trackHead)
@@ -87,38 +77,51 @@ function liveTrack(obj, event)
                 % Choose the end closest to the last front
                 head1 =  hDist.*Vecs(maxIx,:);
                 head2 = -hDist.*Vecs(maxIx,:);
-                dLast1 = (head1(1)-lastHeadX(regionN))^2 + (head1(2)-lastHeadY(regionN))^2;
-                dLast2 = (head2(1)-lastHeadX(regionN))^2 + (head2(2)-lastHeadY(regionN))^2;
+                dLast1 = (head1(1)-lastHeadXpix(regionN))^2 + (head1(2)-lastHeadYpix(regionN))^2;
+                dLast2 = (head2(1)-lastHeadXpix(regionN))^2 + (head2(2)-lastHeadYpix(regionN))^2;
                 if dLast1 <= dLast2
-                    headX(regionN) = head1(1);
-                    headY(regionN) = head1(2);
+                    trackingParams.headXpix(regionN) = head1(1);
+                    trackingParams.headYpix(regionN) = head1(2);
                 else
-                    headX(regionN) = head2(1);
-                    headY(regionN) = head2(2);
+                    trackingParams.headXpix(regionN) = head2(1);
+                    trackingParams.headYpix(regionN) = head2(2);
                 end
 
+				trackingParams.xPix(regionN)  =  bodyXpix(regionN) + trackingParams.headXpix(regionN) + reg(regionN,1) - 1;
+				trackingParams.yPix(regionN)  =  bodyYpix(regionN) + trackingParams.headYpix(regionN) + reg(regionN,3) - 1;
+				trackingParams.bodyX(regionN) =  (bodyXpix(regionN) - trackingParams.laneCenterX)./trackingParams.pxPerMM;
+				trackingParams.bodyY(regionN) = -(bodyYpix(regionN) - trackingParams.laneCenterY)./trackingParams.pxPerMM;
+				trackingParams.headX(regionN) =  trackingParams.headXpix(regionN)./trackingParams.pxPerMM;
+				trackingParams.headY(regionN) = -trackingParams.headYpix(regionN)./trackingParams.pxPerMM;
+
+
                 % Calculate the speed, and flip if it's fast and negative
-                dXdT(regionN) = (trackingParams.velWindow - 1)/trackingParams.velWindow * dXdT(regionN);
-                dYdT(regionN) = (trackingParams.velWindow - 1)/trackingParams.velWindow * dYdT(regionN);
-                dXdT(regionN) = dXdT(regionN) + 1/trackingParams.velWindow * headX(regionN)*(xPos(regionN) - lastXpos(regionN));
-                dYdT(regionN) = dYdT(regionN) + 1/trackingParams.velWindow * headY(regionN)*(yPos(regionN) - lastYpos(regionN));
-                smoothVel = dXdT(regionN) + dYdT(regionN);
+                trackingParams.dXdT(regionN) = (trackingParams.velWindow - 1)/...
+												trackingParams.velWindow * trackingParams.dXdT(regionN);
+                trackingParams.dYdT(regionN) = (trackingParams.velWindow - 1)/...
+												trackingParams.velWindow * trackingParams.dYdT(regionN);
+                trackingParams.dXdT(regionN) = trackingParams.dXdT(regionN) + ...
+												1/trackingParams.velWindow * trackingParams.headXpix(regionN) *...
+											    (trackingParams.xPix(regionN) - lastXpix(regionN));
+                trackingParams.dYdT(regionN) = trackingParams.dYdT(regionN) + ...
+												1/trackingParams.velWindow * trackingParams.headYpix(regionN) * ...
+												(trackingParams.yPix(regionN) - lastYpix(regionN));
+                smoothVel = trackingParams.dXdT(regionN) + trackingParams.dYdT(regionN);
                 if (smoothVel < -2)
-                    dXdT(regionN) = 0; dYdT(regionN) = 0;
-                    headX(regionN) = -headX(regionN);
-                    headY(regionN) = -headY(regionN);
+                    trackingParams.dXdT(regionN) = 0; trackingParams.dYdT(regionN) = 0;
+                    trackingParams.headXpix(regionN) = -trackingParams.headXpix(regionN);
+                    trackingParams.headYpix(regionN) = -trackingParams.headYpix(regionN);
                     disp(['Flipped fly head #',num2str(regionN)]);
                     updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
-				xPos(regionN) = bodyX(regionN) + headX(regionN) + reg(regionN,1) - 1;
-				yPos(regionN) = bodyY(regionN) + headY(regionN) + reg(regionN,3) - 1;
-			else % If not tracking head...
-				xPos(regionN) = bodyX(regionN) + reg(regionN,1) - 1;
-				yPos(regionN) = bodyY(regionN) + reg(regionN,3) - 1;
-				headX(regionN) = 0;
-				headY(regionN) = 0;
-				dXdT(regionN) = 0;
-				dYdT(regionN) = 0;
+
+			else % If we're not tracking head...
+				trackingParams.xPix(regionN)  =  bodyXpix(regionN) + reg(regionN,1) - 1;
+				trackingParams.yPix(regionN)  =  bodyYpix(regionN) + reg(regionN,3) - 1;
+				trackingParams.bodyX(regionN) =  (bodyXpix(regionN) - trackingParams.laneCenterX)./trackingParams.pxPerMM;
+				trackingParams.bodyY(regionN) = -(bodyYpix(regionN) - trackingParams.laneCenterY)./trackingParams.pxPerMM;
+				trackingParams.headX(regionN) =  0;
+				trackingParams.headY(regionN) =  0;
             end
             
 			% Optionally get the std for X and Y
@@ -128,60 +131,31 @@ function liveTrack(obj, event)
             end  
         end % End if pixels are found
     end  % End for each lane
-    
-    % Save to the global variables
-	trackingParams.nPixels = nPixels;
-    trackingParams.xPos = xPos;
-    trackingParams.yPos = yPos;
-	trackingParams.bodyX = bodyX;
-	trackingParams.bodyY = bodyY;
-    trackingParams.headX = headX;
-    trackingParams.headY = headY;
-	if trackingParams.trackHead
-		trackingParams.dXdT = dXdT;
-		trackingParams.dYdT = dYdT;
-	end
- 
+
+
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
             % Output to the scanController
-           powers = feval(trackingParams.laseredZoneFcn{1},...
-               trackingParams.laseredZoneFcn{2});
-               transmissionID = outputPositions(xPos,yPos,powers);
+           powers = feval(trackingParams.laseredZoneFcn{1},trackingParams.laseredZoneFcn{2});
+           transmissionID = outputPositions(trackingParams.xPix,trackingParams.yPix,powers);
     end
 
-	% [(bodyX - trackingParams.laneOriginX)./trackingParams.pxPerMM;-(bodyY - trackingParams.laneOriginY)./trackingParams.pxPerMM]
+
     % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
-		sample = [bodyX;bodyY;headX;headY;(ones(1,8).*transmissionID;ones(1,8).*now];
-%        sample = [(bodyX - trackingParams.laneOriginX)./trackingParams.pxPerMM;...
-%				 -(bodyY - trackingParams.laneOriginY)./trackingParams.pxPerMM;...
-%				  (headX)./trackingParams.pxPerMM;...
-%				 -(headY)./trackingParams.pxPerMM;...
-%				  ones(1,8).*transmissionID; 
-%				  ones(1,8).*now]; 
+
+		sample = [trackingParams.bodyX;
+				  trackingParams.bodyY;
+					trackingParams.headX;
+					trackingParams.headY;
+					ones(1,8).*transmissionID;
+					ones(1,8).*now];
+			
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
     end
-    
-    % If we're looking at frame intervals, update the interval list
-    if (trackingParams.intervalsLeft > 0)
-        trackingParams.intervalList(end+1) = toc();
-        trackingParams.intervalsLeft = trackingParams.intervalsLeft - 1;
-        if (trackingParams.intervalsLeft == 0)
-            N = hist(trackingParams.intervalList.*1000,0:1:120);
-            trackingParams.otherFig = figure(); subplot(2,1,1);
-            N = N ./ sum(N(:));
-            plot(0:1:120,cumsum(N),'b'); hold on;
-            plot(0:1:120,N ./ max(N),'r');
-            xlabel('Frame interval (ms)');
-            ylabel('P'); ylim([0 1]); xlim([0 120]);
-            trackingParams.intervalList = [];
-        end
-    end
-    tic();
-    
+        
 
     
     % Draw annotations to the preview figure
@@ -191,13 +165,15 @@ function liveTrack(obj, event)
         delete(trackingParams.lastLine(regionN));
         if trackingParams.trackHead
             trackingParams.lastLine(regionN) = patch(...
-                bodyX(regionN) + [0 2*headX(regionN) NaN headX(regionN)-headY(regionN) headX(regionN)+headY(regionN)  NaN],...
-                bodyY(regionN) + [0 2*headY(regionN) NaN headY(regionN)+headX(regionN) headY(regionN)-headX(regionN)  NaN],...
+                trackingParams.xPix(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
+				-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN),  NaN],...
+                trackingParams.yPix(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
+				trackingParams.headXpix(regionN), -trackingParams.headXpix(regionN),  NaN],...
                 'k','EdgeColor','w','EdgeAlpha',.5);
         else
             trackingParams.lastLine(regionN) = patch(...
-                xPos(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
-                yPos(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
+                trackingParams.xPix(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
+                trackingParams.yPix(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
                 'k','EdgeColor','w','EdgeAlpha',.5);
         end
 

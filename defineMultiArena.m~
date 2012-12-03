@@ -84,8 +84,10 @@ function defineMultiArena(varargin)
         laneCenter = round(topVent(2) + pxPerMM*(c2VentDist +(i-1)*c2cDist));   
         reg(i,3) = laneCenter - laneHalfWidthPx;
         reg(i,4) = laneCenter + laneHalfWidthPx;
-        trackingParams.xPos(i) = leftBound(1) + 5; 
-        trackingParams.yPos(i) = laneCenter; 
+        trackingParams.xPix(i) = leftBound(1) + 5; 
+        trackingParams.yPix(i) = laneCenter; 
+        trackingParams.headX(i) = 0;
+        trackingParams.headY(i) = 0;
 		trackingParams.bodyX(i) = leftBound(1) + 5;
 		trackingParams.bodyY(i) = laneCenter;
         trackingParams.headX(i) = 0;
@@ -110,18 +112,18 @@ function defineMultiArena(varargin)
     % Go live with the regions
     trackingParams.reg = reg;
 	trackingParams.pxPerMM = pxPerMM;
-	trackingParams.laneOriginX = (rightBound(1) - leftBound(1))/2 + 1;
-	trackingParams.laneOriginY = laneHalfWidthPx + 1;
+	trackingParams.laneCenterX = (rightBound(1) - leftBound(1))/2 + 1;
+	trackingParams.laneCenterY = laneHalfWidthPx + 1;
 
 	if showHalfAndCenter
 		for rN = 1:8
-			trackingParams.calMarks(end+1) = line( [reg(rN,1) + trackingParams.laneOriginX - 1,...
-														reg(rN,1) + trackingParams.laneOriginX - 1],...
+			trackingParams.calMarks(end+1) = line( [reg(rN,1) + trackingParams.laneCenterX - 1,...
+														reg(rN,1) + trackingParams.laneCenterX - 1],...
 				  								   [reg(rN,3) reg(rN,4)],...
 												 	'Color',.5*[1 1 1]);
 			trackingParams.calMarks(end+1) = line( [reg(rN,1) reg(rN,2)],...
-				 								   [reg(rN,3) + trackingParams.laneOriginY - 1, ...
- 														reg(rN,3) + trackingParams.laneOriginY - 1],...
+				 								   [reg(rN,3) + trackingParams.laneCenterY - 1, ...
+ 														reg(rN,3) + trackingParams.laneCenterY - 1],...
 													'Color',.5*[1 1 1]);
 		end
 	end

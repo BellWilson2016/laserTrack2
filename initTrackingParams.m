@@ -32,13 +32,15 @@ function trackingParams = initTrackingParams()
     trackingParams.reg(1,:) = [5,trackingParams.width-5,5,trackingParams.height-5];
     for region = 1:size(trackingParams.reg,1)
 	% Tracked info for each fly
-		trackingParams.xPos(region) = 1;	   % Position of tracked feature
-		trackingParams.yPos(region) = 1;
-		trackingParams.headX(region) = 0;	   % Position of head (if detected)
+		trackingParams.xPix(region) = 1;	   % Position of tracked feature in pixel space
+		trackingParams.yPix(region) = 1;
+		trackingParams.headXpix(region) = 0;   % Position of head (if detected) in pixels
+		trackingParams.headYpix(region) = 0;
+		trackingParams.headX(region) = 0;	   % Position of head (if detected) in mm
 		trackingParams.headY(region) = 0;
-		trackingParams.bodyX(region) = 1;	   % Position of body
+		trackingParams.bodyX(region) = 1;	   % Position of body in mm
 		trackingParams.bodyY(region) = 1;
-		trackingParams.dXdT(region) = 0;	   % Body speed in head direction coordinates 
+		trackingParams.dXdT(region) = 0;	   % Tracked feature speed in head direction coordinates 
 		trackingParams.dYdT(region) = 0;
 		trackingParams.stdX(region) = 1;	   % Standard deviation for each fly
 		trackingParams.stdY(region) = 1;
@@ -86,7 +88,6 @@ function trackingParams = initTrackingParams()
 	% Start a timer to measure frame intervals    
     trackingParams.intervalList = [];
     trackingParams.intervalsLeft = 0;
-    tic;
 
 
 

@@ -84,8 +84,10 @@ function defineMultiArena(varargin)
         laneCenter = round(topVent(2) + pxPerMM*(c2VentDist +(i-1)*c2cDist));   
         reg(i,3) = laneCenter - laneHalfWidthPx;
         reg(i,4) = laneCenter + laneHalfWidthPx;
-        trackingParams.xPos(i) = leftBound(1) + 5; 
-        trackingParams.yPos(i) = laneCenter; 
+        trackingParams.xPix(i) = leftBound(1) + 5; 
+        trackingParams.yPix(i) = laneCenter; 
+        trackingParams.headXpix(i) = 0;
+        trackingParams.headYpix(i) = 0;
 		trackingParams.bodyX(i) = leftBound(1) + 5;
 		trackingParams.bodyY(i) = laneCenter;
         trackingParams.headX(i) = 0;
