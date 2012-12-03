@@ -1,4 +1,4 @@
-function returnPower = laserLatencyMeasure(args)
+function returnPower = laserLatencyMeasure(X,Y,args)
 
     global trackingParams;
     
@@ -6,7 +6,7 @@ function returnPower = laserLatencyMeasure(args)
 
     % If there are any tracked pixels
     if (nnz(trackingParams.nPixels) > 0)
-        returnPower = [1,1,1,1,1,1,1,1]*lp;
+        returnPower = lp;
     else
-        returnPower = [1,1,1,1,1,1,1,1]*0;
+        returnPower = 0;
     end

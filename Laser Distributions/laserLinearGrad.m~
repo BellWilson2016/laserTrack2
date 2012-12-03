@@ -1,4 +1,6 @@
-function returnPower = laserLinearGrad(trackingParams,args)  
+function returnPower = laserLinearGrad(X,Y,args)  
+
+	global trackingParams;
 
     leftP  = args(1);
     rightP = args(2);

@@ -1,6 +1,3 @@
-function returnPower = laserMin(args)  
-
+function returnPower = laserMin(X,Y,args)  
 	
-    lp = 3;
-
-    returnPower = ones(1,8).* lp;
+    returnPower = 3;
