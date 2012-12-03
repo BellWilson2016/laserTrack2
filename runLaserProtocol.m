@@ -78,7 +78,8 @@ function finishEpoch(obj, event, exp, epochN)
 		trackingParams.serialRecord = [];
         
 		% If there's another epoch to do, do it
-        if (epochN + 1 < exp.nEpochs)
+		% Temember there are n+1 entries for nEpochs
+        if (epochN + 1 <= exp.nEpochs)
             % Do another epoch
             startEpoch(exp, epochN + 1);
         else % Finish up       
