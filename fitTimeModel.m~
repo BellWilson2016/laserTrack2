@@ -25,5 +25,5 @@ function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime)
 		allTransSerialTimes = [allTransSerialTimes; sT];
 	end
 	% Fit a linear time model
-	timeModel = fit(allTransSerialTimes,allVideoTimes,'poly1','Robust','Bisquare');
+	timeModel = fit(allSerialTimes,allVideoTimes,'poly1','Robust','Bisquare');
 	disp(['M: ',num2str(timeModel.p1,8),' B: ',num2str(timeModel.p2,8)]);

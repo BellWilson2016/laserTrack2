@@ -96,13 +96,14 @@ function exp = catScaleSyncTracks(exp)
     % Scale videoTime to start at 0, in seconds
     videoTime = (wholeRawTrack.rawVideoTime - wholeRawTrack.rawVideoTime(1)).*(24*60*60);
     % Refer wholeTrack timeseries to videoTime
-    ts1 = timeseries(  wholeRawTrack.bodyX, videoTime, 'Name', 'bodyX');
-    ts2 = timeseries(  wholeRawTrack.bodyY, videoTime, 'Name', 'bodyY');
-    ts3 = timeseries(  wholeRawTrack.headX, videoTime, 'Name', 'headX');
-    ts4 = timeseries(  wholeRawTrack.headY, videoTime, 'Name', 'headY');
-    ts5 = timeseries(wholeRawTrack.videoID, videoTime, 'Name', 'videoID');
+    ts1 = timeseries(wholeTrack.bodyX, videoTime, 'Name', 'bodyX');
+    ts2 = timeseries(wholeTrack.bodyY, videoTime, 'Name', 'bodyY');
+    ts3 = timeseries(wholeTrack.headX, videoTime, 'Name', 'headX');
+    ts4 = timeseries(wholeTrack.headY, videoTime, 'Name', 'headY');
+    ts5 = timeseries(wholeTrack.videoID, videoTime, 'Name', 'videoID');
+    ts6 = timeseries(videoTime, videoTime, 'Name', 'videoTime');
 
-    serialTime = wholeRawTrack.serialTime;
+    serialTime = wholeTrack.serialTime;
     % Remove Time wraps so serialTime increases monotonically
     % This needs to be done again because epochs have been de-wrapped
     % independently (but not scaled to 0)
@@ -112,11 +113,10 @@ function exp = catScaleSyncTracks(exp)
         serialTime(firstWrappedTime:end) = serialTime(firstWrappedTime:end) + 16*10^6;
         ix = find(diff(serialTime) < 0);
     end
-    timeModel = fitTimeModel(wholeRawTrack.videoID, videoTime,...
-                                wholeRawTrack.serialID, serialTime - serialTime(1));
+    timeModel = fitTimeModel(wholeTrack.videoID, videoTime,...
+                                wholeTrack.serialID, serialTime - serialTime(1));
     fitSerialTime = timeModel(serialTime - serialTime(1));
-    ts6 = timeseries(wholeRawTrack.serialID, fitSerialTime,'Name','serialID');
-	ts7 = timeseries(            serialTime, fitSerialTime,'Name','serialTime');
+    ts7 = timeseries(wholeTrack.serialID, fitSerialTime,'Name','serialID');
 
     % Collect the time series objects into a collection
     exp.wholeTrack = tscollection({ts1 ts2 ts3 ts4 ts5 ts6 ts7});
