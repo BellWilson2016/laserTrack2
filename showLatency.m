@@ -1,7 +1,8 @@
-function showLatency()
+function showLatency(fileString)
 
-	load('RTFW2.mat');
+	load(fileString);
 
+	figure();
 	for epochN = 1:exp.nEpochs
 		subplot(exp.nEpochs+1,1,epochN);
 		bodyX = exp.epoch(epochN).track.bodyX;

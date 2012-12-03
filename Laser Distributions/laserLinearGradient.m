@@ -1,4 +1,4 @@
-function returnPower = laserLinearGrad(X,Y,args)  
+function returnPower = laserLinearGradient(X,Y,args)  
 
     leftP  = args(1);
     rightP = args(2);
