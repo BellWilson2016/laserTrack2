@@ -137,7 +137,10 @@ function liveTrack(obj, event)
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
             % Output to the scanController
-           powers = feval(trackingParams.laseredZoneFcn{1},trackingParams.laseredZoneFcn{2});
+		   laserFcn = trackingParams.laseredZoneFcn{1};
+		   laserArgs = trackingParams.laseredZoneFcn{2};
+		   powers = laserFcn(laserArgs);
+
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,powers);
     end
 

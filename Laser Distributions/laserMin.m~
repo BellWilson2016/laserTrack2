@@ -1,4 +1,4 @@
-function returnPower = laserMin(args)  
+function returnPower = laserMin(args) 
 
 	
     lp = 3;

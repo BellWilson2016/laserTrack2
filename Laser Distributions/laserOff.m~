@@ -1,0 +1,5 @@
+function returnPower = laserOff(trackingParams,args)
+
+	returnPower = zeros(1,8);   
+
+

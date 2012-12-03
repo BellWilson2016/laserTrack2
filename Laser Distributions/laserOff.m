@@ -1,5 +1,5 @@
 function returnPower = laserOff(args)
 
-    lp = 0;
+	returnPower = zeros(1,8);   
 
-    returnPower = [1,1,1,1,1,1,1,1]*lp;
+

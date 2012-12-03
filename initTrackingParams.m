@@ -29,6 +29,7 @@ function trackingParams = initTrackingParams()
     trackingParams.velWindow = 60;    % # of frames to look at velocity over
 	trackingParams.laneCenterX = 0;   % Lane centers (in pixels) - all lanes should be equally sized...
 	trackingParams.laneCenterY = 0;
+	trackingParams.pxPerMM = 1;		  % Video scale factor
 
 	% Regions in which to track each fly
     trackingParams.reg(1,:) = [5,trackingParams.width-5,5,trackingParams.height-5];

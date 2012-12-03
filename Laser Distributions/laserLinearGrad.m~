@@ -1,23 +1,11 @@
-function returnPower = laserLinearGrad(args)  
+function returnPower = laserLinearGrad(trackingParams,args)  
 
-    global trackingParams;
-    powerBounds = args;
-    
-    leftP  = powerBounds(1);
-    rightP = powerBounds(2);
+    leftP  = args(1);
+    rightP = args(2);
 
 	Pgrad = (rightP - leftP)/50;  		% Power units / mm
-    
-
-
-    xPos = trackingParams.bodyX + trackingParams.headX;
+    xPos = trackingParams.bodyX;
 	
-	lp = leftP + (xPos + 25)*Pgrad;        
+	returnPower = leftP + (xPos + 25).*Pgrad;    
 
 
-    returnPower = lp;
-
-
-    lp = round((xPos - LB + 1).*(rightP - leftP)/(RB-LB) + leftP);
-
-    returnPower = lp;
