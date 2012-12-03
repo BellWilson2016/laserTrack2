@@ -115,6 +115,10 @@ function liveTrack(obj, event)
                     updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
 
+		   		laserFcn = trackingParams.laseredZoneFcn{1};
+		   		laserArgs = trackingParams.laseredZoneFcn{2};
+				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN),trackingParams.bodyY(regionN),laserArgs);			
+
 			else % If we're not tracking head...
 				trackingParams.xTarget(regionN)  =  bodyXpix(regionN) + reg(regionN,1) - 1;
 				trackingParams.yTarget(regionN)  =  bodyYpix(regionN) + reg(regionN,3) - 1;
@@ -137,11 +141,7 @@ function liveTrack(obj, event)
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
             % Output to the scanController
-		   laserFcn = trackingParams.laseredZoneFcn{1};
-		   laserArgs = trackingParams.laseredZoneFcn{2};
-		   powers = laserFcn(laserArgs);
-
-           transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,powers);
+           transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
 
 
