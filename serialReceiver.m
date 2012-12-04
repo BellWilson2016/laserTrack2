@@ -7,6 +7,8 @@ function serialReceiver(obj,event)
     bytesHere = obj.BytesAvailable;
     blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
+
+		disp('r');
 		
        	x = fread(obj,blocksHere*5);
         for n = 1:blocksHere
@@ -20,7 +22,7 @@ function serialReceiver(obj,event)
                     trackingParams.serialRecord(end+1,:) = [code,time];
                 end
             end
-            if x((n-1)*5+1) == hex2dec('ff')
+            if code == hex2dec('ff')
                 trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
                     bitshift(x((n-1)*5+3),16) + ...
                     bitshift(x((n-1)*5+4),8) + ...
@@ -28,7 +30,7 @@ function serialReceiver(obj,event)
                 if displayTemp
                     disp([num2str(trackingParams.mirrorTemp,'%2.1f'),' C']);
                 end
-            elseif x((n-1)*5+1) == hex2dec('fe')
+            elseif code == hex2dec('fe')
                 trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
                     bitshift(x((n-1)*5+3),16) + ...
                     bitshift(x((n-1)*5+4),8) + ...

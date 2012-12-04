@@ -12,10 +12,11 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     yPosCal = [-17,11,16,75,-74,-213,-118,-160];
     
     % Make sure the size is correct
-    pVals = zeros(1,8); + round(pVals);
+    pVals = zeros(1,8) + round(pVals);
 
+disp('w');
     
-     % Format a byte string
+    % Format a byte string
 	transmissionID = randi(64)-1;
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);

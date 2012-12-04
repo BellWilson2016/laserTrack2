@@ -15,7 +15,7 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     pVals = zeros(1,8) + round(pVals);
 
     
-     % Format a byte string
+    % Format a byte string
 	transmissionID = randi(64)-1;
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);
