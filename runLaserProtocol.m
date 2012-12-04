@@ -107,7 +107,7 @@ function finishEpoch(obj, event, exp, epochN)
 		    % Save data
 		    filename = ['RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
 		    expName  = exp.expName;
-			save(filename,'exp');
+			saveExperimentData(expName,filename, 'exp');
 		    disp(['Saved: ',filename]);
 		end
 
