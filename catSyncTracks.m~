@@ -15,7 +15,7 @@
 %
 % JSB 12/2012
 %%
-function exp = catScaleSyncTracks(exp)
+function exp = catSyncTracks(oldExp)
 
     wholeRawTrack.bodyX = [];
     wholeRawTrack.bodyY = [];
@@ -26,16 +26,26 @@ function exp = catScaleSyncTracks(exp)
     wholeRawTrack.serialID = [];
     wholeRawTrack.serialTimeCode = [];
 
+	for epochN = 1:exp.nEpochs
+		disp('pre');
+		disp(epochN);
+		disp(size(exp.epoch(epochN).serialRecord));
+	end
+
+	return;
+
     % For each epoch extract and normalize data
     for epochN = 1:exp.nEpochs
 
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
+		disp(epochN);
         serialRecord = exp.epoch(epochN).serialRecord;
+		size(serialRecord)
         bodyX     = squeeze(rawTrack(:,1,:));
-        bodyY     = rawTrack(:,2,:);
-        headX     = rawTrack(:,3,:);
-        headY     = rawTrack(:,4,:);
+        bodyY     = squeeze(rawTrack(:,2,:));
+        headX     = squeeze(rawTrack(:,3,:));
+        headY     = squeeze(rawTrack(:,4,:));
         videoID      = rawTrack(:,5,1);
         rawVideoTime    = rawTrack(:,6,1);
         rawSerialID         = serialRecord(:,1);
@@ -44,7 +54,6 @@ function exp = catScaleSyncTracks(exp)
         % Normalize videoTime to start at 0, scale to seconds
         videoTime = (rawVideoTime - rawVideoTime(1)).*(24*60*60);
         % Scale coordinates to lane center, mm
-		size(bodyX)
         ts1 = timeseries(  bodyX, videoTime, 'Name', 'bodyX');
         ts2 = timeseries(  bodyY, videoTime, 'Name', 'bodyY');
         ts3 = timeseries(  headX, videoTime, 'Name', 'headX');

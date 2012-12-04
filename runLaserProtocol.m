@@ -62,6 +62,7 @@ function startEpoch(exp, epochN)
         finishEpochTimer = timer('ExecutionMode','singleShot',...
             'StartDelay',lengthToRun,...
             'TimerFcn',{@finishEpoch, exp, epochN});  
+
         start(finishEpochTimer);
 
         
@@ -76,11 +77,14 @@ function finishEpoch(obj, event, exp, epochN)
 		% If there's another epoch to do, do it
 		% Temember there are n+1 entries for nEpochs
         if (epochN + 1 <= exp.nEpochs)
+
 			% Log data outof the temporary buffer, clear it.
 		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
 			trackingParams.tempData = [];
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
+			disp(size(exp.epoch(epochN).serialRecord));
 			trackingParams.serialRecord = [];
+
             % Do another epoch
             startEpoch(exp, epochN + 1);
         else % Finish up     
@@ -106,11 +110,15 @@ function finishEpoch(obj, event, exp, epochN)
 			% Pause to allow serial buffers to empty
 			pause(.5);
 			trackingParams.recordingSerial = false;
+			pause(.1);
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
+			disp(size(exp.epoch(epochN).serialRecord));
 			trackingParams.serialRecord = [];  
+			disp(size(exp.epoch(epochN).serialRecord));
 
 			% Synchronize clocks and concatenate data epochs.
 			exp = catSyncTracks(exp);
+
 
 		    % Save data
 		    filename = ['RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
@@ -118,6 +126,7 @@ function finishEpoch(obj, event, exp, epochN)
 			saveExperimentData(expName,filename, 'exp');
 		    disp(['Saved: ',filename]);
 		end
+
 
 %%
 
