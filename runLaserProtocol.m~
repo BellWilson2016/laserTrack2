@@ -112,14 +112,12 @@ function finishEpoch(obj, event, exp, epochN)
 			trackingParams.recordingSerial = false;
 			pause(.1);
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
-			disp('a1');
-			disp(size(exp.epoch(epochN).serialRecord));
 			trackingParams.serialRecord = [];  
-			disp('a2');
 			disp(size(exp.epoch(epochN).serialRecord));
 
 			% Synchronize clocks and concatenate data epochs.
-			exp = catSyncTracks(exp);
+			oldExp = exp;
+			exp = catSyncTracks(oldExp);
 
 
 		    % Save data
