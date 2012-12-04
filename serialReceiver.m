@@ -6,7 +6,7 @@ function serialReceiver(obj,event)
     
     bytesHere = obj.BytesAvailable;
     blocksHere = floor(bytesHere/5);
-	disp(blocksHere);
+	blocksHere
     if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
 		
        	x = fread(obj,blocksHere*5);
