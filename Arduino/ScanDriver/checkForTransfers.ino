@@ -25,9 +25,7 @@ void checkForTransfers() {
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }
           
       } else if (timeNow - lastTemp > thermDelay) {
-        DACPINON;
          doThermometer();
-        DACPINOFF;
       } else if (retDataIdxGap > 6) {
          
               

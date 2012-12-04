@@ -5,10 +5,10 @@ function serialReceiver(obj,event)
     displayTemp = false;
     
     bytesHere = obj.BytesAvailable;
-    blocksHere = floor(bytesHere/5);
-	if ~(blocksHere == 6)
-		disp(blocksHere)
+	if (bytesHere >= obj.InputBufferSize)
+		disp(['INPUT BUFFER FULL-----------------------------------------']);
 	end
+    blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
 		
        	x = fread(obj,blocksHere*5);
