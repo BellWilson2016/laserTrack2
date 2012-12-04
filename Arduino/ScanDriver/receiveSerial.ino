@@ -68,7 +68,6 @@ void receiveSerial() {
     }
     queueSerialReturn(0x22, prevTimePoint);
   } else {
-    DACPINON;
       // Otherwise, there's been a mistake.
       byte1 = 0;
       // Throw away bytes until we find a possible POSPOWERSIZE frame
@@ -78,7 +77,6 @@ void receiveSerial() {
       }
       // Throw an error back
       queueSerialReturn(0xfd, (unsigned long) byte1);
-    DACPINOFF;    
   }
   
   SERIALPINOFF;

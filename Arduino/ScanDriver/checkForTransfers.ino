@@ -25,14 +25,16 @@ void checkForTransfers() {
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }
           
       } else if (timeNow - lastTemp > thermDelay) {
+        DACPINON;
          doThermometer();
+        DACPINOFF;
       } else if (retDataIdxGap > 6) {
          
               
               for (n=0; n < 6; n++) {
               // queueSerialReturn(0x23, prevTimePoint);
               // Don't send too many bytes
-              DACPINON;
+              // DACPINON;
                 dataLoc = retDataIdxH - retDataIdxGap;
                 aTime = returnTimes[dataLoc];
                 Serial.write(returnData[dataLoc]);
@@ -41,7 +43,7 @@ void checkForTransfers() {
                 Serial.write((aTime >> 8)&0xFF);
                 Serial.write((aTime >> 0)&0xFF);
                 retDataIdxGap--;
-              DACPINOFF;
+              // DACPINOFF;
               }    
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
