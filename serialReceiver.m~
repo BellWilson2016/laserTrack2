@@ -5,7 +5,7 @@ function serialReceiver(obj,event)
     displayTemp = false;
     
     bytesHere = obj.BytesAvailable;
-	if (bytesHere >= obj.BytesAvailable)
+	if (bytesHere >= obj.InputBufferSize)
 		disp(['INPUT BUFFER FULL-----------------------------------------']);
 	end
     blocksHere = floor(bytesHere/5);
