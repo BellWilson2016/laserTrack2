@@ -51,8 +51,8 @@ function exp = catSyncTracks(exp)
         ts4 = timeseries(  headY, videoTime, 'Name', 'headY');
         ts5 = timeseries(videoID, videoTime, 'Name', 'videoID');
 
-        % Remove themometer ID codes because they don't carry time info
-        ix = find(rawSerialID < hex2dec('fe'));
+        % Remove themometer ID codes and errors because they don't carry time info
+        ix = find(rawSerialID < hex2dec('fd'));
         serialID   = rawSerialID(ix);
         wrappedSerialTimeCode = rawSerialTimeCode(ix);
 		serialTimeCode = wrappedSerialTimeCode;

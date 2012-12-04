@@ -32,9 +32,7 @@ function exp = catSyncTracks(exp)
 
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
-		disp(epochN);
         serialRecord = exp.epoch(epochN).serialRecord;
-		size(serialRecord)
         bodyX     = squeeze(rawTrack(:,1,:));
         bodyY     = squeeze(rawTrack(:,2,:));
         headX     = squeeze(rawTrack(:,3,:));
@@ -53,8 +51,8 @@ function exp = catSyncTracks(exp)
         ts4 = timeseries(  headY, videoTime, 'Name', 'headY');
         ts5 = timeseries(videoID, videoTime, 'Name', 'videoID');
 
-        % Remove themometer ID codes because they don't carry time info
-        ix = find(rawSerialID < hex2dec('fe'));
+        % Remove themometer ID codes and errors because they don't carry time info
+        ix = find(rawSerialID < hex2dec('fd'));
         serialID   = rawSerialID(ix);
         wrappedSerialTimeCode = rawSerialTimeCode(ix);
 		serialTimeCode = wrappedSerialTimeCode;
