@@ -82,7 +82,6 @@ function finishEpoch(obj, event, exp, epochN)
 		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
 			trackingParams.tempData = [];
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
-			disp(size(exp.epoch(epochN).serialRecord));
 			trackingParams.serialRecord = [];
 
             % Do another epoch
@@ -97,8 +96,7 @@ function finishEpoch(obj, event, exp, epochN)
 			% Wait to unload the serial buffer...
             
 			% Get the last frame of the protocol
-		    epochN = epochN + 1;
-		    protocolFrame = exp.protocolDesign{epochN};
+		    protocolFrame = exp.protocolDesign{epochN+1};
 		    % Execute all the commands in the list
 		    nCommands = (size(protocolFrame,2)-1)/2;
 		    for n = 1:nCommands
@@ -110,16 +108,11 @@ function finishEpoch(obj, event, exp, epochN)
 			% Pause to allow serial buffers to empty
 			pause(.5);
 			trackingParams.recordingSerial = false;
-			pause(.1);
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
 			trackingParams.serialRecord = [];  
-			disp(size(exp.epoch(epochN).serialRecord));
 
 			% Synchronize clocks and concatenate data epochs.
-			oldExp = exp;
-			exp = catSyncTracks(oldExp);
-			disp('back');
-			disp(size(exp.epoch(epochN).serialRecord));
+			exp = catSyncTracks(exp);
 
 
 		    % Save data

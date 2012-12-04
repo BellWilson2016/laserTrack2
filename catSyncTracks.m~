@@ -17,6 +17,8 @@
 %%
 function exp = catSyncTracks(oldExp)
 
+	exp = oldExp;
+
     wholeRawTrack.bodyX = [];
     wholeRawTrack.bodyY = [];
     wholeRawTrack.headX = [];
