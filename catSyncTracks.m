@@ -32,9 +32,7 @@ function exp = catSyncTracks(exp)
 
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
-		disp(epochN);
         serialRecord = exp.epoch(epochN).serialRecord;
-		size(serialRecord)
         bodyX     = squeeze(rawTrack(:,1,:));
         bodyY     = squeeze(rawTrack(:,2,:));
         headX     = squeeze(rawTrack(:,3,:));

@@ -15,9 +15,8 @@
 %
 % JSB 12/2012
 %%
-function exp = catSyncTracks(oldExp)
+function exp = catSyncTracks(exp)
 
-	exp = oldExp;
 
     wholeRawTrack.bodyX = [];
     wholeRawTrack.bodyY = [];
@@ -27,14 +26,6 @@ function exp = catSyncTracks(oldExp)
     wholeRawTrack.rawVideoTime = [];
     wholeRawTrack.serialID = [];
     wholeRawTrack.serialTimeCode = [];
-
-	for epochN = 1:exp.nEpochs
-		disp('pre');
-		disp(epochN);
-		disp(size(exp.epoch(epochN).serialRecord));
-	end
-
-	return;
 
     % For each epoch extract and normalize data
     for epochN = 1:exp.nEpochs
