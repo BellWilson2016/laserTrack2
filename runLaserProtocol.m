@@ -71,18 +71,26 @@ function finishEpoch(obj, event, exp, epochN)
         
     	global trackingParams;    
  
-		% Log data outof the temporary buffer, clear it.
-        exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
-		trackingParams.tempData = [];
-		exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
-		trackingParams.serialRecord = [];
+
         
 		% If there's another epoch to do, do it
 		% Temember there are n+1 entries for nEpochs
         if (epochN + 1 <= exp.nEpochs)
+			% Log data outof the temporary buffer, clear it.
+		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
+			trackingParams.tempData = [];
+			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
+			trackingParams.serialRecord = [];
             % Do another epoch
             startEpoch(exp, epochN + 1);
-        else % Finish up       
+        else % Finish up     
+
+			% Stop updating the data buffers
+			% Log data outof the temporary buffer, clear it.
+			trackingParams.recording = false;
+		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
+			trackingParams.tempData = [];
+			% Wait to unload the serial buffer...
             
 			% Get the last frame of the protocol
 		    epochN = epochN + 1;
@@ -95,11 +103,11 @@ function finishEpoch(obj, event, exp, epochN)
 		    	feval(cmd,args);
 		    end
 
-			% Stop updating the data buffers
-			trackingParams.recording = false;
+			% Pause to allow serial buffers to empty
+			pause(.5);
 			trackingParams.recordingSerial = false;
-			trackingParams.tempData = [];
-			trackingParams.serialRecord = [];
+			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
+			trackingParams.serialRecord = [];  
 
 			% Synchronize clocks and concatenate data epochs.
 			exp = catSyncTracks(exp);

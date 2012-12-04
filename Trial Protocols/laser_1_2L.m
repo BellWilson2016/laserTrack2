@@ -1,7 +1,7 @@
-function exp = laser_1_1L(laserDistribution, laserParams)
+function exp = laser_1_2L(laserDistribution, laserParams)
 
     
-    exp.protocolName      = 'laser_1_1L';
+    exp.protocolName      = 'laser_1_2L';
     exp.laserDistribution = laserDistribution;
     exp.laserDistributionName = func2str(laserDistribution);
     exp.laserParams      = laserParams;
@@ -18,7 +18,7 @@ function exp = laser_1_1L(laserDistribution, laserParams)
         % Time (min), Odor left, odor right, laser left, laser right
 [   0, setLaserOff];...
 [   1, setLaserL];...
-[   2, setLaserOff];...
+[   3, setLaserOff];...
 
 
 };
