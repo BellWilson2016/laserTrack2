@@ -17,10 +17,10 @@ global USBscanController;
     
 
     set(USBscanController,'BytesAvailableFcn',@serialReceiver);
-    set(USBscanController,'BytesAvailableFcnCount',5*60);
+    set(USBscanController,'BytesAvailableFcnCount',5*6);
     set(USBscanController,'BytesAvailableFcnMode','byte');
 
-	set(USBscanController,'InputBufferSize',5*60*10);
+	set(USBscanController,'InputBufferSize',5*6*10);
     % set(USBscanController,'Terminator',10);
     % set(USBscanController,'Timeout',.2);
         

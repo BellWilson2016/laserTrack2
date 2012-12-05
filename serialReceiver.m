@@ -1,5 +1,8 @@
 function serialReceiver(obj,event)
 
+
+	tic();
+
     global trackingParams;
 
     displayTemp = false;
@@ -23,37 +26,33 @@ function serialReceiver(obj,event)
                     trackingParams.serialRecord(end+1,:) = [code,time];
                 end
             end
-			if code == hex2dec('fd')
-				bytesLost = (bitshift(x((n-1)*5+2),24) + ...
-                    bitshift(x((n-1)*5+3),16) + ...
-                    bitshift(x((n-1)*5+4),8) + ...
-                    bitshift(x((n-1)*5+5),0));
-				disp(['Alarm code: ',dec2hex(bytesLost),' in serial transmission']);
-	        elseif code == hex2dec('ff')
-                trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
-                    bitshift(x((n-1)*5+3),16) + ...
-                    bitshift(x((n-1)*5+4),8) + ...
-                    bitshift(x((n-1)*5+5),0))/2;
-                if displayTemp
-                    disp([num2str(trackingParams.mirrorTemp,'%2.1f'),' C']);
-                end
-            elseif code == hex2dec('fe')
-                trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
-                    bitshift(x((n-1)*5+3),16) + ...
-                    bitshift(x((n-1)*5+4),8) + ...
-                    bitshift(x((n-1)*5+5),0))/2;
-                alertString = ['Mirrors locked at t= ',num2str(trackingParams.mirrorTemp,'%2.1f'),...
-                     ' C    ',datestr(now)];
-                % Only send the alert on the first occurence
-                if (~trackingParams.tempFault)
-                    trackingParams.scanMirrors = false;
-                    trackingParams.tempFault = true;
-                    notifyOfFault(alertString);
-                    pushNow = true;
-                    updateWebStatus(alertString, pushNow);
-                end
+			switch (code)
+				case 253 % hex2dec('fd')
+					disp(['Serial alarm code: ',dec2hex(time)]);
+				case 254 % hex2dec('fe')
+		            trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
+		                bitshift(x((n-1)*5+3),16) + ...
+		                bitshift(x((n-1)*5+4),8) + ...
+		                bitshift(x((n-1)*5+5),0))/2;
+                	alertString = ['Mirrors locked at t= ',num2str(trackingParams.mirrorTemp,'%2.1f'),...
+                     	' C    ',datestr(now)];
+		            % Only send the alert on the first occurence
+		            if (~trackingParams.tempFault)
+		                trackingParams.scanMirrors = false;
+		                trackingParams.tempFault = true;
+		                notifyOfFault(alertString);
+		                pushNow = true;
+		                updateWebStatus(alertString, pushNow);
+		            end
+				case 255 % hex2dec('ff')
+		            trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
+		                bitshift(x((n-1)*5+3),16) + ...
+		                bitshift(x((n-1)*5+4),8) + ...
+		                bitshift(x((n-1)*5+5),0))/2;
+
             end
         end
     end
 
+toc
 
