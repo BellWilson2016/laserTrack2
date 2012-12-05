@@ -17,7 +17,7 @@ function doLater(obj,event,cmdToRun,eventN)
 	
 	global allScheduledEvents;
 
-	totalEvents = size(allScheduledEvents,2);
+	totalEvents = allScheduledEvents(end);
 
 	disp(['scheduleEvent() is running event #',num2str(eventN),' of ',num2str(totalEvents)]);
 	eval(cmdToRun);
