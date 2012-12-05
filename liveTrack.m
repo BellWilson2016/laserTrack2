@@ -118,7 +118,7 @@ function liveTrack(obj, event)
                     trackingParams.headXpix(regionN) = -trackingParams.headXpix(regionN);
                     trackingParams.headYpix(regionN) = -trackingParams.headYpix(regionN);
                     disp(['Flipped fly head #',num2str(regionN)]);
-                    updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
+                    % updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
 
 %		   		laserFcn = trackingParams.laseredZoneFcn{1};

@@ -21,9 +21,9 @@ function liveTrack(obj, event)
     allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
     if size(allFrames,1) > 0
-		if (size(allFrames,4) > 1)
-			disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
-		end
+%		if (size(allFrames,4) > 1)
+%			disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+%		end
         frame = allFrames(:,:,:,end);
     else
         return;
@@ -118,7 +118,7 @@ function liveTrack(obj, event)
                     trackingParams.headXpix(regionN) = -trackingParams.headXpix(regionN);
                     trackingParams.headYpix(regionN) = -trackingParams.headYpix(regionN);
                     disp(['Flipped fly head #',num2str(regionN)]);
-                    updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
+                    % updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
 
 %		   		laserFcn = trackingParams.laseredZoneFcn{1};
