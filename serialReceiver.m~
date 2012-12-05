@@ -55,9 +55,9 @@ function serialReceiver(obj,event)
 		                bitshift(x((n-1)*5+4),8) + ...
 		                bitshift(x((n-1)*5+5),0))/2;
 
-            end
+             end
         end
     end
 
-toc
+% toc
 

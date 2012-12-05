@@ -10,6 +10,15 @@ void receiveSerial() {
   byte byte3;
   byte transmissionID;
   
+  // if (Serial.available() > 70) {
+  if (UCSR0A & (1<<DOR0)) {
+    DACPINON;
+    SERIALPINOFF;
+    while (true) {
+        NOP;
+    }
+  }
+  
   SERIALPINON;
   
   transmissionSize = Serial.read();
@@ -67,8 +76,13 @@ void receiveSerial() {
       mode = 0;
     }
     queueSerialReturn(0x22, prevTimePoint);
+    
   } else {
 
+      DACPINON;
+      while (true) {
+        NOP;
+      }
       // Otherwise, there's been a mistake.
       byte1 = 0;
       // Throw away bytes until we find a possible POSPOWERSIZE frame to try to recover
@@ -81,6 +95,7 @@ void receiveSerial() {
   }
   
   SERIALPINOFF;
+  
 }
 
 

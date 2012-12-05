@@ -45,6 +45,7 @@ function serialReceiver(obj,event)
 		            if (~trackingParams.tempFault)
 		                trackingParams.scanMirrors = false;
 		                trackingParams.tempFault = true;
+						disp(alertString);
 		                notifyOfFault(alertString);
 		                pushNow = true;
 		                updateWebStatus(alertString, pushNow);
@@ -55,7 +56,7 @@ function serialReceiver(obj,event)
 		                bitshift(x((n-1)*5+4),8) + ...
 		                bitshift(x((n-1)*5+5),0))/2;
 
-            end
+             end
         end
     end
 

@@ -23,7 +23,7 @@
 // Issues:
 // 
 // Remember to set I2C speed to 400kHz in the environment
-// Remember to set Serial buffer to 128 bytes in the environment
+// Remember to set Serial buffer to 256 bytes in the environment
 // Serial interrupt problems with dense serial returns
 // Account for latency before mirror movement starts
 
@@ -212,7 +212,7 @@ void loop() {
         // Turn on the laser
         LASERPINON;
         // For long pulses, go back through the counter
-        if (laserDuration > (40 << 4)) {
+        if (laserDuration > (80 << 4)) {
             SREG = sreg;
             phase = 2;
             prevTimePoint += nextTimeGap;
