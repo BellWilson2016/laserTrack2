@@ -24,11 +24,7 @@
 // 
 // Remember to set I2C speed to 400kHz in the environment
 // Remember to set Serial buffer to 128 bytes in the environment
-// Data return on serial port?
-//      This is returning an ASCII stream with the time every serial receive.
-//      Latency works fine.  Add a random byte in transmissions to correlate them?
-//      Serial port breaks timing.  Not sure why.
-// Add laser blanking after 4 seconds without serial update?
+// Serial interrupt problems with dense serial returns
 // Account for latency before mirror movement starts
 
 
