@@ -1,6 +1,6 @@
-function showLatency(fileString)
+function showLatency(files)
 
-	load(fileString);
+	loadData(files);
 
 	figure();
 	for epochN = 1:exp.nEpochs
