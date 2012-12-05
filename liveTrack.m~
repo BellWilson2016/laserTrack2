@@ -21,6 +21,9 @@ function liveTrack(obj, event)
     allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
     if size(allFrames,1) > 0
+		if (size(allFrames,4) > 1)
+			disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+		end
         frame = allFrames(:,:,:,end);
     else
         return;
@@ -158,7 +161,7 @@ function liveTrack(obj, event)
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
 
-	% If the positions are output, we can do other things
+	% If the positions are output, we can do other things, so unlock the lock
 	trackingParams.busyLock = false;
 
 

@@ -53,7 +53,7 @@ function vid = setupTrackingCamera()
 		%	884				50
 		%	976				55
 		%	1060			60
-        set(vid.Source, 'BytesPerPacket',524); 
+        set(vid.Source, 'BytesPerPacket',704); 
         set(trackingParams.previewFigure, 'Name', 'Live video...', ...
             'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');

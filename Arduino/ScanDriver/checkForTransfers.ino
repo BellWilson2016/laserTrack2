@@ -36,16 +36,36 @@ void checkForTransfers() {
           for (n=0; n < 6; n++) {
             // queueSerialReturn(0x23, prevTimePoint);
             // Don't send too many bytes
-            NOP;    // Bracket with NOP to allow some time for other interrupts to run.
+
               dataLoc = retDataIdxH - retDataIdxGap;
               aTime = returnTimes[dataLoc];
               Serial.write(returnData[dataLoc]);
-              Serial.write((aTime >> 24)&0xFF);
-              Serial.write((aTime >> 16)&0xFF);
-              Serial.write((aTime >> 8)&0xFF);
-              Serial.write((aTime >> 0)&0xFF);
-              retDataIdxGap--;
+                          NOP;    // Bracket with NOP to allow some time for other interrupts to run.
             NOP;
+            NOP;
+            NOP;
+              Serial.write((aTime >> 24)&0xFF);
+                          NOP;    // Bracket with NOP to allow some time for other interrupts to run.
+            NOP;
+            NOP;
+            NOP;
+              Serial.write((aTime >> 16)&0xFF);
+                          NOP;    // Bracket with NOP to allow some time for other interrupts to run.
+            NOP;
+            NOP;
+            NOP;
+              Serial.write((aTime >> 8)&0xFF);
+                          NOP;    // Bracket with NOP to allow some time for other interrupts to run.
+            NOP;
+            NOP;
+            NOP;
+              Serial.write((aTime >> 0)&0xFF);
+                          NOP;    // Bracket with NOP to allow some time for other interrupts to run.
+            NOP;
+            NOP;
+            NOP;
+              retDataIdxGap--;
+            
           }    
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();

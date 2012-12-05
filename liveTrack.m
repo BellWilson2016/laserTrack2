@@ -21,6 +21,9 @@ function liveTrack(obj, event)
     allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
     if size(allFrames,1) > 0
+%		if (size(allFrames,4) > 1)
+%			disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+%		end
         frame = allFrames(:,:,:,end);
     else
         return;
