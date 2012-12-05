@@ -8,6 +8,7 @@ function serialReceiver(obj,event)
 	if (bytesHere >= obj.InputBufferSize)
 		disp(['SERIAL INPUT BUFFER FULL']);
 	end
+
     blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
 		
@@ -28,7 +29,7 @@ function serialReceiver(obj,event)
                     bitshift(x((n-1)*5+3),16) + ...
                     bitshift(x((n-1)*5+4),8) + ...
                     bitshift(x((n-1)*5+5),0));
-				disp(['Lost code: ',dec2hex(bytesLost),' in serial transmission']);
+				disp(['Alarm code: ',dec2hex(bytesLost),' in serial transmission']);
 	        elseif code == hex2dec('ff')
                 trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
                     bitshift(x((n-1)*5+3),16) + ...

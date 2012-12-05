@@ -6,8 +6,9 @@ function serialReceiver(obj,event)
     
     bytesHere = obj.BytesAvailable;
 	if (bytesHere >= obj.InputBufferSize)
-		disp(['INPUT BUFFER FULL-----------------------------------------']);
+		disp(['SERIAL INPUT BUFFER FULL']);
 	end
+
     blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
 		

@@ -28,6 +28,10 @@ void checkForTransfers() {
          doThermometer();
       } else if (retDataIdxGap > 6) {
          
+          // If the dataGap is big, report it
+          if (retDataIdxGap > 64) {
+            queueSerialReturn(0xfd, (unsigned long) retDataIdxGap);
+          }
               
               for (n=0; n < 6; n++) {
               // queueSerialReturn(0x23, prevTimePoint);

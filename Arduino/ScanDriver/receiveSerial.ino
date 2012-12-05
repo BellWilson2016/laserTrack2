@@ -77,7 +77,7 @@ void receiveSerial() {
         byte2 = Serial.read();
       }
       // Throw an error back
-      queueSerialReturn(0xfd, (unsigned long) byte1);
+      //queueSerialReturn(0xfd, (unsigned long) byte1);
   }
   
   SERIALPINOFF;
