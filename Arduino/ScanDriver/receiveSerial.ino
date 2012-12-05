@@ -10,15 +10,7 @@ void receiveSerial() {
   byte byte3;
   byte transmissionID;
   
-  // if (Serial.available() > 70) {
-  if (UCSR0A & (1<<DOR0)) {
-    DACPINON;
-    SERIALPINOFF;
-    while (true) {
-        NOP;
-    }
-  }
-  
+ 
   SERIALPINON;
   
   transmissionSize = Serial.read();
