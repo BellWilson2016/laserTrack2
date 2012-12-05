@@ -120,7 +120,7 @@ function finishEpoch(obj, event, exp, epochN)
 		    expName  = exp.expName;
 			% Use evalc to suppress commandline output
 			T = evalc('saveExperimentData(expName,filename, ''exp'')');
-		    disp(['Saved: ',filename]);
+			listRecent(0);
 		end
 
 

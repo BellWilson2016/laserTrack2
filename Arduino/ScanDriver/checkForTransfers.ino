@@ -36,7 +36,7 @@ void checkForTransfers() {
           for (n=0; n < 6; n++) {
             // queueSerialReturn(0x23, prevTimePoint);
             // Don't send too many bytes
-            DACPINON;
+            SERIALPINON;
               dataLoc = retDataIdxH - retDataIdxGap;
               aTime = returnTimes[dataLoc];
               Serial.write(returnData[dataLoc]);
@@ -45,7 +45,7 @@ void checkForTransfers() {
               Serial.write((aTime >> 8)&0xFF);
               Serial.write((aTime >> 0)&0xFF);
               retDataIdxGap--;
-            DACPINOFF;
+            SERIALPINOFF;
           }    
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();

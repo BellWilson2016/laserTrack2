@@ -24,6 +24,7 @@
 // 
 // Remember to set I2C speed to 400kHz in the environment
 // Remember to set Serial buffer to 256 bytes in the environment
+//   Edited HardwareSerial.cpp to flag buffer overruns
 // Serial interrupt problems with dense serial returns
 // Account for latency before mirror movement starts
 
