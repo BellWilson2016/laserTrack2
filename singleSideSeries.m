@@ -15,9 +15,9 @@ function singleSideSeries()
 			powerL = onePass(1,order(seqN));
 			powerR = onePass(2,order(seqN));
 			cmd = ['runLaserProtocol(@laser_1_2L,@laserFlatHalves,[',...
-					num2str(powerL),',',num2str(powerR),'];'];
+					num2str(powerL),',',num2str(powerR),']);'];
 			scheduleEvent(15 + (3.5*60)*nSched, cmd);  
-			nSched = nSched + 1
+			nSched = nSched + 1;
 		end
 	end
 
