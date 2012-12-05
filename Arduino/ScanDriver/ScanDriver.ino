@@ -212,7 +212,7 @@ void loop() {
         // Turn on the laser
         LASERPINON;
         // For long pulses, go back through the counter
-        if (laserDuration > (80 << 4)) {
+        if (laserDuration > (40 << 4)) {
             SREG = sreg;
             phase = 2;
             prevTimePoint += nextTimeGap;
