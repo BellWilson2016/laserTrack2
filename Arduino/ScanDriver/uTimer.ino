@@ -16,7 +16,7 @@ unsigned long uTimer() {
     }    
     output = ((overflows << 16) + ((unsigned long) currentTime));
     if (rollFlag) {
-      output += 13; // 13 is right!
+      output += 13; // 13 is right! Add a negative delay to compensate for extra time taken if overflow
     }
   return output;
   

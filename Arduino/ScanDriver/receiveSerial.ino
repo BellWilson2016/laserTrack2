@@ -70,7 +70,8 @@ void receiveSerial() {
     queueSerialReturn(0x22, prevTimePoint);
     
   } else {
-
+  
+      // All serial frame errors should be caught by hardware buffer overwrite now.
       DACPINON;
       while (true) {
         NOP;
