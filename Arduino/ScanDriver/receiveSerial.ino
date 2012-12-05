@@ -68,16 +68,16 @@ void receiveSerial() {
     }
     queueSerialReturn(0x22, prevTimePoint);
   } else {
-      DACPINON;
+
       // Otherwise, there's been a mistake.
       byte1 = 0;
-      // Throw away bytes until we find a possible POSPOWERSIZE frame
+      // Throw away bytes until we find a possible POSPOWERSIZE frame to try to recover
       while ((Serial.peek() != POSPOWERSIZE) && (Serial.available() > 0) && (byte1 < 40)) {
         byte1++;
         byte2 = Serial.read();
       }
       // Throw an error back
-      //queueSerialReturn(0xfd, (unsigned long) byte1);
+      queueSerialReturn(0xfd, ((unsigned long) byte1) << 8);
   }
   
   SERIALPINOFF;

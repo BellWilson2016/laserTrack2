@@ -8,10 +8,9 @@ function serialReceiver(obj,event)
 	if (bytesHere >= obj.InputBufferSize)
 		disp(['SERIAL INPUT BUFFER FULL']);
 	end
-
     blocksHere = floor(bytesHere/5);
-    if ( (blocksHere > 0) && strcmp(obj.TransferStatus,'idle') )
-		
+    if ( (blocksHere > 0) )
+		% disp(['Reading ',num2str(blocksHere)]);
        	x = fread(obj,blocksHere*5);
         for n = 1:blocksHere
             code = x((n-1)*5+1);

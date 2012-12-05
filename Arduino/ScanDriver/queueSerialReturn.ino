@@ -9,6 +9,7 @@
     23: Serial returned data
     24 + 0-3f (24-73): Serial received scan data + ID code
     
+    fd: Serial alarm codes
     fe: Overtemperature alarm
     ff: Temp sample
 */
