@@ -48,6 +48,7 @@ function trackingParams = initTrackingParams()
 		trackingParams.stdX(region) = 1;	   % Standard deviation for each fly
 		trackingParams.stdY(region) = 1;
 		trackingParams.nPixels(region) = 0;
+		trackingParams.power = 0;
 		trackingParams.lastLine(region)    = line([0 0],[1 1]);
 	end
 

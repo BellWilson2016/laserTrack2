@@ -13,6 +13,9 @@ function liveTrack(obj, event)
     global vid;
     global trackingParams;
     global tempData;
+
+	% Set a lock to prevent processing of serial data if we're currently working on a frame
+	trackingParams.busyLock = true;
     
     % Get the most recent frame if multiple are available
     allFrames = getdata(obj,obj.FramesAvailable);
@@ -154,6 +157,9 @@ function liveTrack(obj, event)
             % Output to the scanController
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
+
+	% If the positions are output, we can do other things, so unlock the lock
+	trackingParams.busyLock = false;
 
 
     % Save the data, scale to lane origin and calibration size

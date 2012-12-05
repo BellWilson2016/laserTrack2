@@ -15,6 +15,7 @@ function trackingParams = initTrackingParams()
     trackingParams.height = 640;
 
      % Info for the tracking routine
+	trackingParams.busyLock = false;
     trackingParams.updateAvg = false;
     trackingParams.runningAvg = zeros(trackingParams.width,trackingParams.height); 
 	trackingParams.imageTau = 5;    % Image averaging time-constant (secs)
