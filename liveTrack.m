@@ -115,12 +115,12 @@ function liveTrack(obj, event)
                     updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end
 
-		   		laserFcn = trackingParams.laseredZoneFcn{1};
-		   		laserArgs = trackingParams.laseredZoneFcn{2};
-				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN) + ...
-														 trackingParams.headX(regionN),...
-														 trackingParams.bodyY(regionN) + ...
-													     trackingParams.headY(regionN),laserArgs);			
+%		   		laserFcn = trackingParams.laseredZoneFcn{1};
+%		   		laserArgs = trackingParams.laseredZoneFcn{2};
+%				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN) + ...
+%														 trackingParams.headX(regionN),...
+%														 trackingParams.bodyY(regionN) + ...
+%													     trackingParams.headY(regionN),laserArgs);			
 
 			else % If we're not tracking head...
 				trackingParams.xTarget(regionN)  =  bodyXpix(regionN) + reg(regionN,1) - 1;
@@ -130,9 +130,9 @@ function liveTrack(obj, event)
 				trackingParams.headX(regionN) =  0;
 				trackingParams.headY(regionN) =  0;
 
-		   		laserFcn = trackingParams.laseredZoneFcn{1};
-		   		laserArgs = trackingParams.laseredZoneFcn{2};
-				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN),trackingParams.bodyY(regionN),laserArgs);			
+%		   		laserFcn = trackingParams.laseredZoneFcn{1};
+%		   		laserArgs = trackingParams.laseredZoneFcn{2};
+%				trackingParams.power(regionN) = laserFcn(trackingParams.bodyX(regionN),trackingParams.bodyY(regionN),laserArgs);			
             end
             
 			% Optionally get the std for X and Y
@@ -147,6 +147,10 @@ function liveTrack(obj, event)
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
+			% Get the powers
+		   	laserFcn = trackingParams.laseredZoneFcn{1};
+		   	laserArgs = trackingParams.laseredZoneFcn{2};
+			trackingParams.power = laserFcn(laserArgs);
             % Output to the scanController
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
