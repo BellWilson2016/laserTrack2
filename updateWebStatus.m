@@ -59,7 +59,7 @@ if pushNow
     
     [status,result] = system(cmd);
     if status == 0
-        disp('Updated Web Status');
+        disp('Pushed Web Update');
     else
         disp('Command line error: ');
         disp(result);

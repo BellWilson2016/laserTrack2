@@ -19,6 +19,8 @@ function doLater(obj,event,cmdToRun,eventN)
 
 	totalEvents = size(allScheduledEvents,2);
 
+	pushNow = false;
+	updateWebStatus(cmdToRun, pushNow)
 	disp(['scheduleEvent() #',num2str(eventN),' of ',num2str(totalEvents),...
 					'  =>  ',cmdToRun]);
 	eval(cmdToRun);
