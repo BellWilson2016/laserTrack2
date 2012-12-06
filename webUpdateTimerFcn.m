@@ -27,7 +27,7 @@ function webUpdateTimerFcn(obj, event)
 		
 		% For command line aesthetics
 		if webPush
-		    fprintf([mirrorString,tempString,faultString]);
+		    fprintf([mirrorString,tempString,faultString,'   ']);
 		else
 			disp([mirrorString,tempString,faultString]);
 		end

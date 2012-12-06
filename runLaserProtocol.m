@@ -1,6 +1,7 @@
 function runLaserProtocol(exp)
 
 	runString = ['Running protocol: ',func2str(exp.protocol)];
+	disp(runString);
 	pushNow = false;
 	updateWebStatus(runString,pushNow);
 
