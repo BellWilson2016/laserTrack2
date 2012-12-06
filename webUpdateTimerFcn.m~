@@ -24,7 +24,7 @@ function webUpdateTimerFcn(obj, event)
         else
             webPush = false; 
         end
-		disp(' ');
+		
         disp([mirrorString,tempString,faultString]);
         updateWebStatus([mirrorString,tempString,faultString],webPush);
         

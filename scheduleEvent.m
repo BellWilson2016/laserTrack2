@@ -20,6 +20,7 @@ function doLater(obj,event,cmdToRun,eventN)
 
 	totalEvents = size(allScheduledEvents,2);
 
+	disp(' ');
 	dispString = ['scheduleEvent() #',num2str(eventN),' of ',num2str(totalEvents),...
 					'  =>  ',func2str(cmdToRun{1}),'():\n'];
 	fprintf(dispString); disp(cmdToRun{2});

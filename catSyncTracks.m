@@ -17,6 +17,7 @@
 %%
 function exp = catSyncTracks(exp)
 
+	disp(' '); % For aesthetics
 
     wholeRawTrack.bodyX = [];
     wholeRawTrack.bodyY = [];
