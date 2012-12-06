@@ -148,7 +148,19 @@ void loop() {
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
   if ((timeNow - prevTimePoint + timerCapturePad) < nextTimeGap) {
-    SREG = sreg;
+                // Serial check13
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                  for (i=0; i < 13; i++) {
+                    DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  }
+                  SERIALPINOFF;
+                }
+               }
+    SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
     if (mode > 0) {
       availableBytes = Serial.available();
