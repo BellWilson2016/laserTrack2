@@ -30,7 +30,7 @@ function singleSideSeries()
 			exp.protocol	 = @laser_1_2L;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
-			scheduleEvent(15 + (3.5*60)*nSched, cmd);  
+			scheduleEvent(5 + (3.5*60)*nSched, cmd);  
 			nSched = nSched + 1;
 		end
 	end

@@ -1,7 +1,7 @@
 %%
 % Returns flat laser distributions on each half.
 %
-function returnPower = laserFlatHalves(X,Y,args)  
+function returnPower = laserFlatHalves(args)  
 
 	global trackingParams;
     

@@ -2,7 +2,9 @@ function scheduleEvent(timeDelay, cmdToRun);
 
 	global allScheduledEvents;
 
-	disp(['scheduleEvent() for ',num2str(timeDelay/60),' (min) =>  ',cmdToRun]);
+	dispString = ['scheduleEvent() for ',num2str(timeDelay/60),' (min) =>  ',...
+					func2str(cmdToRun{1}),'()\n'];
+	fprintf(dispString); % disp(cmdToRun{2});
 
 	nEvents = size(allScheduledEvents,2);
 	allScheduledEvents{end+1} = nEvents + 1;
@@ -18,8 +20,9 @@ function doLater(obj,event,cmdToRun,eventN)
 
 	totalEvents = size(allScheduledEvents,2);
 
-	disp(['scheduleEvent() #',num2str(eventN),' of ',num2str(totalEvents),...
-					'  =>  ',cmdToRun]);
+	dispString = ['scheduleEvent() #',num2str(eventN),' of ',num2str(totalEvents),...
+					'  =>  ',func2str(cmdToRun{1}),':\n'];
+	fprintf(dispString); disp(cmdToRun{2});
 	feval(cmdToRun{1},cmdToRun{2});
 
 
