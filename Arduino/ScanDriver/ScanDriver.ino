@@ -132,16 +132,18 @@ void loop() {
   cli();
   timeNow = uTimer();
   
-                // Serial check1
+                // Serial check2
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
+                  for (i=0; i < 2; i++) {
                     DACPINON;
                     DACPINOFF;
                     DACPINOFF;
+                  }
                   SERIALPINOFF;
                 }
-              }
+               }
   
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
@@ -157,20 +159,18 @@ void loop() {
     return;
   }
   
-  
-                  // Serial check2
+                // Serial check3
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 3; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
+                  }
                   SERIALPINOFF;
                 }
-              }
+               }
   
   
   // Calculate the gap until the next target time.  Then delay for the gap.
@@ -212,22 +212,18 @@ void loop() {
    
    
      
-               // Serial check3
+                // Serial check4
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 4; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
+                  }
                   SERIALPINOFF;
                 }
-              }
+               }
             
   // Do the code, remember to turn interrupts back on!        
   switch (phase) {
@@ -236,25 +232,18 @@ void loop() {
     case 0: 
       // Find the next zone and output it
       PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone
-                 // Serial check4
+                // Serial check5
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 5; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
+                  }
                   SERIALPINOFF;
                 }
-              }    
+               }
       SREG = sreg;
       laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD))/255;  
       prevTimePoint += nextTimeGap;
@@ -277,28 +266,18 @@ void loop() {
         LASERPINON;
         // For long pulses, go back through the counter
         if (laserDuration > (80 << 4)) {
-                 // Serial check5
+                 // Serial check6
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 6; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                    
+                  }
                   SERIALPINOFF;
                 }
-              }             
+               }
           
             SREG = sreg;
             phase = 2;
@@ -365,63 +344,34 @@ void loop() {
         // Short delay for alignment
         NOP; NOP; NOP; NOP;
         
-                 // Serial check6
+                        // Serial check7
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 7; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
+                  }
                   SERIALPINOFF;
                 }
-              }              
+               }
         
         // Turn off the laser
      LaserOff:   
         LASERPINOFF;
-                  // Serial check7
+               // Serial check8
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 8; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
+                  }
                   SERIALPINOFF;
                 }
-              }        
+               }
         SREG = sreg;
         prevTimePoint += nextTimeGap;
         nextTimeGap = (((unsigned long) scanTime) << 4) - nextTimeGap;  // The amount of time left in the laser phase
@@ -438,37 +388,18 @@ void loop() {
     // Phase 3 is an epoch without any lasing
     case 3:
         // Don't turn on the laser
-                   // Serial check8
+                                  // Serial check9
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 9; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
+                  }
                   SERIALPINOFF;
                 }
-              }          
+               }
         SREG = sreg;
         LASERPINOFF;
         phase = 0;

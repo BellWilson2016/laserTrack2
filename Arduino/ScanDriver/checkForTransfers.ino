@@ -24,81 +24,34 @@ void checkForTransfers() {
           nextDACIndex = nextDACIndex + 1; 
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }
           
-                             // Serial check9
+                                             // Serial check10
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 10; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                        DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
+                  }
                   SERIALPINOFF;
                 }
-              }     
+               }
           
       } else if (timeNow - lastTemp > thermDelay) {
          doThermometer();
          
-               // Serial check10
+                               // Serial check11
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 11; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                        DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                        DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                    
+                  }
                   SERIALPINOFF;
                 }
-              }          
+               }
          
       } else if (retDataIdxGap > 6) {
          
@@ -122,46 +75,18 @@ void checkForTransfers() {
             SERIALPINOFF;
           }    
           
-                         // Serial check11
+                                         // Serial check12
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
-                      DACPINON;
+                  for (i=0; i < 12; i++) {
+                    DACPINON;
                     DACPINOFF;
                     DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                      DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                       DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                         DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                           DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
-                            DACPINON;
-                    DACPINOFF;
-                    DACPINOFF; 
-                        DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                        DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;  
-                          DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;                   
+                  }
                   SERIALPINOFF;
                 }
-              }       
+               }
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
      }

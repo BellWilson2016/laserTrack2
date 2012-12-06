@@ -14,7 +14,7 @@ void receiveSerial() {
   if (UCSR0A & (1 << DOR0)) {
     while (true) {
       DACPINON;
-      for (i=0; i < (phase + 1); i++) {
+      for (i=0; i < (phase + 2); i++) {
           SERIALPINON;
           SERIALPINOFF;
           SERIALPINOFF;
