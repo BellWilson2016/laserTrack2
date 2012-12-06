@@ -223,13 +223,13 @@ void loop() {
         // But for short pulses, delay a bit, then jump right to the next phase     
         } else {
           
-//              // Manually read from serial port since interrupts are disabled
-//              if ((byte) UCSR0A & ((byte) 1 << RXC0)) {
-//                  Serial.takeBuffer();
-//                  laserDuration -= 0;  
-//              } else {
-//                  laserDuration -= 0;
-//              }     
+              // Manually read from serial port since interrupts are disabled
+              if ((byte) UCSR0A & ((byte) 1 << RXC0)) {
+                  Serial.takeBuffer();
+                  laserDuration -= 0;  
+              } else {
+                  laserDuration -= 0;
+              }     
               
               // Calculate a non-negative delay
               if (laserDuration > 80) {
