@@ -1,5 +1,9 @@
 function runLaserProtocol(exp)
 
+	runString = ['Running protocol: ',func2str(exp.protocol)];
+	pushNow = false;
+	updateWebStatus(runString,pushNow);
+
     global trackingParams;
 
 	% Unpack the protocol by running its handle
@@ -107,6 +111,11 @@ function finishEpoch(obj, event, exp, epochN)
 			% Use evalc to suppress commandline output
 			T = evalc('saveExperimentData(expName,filename, ''exp'')');
 			listRecent(0);
+
+			% Update website
+			runString = ['Finished protocol: ',func2str(exp.protocol)];
+			pushNow = false;
+			updateWebStatus(runString,pushNow);
 		end
 
 

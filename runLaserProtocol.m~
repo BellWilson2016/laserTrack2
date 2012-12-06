@@ -1,5 +1,9 @@
 function runLaserProtocol(exp)
 
+	runString = ['Running protocol: ',func2str(exp.protocol)];
+	pushNow = false;
+	updateWebStatus(runString,pushNow);
+
     global trackingParams;
 
 	% Unpack the protocol by running its handle
