@@ -164,10 +164,10 @@ function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime)
 		allTransSerialTimes = [allTransSerialTimes; sT];
 	end
 
-	% Fit a linear time model
+	% Fit a linear time model, remember that model.p1 coefficients refer to the normalized
+	% values
 	timeModel = fit(allTransSerialTimes,allVideoTimes,'poly1',...
-			'Robust','Bisquare','Normalize','on'...
-			);
+			'Robust','Bisquare','Normalize','on');
 	disp(['Fit clock model - M: ',num2str(timeModel(1)-timeModel(0),8),...
 		' B: ',num2str(timeModel(0),8)]);
 

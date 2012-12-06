@@ -403,7 +403,7 @@ void loop() {
                // Serial check9
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
-                  SERIALPINON;
+                  SERIALPINON; 
                   for (i=0; i < 9; i++) {
                     DACPINON;
                     DACPINOFF;
