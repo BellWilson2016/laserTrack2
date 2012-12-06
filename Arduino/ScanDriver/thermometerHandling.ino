@@ -175,3 +175,4 @@ byte inNibble(byte half) {
   
   return(retByte);  
 }
+
