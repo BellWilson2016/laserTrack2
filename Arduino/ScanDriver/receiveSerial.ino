@@ -10,11 +10,12 @@ void receiveSerial() {
   byte byte3;
   byte transmissionID;
   
-  // Serial check1
+  // Serial check14
   if (UCSR0A & (1 << DOR0)) {
     while (true) {
+      cli();
       DACPINON;
-      for (i=0; i < (phase + 2); i++) {
+      for (i=0; i < (phase + 14); i++) {
           SERIALPINON;
           SERIALPINOFF;
           SERIALPINOFF;
@@ -24,7 +25,6 @@ void receiveSerial() {
   }
   
   
-  SYNC1PINON;
   SERIALPINON;
   
   transmissionSize = Serial.read();
@@ -102,7 +102,6 @@ void receiveSerial() {
   }
   
   SERIALPINOFF;
-  SYNC1PINOFF;
   
 }
 

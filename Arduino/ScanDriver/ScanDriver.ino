@@ -1,3 +1,6 @@
+//#pragma G++ push_options
+//#pragma G++ optimize ("O0")
+
 #include <Wire.h>
 #include "ScanDriverPinDefs.h"
 #define BAUDRATE 115200        // Serial baudrate
@@ -21,6 +24,7 @@
 #define STORAGESIZE 256                     // Storage buffer for serial return
 #define LASERENDPAD (80 << 4)              // Pad time after longest laser epoch before mirro movement (us)
 #define LOSTCONTACTTIME   ((unsigned long) 2 << 25)  // Shut down the mirrors if you don't talk to the computer in about 4 sec.
+#define DONOTOPTIMIZE __attribute__((optimize("O0")))
  
 // Issues:
 // 
@@ -64,6 +68,7 @@
   unsigned long prevTimePoint;
   unsigned long lastComputerContact;
   unsigned int timerCapturePad = (30 << 4);      // uS to Clock cycles
+  unsigned char sreg;               // System registers for timer disabling
   
   // Variables for thermometer
   unsigned long thermDelay;
@@ -75,6 +80,8 @@
   byte          returnData[STORAGESIZE];
   byte retDataIdxH;
   byte retDataIdxGap;
+  
+ 
   
  
 void setup() {
@@ -102,15 +109,17 @@ void setup() {
   // Setup timing, and start
   currentZone = ScanOrder[zoneIndex];
   nextDACIndex = zoneIndex + 1;
-  nextTimeGap = mirrorMoveTime[currentZone] << 4;
+  nextTimeGap = (mirrorMoveTime[currentZone] << 4);   // Allow a large time gap to allow initialization
   PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone    
   
   // Setup Serial Link
   Serial.begin(BAUDRATE);
   
   setupUTimer();
-  rollFlag = false;
-  prevTimePoint = uTimer();
+  sreg = SREG;
+  cli();
+  prevTimePoint = uTimer(); // uTimer needs interrupts off
+  SREG = sreg;
   lastComputerContact = prevTimePoint;
     
 }
@@ -119,22 +128,24 @@ void setup() {
 
 
 
-void loop() {
+void DONOTOPTIMIZE loop() {
   
-  int i;
+    
+  int i,j;
   unsigned int coarseDelayTime;
   byte           fineDelayTime;
-  unsigned char sreg;               // System registers for timer disabling
-  
+
   
   // Kill interrupts and get the time
   sreg = SREG;
   cli();
   timeNow = uTimer();
   
+ 
                 // Serial check2
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 2; i++) {
                     DACPINON;
@@ -150,6 +161,7 @@ void loop() {
   if ((timeNow - prevTimePoint + timerCapturePad) < nextTimeGap) {
                 // Serial check13
                if (UCSR0A & (1 << DOR0)) {
+                cli(); 
                 while (true) {
                   SERIALPINON;
                   for (i=0; i < 13; i++) {
@@ -174,6 +186,7 @@ void loop() {
                 // Serial check3
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 3; i++) {
                     DACPINON;
@@ -188,6 +201,19 @@ void loop() {
   // Calculate the gap until the next target time.  Then delay for the gap.
   if ((timeNow - prevTimePoint) > nextTimeGap) {
      // If we missed the interval throw an error!
+               // Serial check16
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  cli();
+                  SERIALPINON;
+                  for (i=0; i < 16; i++) {
+                    DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  }
+                  SERIALPINOFF;
+                }
+               }
   }
   coarseDelayTime = (nextTimeGap - (timeNow - prevTimePoint));
   fineDelayTime   = (byte) coarseDelayTime & B00000111; 
@@ -227,6 +253,7 @@ void loop() {
                 // Serial check4
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 4; i++) {
                     DACPINON;
@@ -236,17 +263,21 @@ void loop() {
                   SERIALPINOFF;
                 }
                }
-            
+   
+   
+   SYNC1PINON;        
   // Do the code, remember to turn interrupts back on!        
   switch (phase) {
     
     // Phase 0 is End of lasing until mirror movement  
     case 0: 
+      SYNC1PINON;
       // Find the next zone and output it
       PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone
                 // Serial check5
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 5; i++) {
                     DACPINON;
@@ -266,12 +297,12 @@ void loop() {
         phase = 1;
         queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);      // Denotes laser on.  Do this in advance in case of short laser epochs.
         // queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Causes crash. Don't know why.
-      }
-      
+      }     
       break;
     
     // Phase 1 is start of mirror movement until Laser ON
     case 1:       
+        SYNC1PINON;
         // Short delay for alignment
         NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
         // Turn on the laser
@@ -281,6 +312,7 @@ void loop() {
                  // Serial check6
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 6; i++) {
                     DACPINON;
@@ -296,7 +328,6 @@ void loop() {
             prevTimePoint += nextTimeGap;
             nextTimeGap = ((unsigned long) laserDuration);
             checkForTransfers();        
-            break;
         // But for short pulses, delay a bit, then jump right to the next phase     
         } else {
           
@@ -350,15 +381,18 @@ void loop() {
             nextTimeGap = ((unsigned long) laserDuration);
             goto LaserOff; // Interrupts will be turned on at LaserOff:
         }
+        break;
         
     // Phase 2 is Laser ON until Laser OFF    
     case 2:
+        SYNC1PINON;
         // Short delay for alignment
         NOP; NOP; NOP; NOP;
         
                         // Serial check7
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 7; i++) {
                     DACPINON;
@@ -375,6 +409,7 @@ void loop() {
                // Serial check8
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 8; i++) {
                     DACPINON;
@@ -399,10 +434,12 @@ void loop() {
         
     // Phase 3 is an epoch without any lasing
     case 3:
+        SYNC1PINON; 
         // Don't turn on the laser
                // Serial check9
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON; 
                   for (i=0; i < 9; i++) {
                     DACPINON;
@@ -427,7 +464,13 @@ void loop() {
         currentZone = ScanOrder[zoneIndex]; 
         // queueSerialReturn(0x00 + currentZone, prevTimePoint + nextTimeGap);  // Denotes mirror movement.
         break;
+        
+    default:
+        SREG = sreg;
+        break;   
   }
+  
+  SYNC1PINOFF;
     
 }
 

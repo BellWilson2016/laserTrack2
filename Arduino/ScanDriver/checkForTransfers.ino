@@ -24,9 +24,10 @@ void checkForTransfers() {
           nextDACIndex = nextDACIndex + 1; 
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }
           
-                                             // Serial check10
+               // Serial check10
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 10; i++) {
                     DACPINON;
@@ -43,6 +44,7 @@ void checkForTransfers() {
                // Serial check11
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 11; i++) {
                     DACPINON;
@@ -78,6 +80,7 @@ void checkForTransfers() {
                // Serial check12
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
+                  cli();
                   SERIALPINON;
                   for (i=0; i < 12; i++) {
                     DACPINON;
