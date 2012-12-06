@@ -24,8 +24,82 @@ void checkForTransfers() {
           nextDACIndex = nextDACIndex + 1; 
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }
           
+                             // Serial check9
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                        DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  SERIALPINOFF;
+                }
+              }     
+          
       } else if (timeNow - lastTemp > thermDelay) {
          doThermometer();
+         
+               // Serial check10
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                        DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                        DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                    
+                  SERIALPINOFF;
+                }
+              }          
+         
       } else if (retDataIdxGap > 6) {
          
           // If the dataGap is big, report it
@@ -47,6 +121,47 @@ void checkForTransfers() {
               retDataIdxGap--;
             SERIALPINOFF;
           }    
+          
+                         // Serial check11
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                        DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                        DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                          DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                  SERIALPINOFF;
+                }
+              }       
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
      }

@@ -130,6 +130,17 @@ void loop() {
   cli();
   timeNow = uTimer();
   
+                // Serial check1
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                    DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  SERIALPINOFF;
+                }
+              }
+  
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
   if ((timeNow - prevTimePoint + timerCapturePad) < nextTimeGap) {
@@ -143,6 +154,21 @@ void loop() {
     }
     return;
   }
+  
+  
+                  // Serial check2
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  SERIALPINOFF;
+                }
+              }
   
   
   // Calculate the gap until the next target time.  Then delay for the gap.
@@ -183,7 +209,23 @@ void loop() {
             "r30","r31");
    
    
-   
+     
+               // Serial check3
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                  SERIALPINOFF;
+                }
+              }
             
   // Do the code, remember to turn interrupts back on!        
   switch (phase) {
@@ -191,7 +233,26 @@ void loop() {
     // Phase 0 is End of lasing until mirror movement  
     case 0: 
       // Find the next zone and output it
-      PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone    
+      PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone
+                 // Serial check4
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                  SERIALPINOFF;
+                }
+              }    
       SREG = sreg;
       laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD))/255;  
       prevTimePoint += nextTimeGap;
@@ -214,6 +275,29 @@ void loop() {
         LASERPINON;
         // For long pulses, go back through the counter
         if (laserDuration > (80 << 4)) {
+                 // Serial check5
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                    
+                  SERIALPINOFF;
+                }
+              }             
+          
             SREG = sreg;
             phase = 2;
             prevTimePoint += nextTimeGap;
@@ -223,8 +307,10 @@ void loop() {
         // But for short pulses, delay a bit, then jump right to the next phase     
         } else {
           
+
+          
               // Manually read from serial port since interrupts are disabled
-              if ((byte) UCSR0A & ((byte) 1 << RXC0)) {
+              if (UCSR0A & (1 << RXC0)) {
                   Serial.takeBuffer();
                   laserDuration -= 0;  
               } else {
@@ -276,9 +362,64 @@ void loop() {
     case 2:
         // Short delay for alignment
         NOP; NOP; NOP; NOP;
+        
+                 // Serial check6
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                  SERIALPINOFF;
+                }
+              }              
+        
         // Turn off the laser
      LaserOff:   
         LASERPINOFF;
+                  // Serial check7
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                  SERIALPINOFF;
+                }
+              }        
         SREG = sreg;
         prevTimePoint += nextTimeGap;
         nextTimeGap = (((unsigned long) scanTime) << 4) - nextTimeGap;  // The amount of time left in the laser phase
@@ -295,6 +436,37 @@ void loop() {
     // Phase 3 is an epoch without any lasing
     case 3:
         // Don't turn on the laser
+                   // Serial check8
+               if (UCSR0A & (1 << DOR0)) {
+                while (true) {
+                  SERIALPINON;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                      DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;
+                       DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                         DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                           DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;  
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF;                   
+                            DACPINON;
+                    DACPINOFF;
+                    DACPINOFF; 
+                  SERIALPINOFF;
+                }
+              }          
         SREG = sreg;
         LASERPINOFF;
         phase = 0;
