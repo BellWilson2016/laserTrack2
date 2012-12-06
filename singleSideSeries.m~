@@ -1,5 +1,9 @@
 function singleSideSeries()
 
+	global allScheduledEvents;
+
+	allScheduledEvents = [];
+
 
 	lp = [0,5,10,15,20,25,30];
 	nReps = 1;
@@ -17,7 +21,7 @@ function singleSideSeries()
 			cmd = ['runLaserProtocol(@laser_1_2L,@laserFlatHalves,[',...
 					num2str(powerL),',',num2str(powerR),']);'];
 			scheduleEvent(15 + (3.5*60)*nSched, cmd);  
-			nSched = nSched + 1
+			nSched = nSched + 1;
 		end
 	end
 

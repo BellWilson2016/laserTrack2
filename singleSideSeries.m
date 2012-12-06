@@ -1,5 +1,9 @@
 function singleSideSeries()
 
+	global allScheduledEvents;
+
+	allScheduledEvents = [];	% Clear existing schedule
+
 
 	lp = [0,5,10,15,20,25,30];
 	nReps = 1;
