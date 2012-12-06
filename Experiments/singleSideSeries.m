@@ -15,7 +15,8 @@ function singleSideSeries()
 	exp.nReps          = 1;	
 
 	% One pass has each power versus 0 on each side;
-	onePass = [exp.laserPowers , zeros(1,size(lp,2)) ; zeros(1,size(lp,2)) , exp.laserPowers];
+	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
+		 		zeros(1,size(exp.laserPowers,2)) , exp.laserPowers];
 	nSeq = size(exp.laserPowers,2)*2;
 
 	nSched = 0;
