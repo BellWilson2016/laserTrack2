@@ -14,6 +14,8 @@
 #define LASERPINOFF  PORTD &= B11011111
 #define DACPINON     PORTD |= B00010000
 #define DACPINOFF    PORTD &= B11101111
+#define SYNC1PINON   PORTD |= B01000000
+#define SYNC1PINOFF  PORTD &= B10111111
 #define NOP asm volatile("nop\n\t"::)
 #define TRANSFERWINDOWSIZE (450 << 4)      // Allow 450 usec for serial and I2C transfers
 #define STORAGESIZE 256                     // Storage buffer for serial return

@@ -24,8 +24,7 @@ void receiveSerial() {
   }
   
   
-  
- 
+  SYNC1PINON;
   SERIALPINON;
   
   transmissionSize = Serial.read();
@@ -103,6 +102,7 @@ void receiveSerial() {
   }
   
   SERIALPINOFF;
+  SYNC1PINOFF;
   
 }
 
