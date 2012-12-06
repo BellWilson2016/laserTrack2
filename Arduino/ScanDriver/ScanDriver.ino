@@ -23,7 +23,7 @@
 // Issues:
 // 
 // Remember to set I2C speed to 400kHz in the environment
-// Remember to set Serial buffer to 256 bytes in the environment
+// Remember to set Serial buffer to 128 bytes in the environment
 //   Edited HardwareSerial.cpp to flag buffer overruns
 // Serial interrupt problems with dense serial returns
 // Account for latency before mirror movement starts
@@ -222,6 +222,15 @@ void loop() {
             break;
         // But for short pulses, delay a bit, then jump right to the next phase     
         } else {
+          
+//              // Manually read from serial port since interrupts are disabled
+//              if ((byte) UCSR0A & ((byte) 1 << RXC0)) {
+//                  Serial.takeBuffer();
+//                  laserDuration -= 0;  
+//              } else {
+//                  laserDuration -= 0;
+//              }     
+              
               // Calculate a non-negative delay
               if (laserDuration > 80) {
                 coarseDelayTime = laserDuration - 80;    // Magic number to sync short laser times with long times
