@@ -388,7 +388,7 @@ void loop() {
     // Phase 3 is an epoch without any lasing
     case 3:
         // Don't turn on the laser
-                                  // Serial check9
+               // Serial check9
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;

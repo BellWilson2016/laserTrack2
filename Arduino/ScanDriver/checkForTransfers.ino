@@ -40,7 +40,7 @@ void checkForTransfers() {
       } else if (timeNow - lastTemp > thermDelay) {
          doThermometer();
          
-                               // Serial check11
+               // Serial check11
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
@@ -75,7 +75,7 @@ void checkForTransfers() {
             SERIALPINOFF;
           }    
           
-                                         // Serial check12
+               // Serial check12
                if (UCSR0A & (1 << DOR0)) {
                 while (true) {
                   SERIALPINON;
