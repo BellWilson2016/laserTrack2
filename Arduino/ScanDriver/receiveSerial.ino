@@ -10,6 +10,21 @@ void receiveSerial() {
   byte byte3;
   byte transmissionID;
   
+  // Serial check1
+  if (UCSR0A & (1 << DOR0)) {
+    while (true) {
+      DACPINON;
+      for (i=0; i < (phase + 1); i++) {
+          SERIALPINON;
+          SERIALPINOFF;
+          SERIALPINOFF;
+      }
+      DACPINOFF;
+    }
+  }
+  
+  
+  
  
   SERIALPINON;
   
