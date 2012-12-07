@@ -24,7 +24,7 @@
 
 // Time pads:
 #define TIMERCAPTUREPAD  (45ul << 4)      // Don't loop again within...
-#define TIMERWARNINGPAD  (10ul << 4)      // Throw timer warning if less time
+#define TIMERWARNINGPAD  (4ul  << 4)      // Throw timer warning if less time
 #define LASERENDPAD      (95ul << 4)      // Laser epoch end to mirror movement
 
 
@@ -156,12 +156,14 @@ void loop() {
   timeNow = uTimer();
   
   // Check to see if we've missed a time target
-  if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {
-     
+  if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
+    // If we missed the interval, halt execution
+    // catchError(MISSEDTIMERERROR);
     SERIALPINON;
     // If we missed the interval, notify via serial
     queueSerialReturn(0xfd, timeNow + TIMERWARNINGPAD - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
+    prevTimePoint += nextTimeGap;
     nextTimeGap = ((unsigned long) 1 << 14);
     SREG = sreg;
     return;
@@ -307,7 +309,7 @@ void loop() {
         LASERPINOFF;
         SREG = sreg;
         prevTimePoint += nextTimeGap;
-        nextTimeGap = (((unsigned long) scanTime) << 4) - nextTimeGap;  // The amount of time left in the laser phase
+        nextTimeGap = (((unsigned long) scanTime) << 4) - ((unsigned long) laserDuration);  // The amount of time left in the laser phase
         phase = 0;
         // If there's enough time to Rx or Tx check the serial port and I2C
         checkForTransfers(); 
