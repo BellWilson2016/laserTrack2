@@ -350,7 +350,7 @@ void loop() {
         break;   
   }
   
-    
+  timerErrorFlag = false;  
 }
 
   
