@@ -170,15 +170,17 @@ void loop() {
   }
    
   
-  // Calculate the gap until the next target time.  Then delay for the gap.
+  // Check to see if we've missed a time target
   if ((timeNow - prevTimePoint) > nextTimeGap) {
     // If we missed the interval throw an error!
     // catchError(MISSEDTIMERERROR);
     queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
     nextTimeGap = ((unsigned long) 1 << 15);
+    SREG = sreg;
     return;
   }
+  // Calculate the gap until the next target time.  Then delay for the gap.
   coarseDelayTime = (nextTimeGap - (timeNow - prevTimePoint));
   fineDelayTime   = (byte) coarseDelayTime & B00000111; 
   coarseDelayTime = coarseDelayTime >> 3;
