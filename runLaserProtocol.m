@@ -117,7 +117,7 @@ function finishEpoch(obj, event, exp, epochN)
 			listRecent(0);
 
 			% Update website
-			runString = ['Finished protocol: ',func2str(exp.protocol)];
+			runString = ['Finished protocol, wrote: ',num2str(nextFileNumber() - 1)];
 			pushNow = false;
 			updateWebStatus(runString,pushNow);
 		end

@@ -103,6 +103,9 @@ function finishEpoch(obj, event, exp, epochN)
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
 			trackingParams.serialRecord = [];  
 
+			% Notify of finish
+			disp('Finishing up protocol...');
+			disp(' ');
 			% Synchronize clocks and concatenate data epochs.
 			exp = catSyncTracks(exp);
 
