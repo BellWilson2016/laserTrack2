@@ -23,7 +23,7 @@
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
 
 // Time pads:
-#define TIMERCAPTUREPAD  (40ul << 4)      // Don't loop again within...
+#define TIMERCAPTUREPAD  (45ul << 4)      // Don't loop again within...
 #define TIMERWARNINGPAD  (10ul << 4)      // Throw timer warning if less time
 #define LASERENDPAD      (95ul << 4)      // Laser epoch end to mirror movement
 
