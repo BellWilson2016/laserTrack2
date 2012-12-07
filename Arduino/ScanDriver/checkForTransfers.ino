@@ -1,41 +1,49 @@
-void DONOTOPTIMIZE checkForTransfers() {
-  
+void checkForTransfers() {
+
   byte nTransfers;
   byte dataLoc;
   unsigned long aTime;
   byte n;
   int i,j;
+  
+  // Don't allow transfers of the same type in the same epoch
+  boolean doneSerialRx = false;
+  boolean doneDAC      = false;
+  boolean doneSerialTx = false;
+  boolean doneTherm    = false;
 
   nTransfers = nextTimeGap / TRANSFERWINDOWSIZE;
-  // Limit transfers to 1
-  if (nTransfers > 1) { nTransfers = 1; }
+  // Limit transfers to two
+  if (nTransfers > 2) { nTransfers = 2; }
 
   for (i=0; i < nTransfers; i++) {
       availableBytes = Serial.available();
       // If there's new serial data, get it.
-      if ((availableBytes > 0) && (availableBytes >= Serial.peek())) {
-        SERIALPINON;
+      if ((availableBytes > 0) && (availableBytes >= Serial.peek()) && !doneSerialRx) {
+         SERIALPINON;
           receiveSerial();
-        SERIALPINOFF;
+         SERIALPINOFF;
+         doneSerialRx = true;
       // If there's not, pass data to the next DAC  
-      } else if (DACsLeftToUpdate > 0) {
-        DACPINON;
+      } else if ((DACsLeftToUpdate > 0) && !doneDAC) {
+         DACPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
-        DACPINOFF;
+         DACPINOFF;
           DACsLeftToUpdate--;
           nextDACIndex = nextDACIndex + 1; 
-          if (nextDACIndex >= numZones) {nextDACIndex = 0; }                   
-         
-      } else if (retDataIdxGap > 6) {
-         
+          if (nextDACIndex >= numZones) {nextDACIndex = 0; }  
+          doneDAC = true;          
+      } else if ((timeNow - lastTemp > thermDelay) && !doneTherm) {
+         doThermometer();  
+         doneTherm = true;  
+      } else if ((retDataIdxGap > 10) & !doneSerialTx) {
           // If the dataGap is big, report it
-          if (retDataIdxGap > 64) {
+          if (retDataIdxGap > 0xD0) {
             queueSerialReturn(0xfd, (unsigned long) retDataIdxGap);
           }
-          
           // If there's space in the buffer...
-          if (Serial.txBufferSpace() > 6) {     
-            for (n=0; n < 6; n++) {
+          if (Serial.txBufferSpace() > 10*5) {     
+            for (n=0; n < 10; n++) {
               // queueSerialReturn(0x23, prevTimePoint);
               // Don't send too many bytes
 
@@ -47,18 +55,12 @@ void DONOTOPTIMIZE checkForTransfers() {
                 Serial.write((aTime >> 8)&0xFF);
                 Serial.write((aTime >> 0)&0xFF);
                 retDataIdxGap--;
-
             }
           }    
-          
-      } else if (timeNow - lastTemp > thermDelay) {
-         doThermometer();      
+          doneSerialTx = true;
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
      }
   }
-  
-  
-  SYNC1PINOFF;
 }
 

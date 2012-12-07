@@ -6,11 +6,11 @@ function serialReceiver(obj,event)
     global trackingParams;
 
 	% If we're currently acquiring a frame, don't take the buffer now
-	if (trackingParams.busyLock)
-		return;
+	if isfield(trackingParams,'busyLock')
+		if (trackingParams.busyLock)
+			return;
+		end
 	end
-
-    displayTemp = false;
     
     bytesHere = obj.BytesAvailable;
 	if (bytesHere >= obj.InputBufferSize)

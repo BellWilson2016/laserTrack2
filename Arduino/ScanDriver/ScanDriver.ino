@@ -19,13 +19,14 @@
 #define NOP asm volatile("nop\n\t"::)
 #define TRANSFERWINDOWSIZE (450 << 4)      // Allow 450 usec for serial and I2C transfers
 #define STORAGESIZE 256                     // Storage buffer for serial return
-#define LASERENDPAD (80 << 4)              // Pad time after longest laser epoch before mirro movement (us)
+#define LASERENDPAD (95 << 4)              // Pad time after longest laser epoch before mirro movement (us)
 #define LOSTCONTACTTIME   ((unsigned long) 2 << 25)  // Shut down the mirrors if you don't talk to the computer in about 4 sec.
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
 
 // Error codes:
 #define MISSEDTIMERERROR 5
 #define WRONGSWITCHCASE  6
+#define STORAGEFULL      7
  
 // Issues:
 // 
@@ -224,7 +225,7 @@ void loop() {
       } else {
         phase = 1;
         queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);      // Denotes laser on.  Do this in advance in case of short laser epochs.
-        // queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Causes crash. Don't know why.
+        queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Causes crash. Don't know why.
       }     
       break;
     
@@ -235,7 +236,7 @@ void loop() {
         // Turn on the laser
         LASERPINON;
         // For long pulses, go back through the counter
-        if (laserDuration > (80 << 4)) {         
+        if (laserDuration > (85 << 4)) {         
             SREG = sreg;
             phase = 2;
             prevTimePoint += nextTimeGap;

@@ -1,6 +1,6 @@
 // Receives serial transmissions once the Serial buffer is full enough
 // The first byte should tell the size of the serial transmission
-void DONOTOPTIMIZE receiveSerial() {
+void receiveSerial() {
   
   byte i;
   byte msb;

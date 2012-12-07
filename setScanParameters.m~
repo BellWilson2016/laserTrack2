@@ -29,7 +29,7 @@ disp(['Setting scan time: ',num2str(scanTime),' us']);
 disp(['Mirror move times: ',num2str(mirrorMoveTime)]);
 disp(['Scan order: ',num2str(scanOrder)]);
 disp(['Total cycle: ',num2str(totalCycle),' us']);
-disp(['Max laser time: ', num2str(maxLaser),' us']);
+disp(['Max laser time:', num2str(maxLaser),' us']);
 disp(['Laser max duty: ',num2str(maxDuty)]);
 disp(' ');
 

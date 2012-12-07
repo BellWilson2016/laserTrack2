@@ -19,5 +19,8 @@ void queueSerialReturn(byte leadingByte, unsigned long timeStamp) {
     returnTimes[retDataIdxH] = timeStamp;
     retDataIdxH++;
     retDataIdxGap++;
-    if (retDataIdxH >= STORAGESIZE) { retDataIdxH = 0; }  
+    if (retDataIdxH >= STORAGESIZE) { retDataIdxH = 0; } 
+    if (retDataIdxGap >= (STORAGESIZE)) {
+      catchError(STORAGEFULL);
+    }
 }

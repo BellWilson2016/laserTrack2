@@ -7,12 +7,22 @@ void DONOTOPTIMIZE catchError(int errorNumber) {
   
   while (true) {
     cli();
-    SERIALPINON;
+    //SERIALPINON;
+    NOP;
     for (i=0; i < errorNumber; i++) {
       DACPINON;
       DACPINOFF;
       DACPINOFF;
     }
-    SERIALPINOFF;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
+    //SERIALPINOFF;
+   
   }
 }

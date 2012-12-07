@@ -17,6 +17,6 @@ void passDataToDAC(byte addr) {
     command[2] =  Ypositions[2*addr + 1];
     Wire.write(command, 3);
   Wire.endTransmission();
-  // queueSerialReturn(0x08 + addr, prevTimePoint);  
+  queueSerialReturn(0x08 + addr, prevTimePoint);  
 
 }
