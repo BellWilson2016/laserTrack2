@@ -160,7 +160,7 @@ void loop() {
   // Check to see if we've missed a time target
   if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {
     // If we missed the interval throw an error!
-    // catchError(MISSEDTIMERERROR);
+    catchError(MISSEDTIMERERROR);
     queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
     nextTimeGap = ((unsigned long) 1 << 15);
