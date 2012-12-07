@@ -167,7 +167,7 @@ void loop() {
     SERIALPINON;
     // If we missed the interval throw an error!
     timerErrorFlag = true;
-    queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
+    queueSerialReturn(0xfd, timeNow + TIMERWARNINGPAD - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
     nextTimeGap = ((unsigned long) 1 << 14);
     SREG = sreg;
