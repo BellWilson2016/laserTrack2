@@ -167,8 +167,9 @@ void loop() {
     timerErrorFlag = true;
     queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
-    nextTimeGap = ((unsigned long) 1 << 15);
+    nextTimeGap = ((unsigned long) 1 << 14);
     SREG = sreg;
+    checkForTransfers();  
     return;
   }
   
