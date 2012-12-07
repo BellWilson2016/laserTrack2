@@ -14,7 +14,9 @@ function serialReceiver(obj,event)
     
     bytesHere = obj.BytesAvailable;
 	if (bytesHere >= obj.InputBufferSize)
-		disp(['SERIAL INPUT BUFFER FULL']);
+		alertString = '-SERIAL INPUT BUFFER FULL-';
+		updateWebStatus(alertString,false);
+		disp(alertString);
 	end
     blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) )
