@@ -1,13 +1,11 @@
-void checkForTransfers() {
-  
-  
+void DONOTOPTIMIZE checkForTransfers() {
   
   byte nTransfers;
   byte dataLoc;
   unsigned long aTime;
   byte n;
   int i,j;
-  
+
   nTransfers = nextTimeGap / TRANSFERWINDOWSIZE;
   // Limit transfers to 1
   if (nTransfers > 1) { nTransfers = 1; }
@@ -16,44 +14,17 @@ void checkForTransfers() {
       availableBytes = Serial.available();
       // If there's new serial data, get it.
       if ((availableBytes > 0) && (availableBytes >= Serial.peek())) {
+        SERIALPINON;
           receiveSerial();
+        SERIALPINOFF;
       // If there's not, pass data to the next DAC  
       } else if (DACsLeftToUpdate > 0) {
+        DACPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
+        DACPINOFF;
           DACsLeftToUpdate--;
           nextDACIndex = nextDACIndex + 1; 
-          if (nextDACIndex >= numZones) {nextDACIndex = 0; }
-          
-               // Serial check10
-               if (UCSR0A & (1 << DOR0)) {
-                while (true) {
-                  cli();
-                  SERIALPINON;
-                  for (i=0; i < 10; i++) {
-                    DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                  }
-                  SERIALPINOFF;
-                }
-               }
-          
-      } else if (timeNow - lastTemp > thermDelay) {
-         doThermometer();
-         
-               // Serial check11
-               if (UCSR0A & (1 << DOR0)) {
-                while (true) {
-                  cli();
-                  SERIALPINON;
-                  for (i=0; i < 11; i++) {
-                    DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                  }
-                  SERIALPINOFF;
-                }
-               }
+          if (nextDACIndex >= numZones) {nextDACIndex = 0; }                   
          
       } else if (retDataIdxGap > 6) {
          
@@ -61,41 +32,33 @@ void checkForTransfers() {
           if (retDataIdxGap > 64) {
             queueSerialReturn(0xfd, (unsigned long) retDataIdxGap);
           }
-              
-          for (n=0; n < 6; n++) {
-            // queueSerialReturn(0x23, prevTimePoint);
-            // Don't send too many bytes
-            SERIALPINON;
-              dataLoc = retDataIdxH - retDataIdxGap;
-              aTime = returnTimes[dataLoc];
-              Serial.write(returnData[dataLoc]);
-              Serial.write((aTime >> 24)&0xFF);
-              Serial.write((aTime >> 16)&0xFF);
-              Serial.write((aTime >> 8)&0xFF);
-              Serial.write((aTime >> 0)&0xFF);
-              retDataIdxGap--;
-            SERIALPINOFF;
+          
+          // If there's space in the buffer...
+          if (Serial.txBufferSpace() > 6) {     
+            for (n=0; n < 6; n++) {
+              // queueSerialReturn(0x23, prevTimePoint);
+              // Don't send too many bytes
+
+                dataLoc = retDataIdxH - retDataIdxGap;
+                aTime = returnTimes[dataLoc];
+                Serial.write(returnData[dataLoc]);
+                Serial.write((aTime >> 24)&0xFF);
+                Serial.write((aTime >> 16)&0xFF);
+                Serial.write((aTime >> 8)&0xFF);
+                Serial.write((aTime >> 0)&0xFF);
+                retDataIdxGap--;
+
+            }
           }    
           
-               // Serial check12
-               if (UCSR0A & (1 << DOR0)) {
-                while (true) {
-                  cli();
-                  SERIALPINON;
-                  for (i=0; i < 12; i++) {
-                    DACPINON;
-                    DACPINOFF;
-                    DACPINOFF;
-                  }
-                  SERIALPINOFF;
-                }
-               }
+      } else if (timeNow - lastTemp > thermDelay) {
+         doThermometer();      
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
      }
   }
   
   
-  
+  SYNC1PINOFF;
 }
 

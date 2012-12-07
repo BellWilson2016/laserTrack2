@@ -1,6 +1,6 @@
 // Receives serial transmissions once the Serial buffer is full enough
 // The first byte should tell the size of the serial transmission
-void receiveSerial() {
+void DONOTOPTIMIZE receiveSerial() {
   
   byte i;
   byte msb;
@@ -9,24 +9,7 @@ void receiveSerial() {
   byte byte2;
   byte byte3;
   byte transmissionID;
-  
-  // Serial check14
-  if (UCSR0A & (1 << DOR0)) {
-    while (true) {
-      cli();
-      DACPINON;
-      for (i=0; i < (phase + 14); i++) {
-          SERIALPINON;
-          SERIALPINOFF;
-          SERIALPINOFF;
-      }
-      DACPINOFF;
-    }
-  }
-  
-  
-  SERIALPINON;
-  
+ 
   transmissionSize = Serial.read();
   
   if (transmissionSize == POSPOWERSIZE) {
@@ -85,11 +68,7 @@ void receiveSerial() {
     
   } else {
   
-      // All serial frame errors should be caught by hardware buffer overwrite now.
-      DACPINON;
-      while (true) {
-        NOP;
-      }
+      // All serial frame errors should be caught by hardware buffer overwrite checking now.
       // Otherwise, there's been a mistake.
       byte1 = 0;
       // Throw away bytes until we find a possible POSPOWERSIZE frame to try to recover
@@ -101,7 +80,6 @@ void receiveSerial() {
       queueSerialReturn(0xfd, ((unsigned long) byte1) << 8);
   }
   
-  SERIALPINOFF;
   
 }
 
