@@ -33,7 +33,9 @@ function serialReceiver(obj,event)
             end
 			switch (code)
 				case 253 % hex2dec('fd')
-					disp(['Serial alarm code: ',dec2hex(time)]);
+					alertString = ['Serial alarm code: ',dec2hex(time),'  ',num2str(time)];
+					disp(alertString);
+					updateWebStatus(alertString,false);
 				case 254 % hex2dec('fe')
 		            trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
 		                bitshift(x((n-1)*5+3),16) + ...
