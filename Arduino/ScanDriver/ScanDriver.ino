@@ -174,9 +174,10 @@ void loop() {
   if ((timeNow - prevTimePoint) > nextTimeGap) {
     // If we missed the interval throw an error!
     // catchError(MISSEDTIMERERROR);
+    queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
     nextTimeGap = ((unsigned long) 1 << 15);
-    queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
+    
   }
   coarseDelayTime = (nextTimeGap - (timeNow - prevTimePoint));
   fineDelayTime   = (byte) coarseDelayTime & B00000111; 
