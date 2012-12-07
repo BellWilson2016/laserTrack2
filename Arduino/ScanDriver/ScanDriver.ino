@@ -141,11 +141,11 @@ void loop() {
   
 // Throttling code to stress-test for inexpected interrupt combinations
 //    that cause missed timer events.
-  i = 0;
-  while (i < 20) {
-        NOP; NOP; NOP; NOP;
-        i++;     
-  }
+//  i = 0;
+//  while (i < 20) {
+//        NOP; NOP; NOP; NOP;
+//        i++;     
+//  }
 
 
   
