@@ -17,11 +17,16 @@
 #define SYNC1PINON   PORTD |= B01000000
 #define SYNC1PINOFF  PORTD &= B10111111
 #define NOP asm volatile("nop\n\t"::)
-#define TRANSFERWINDOWSIZE (450 << 4)      // Allow 450 usec for serial and I2C transfers
+#define TRANSFERWINDOWSIZE (450ul << 4)      // Allow 450 usec for serial and I2C transfers
 #define STORAGESIZE 256                     // Storage buffer for serial return
-#define LASERENDPAD (95 << 4)              // Pad time after longest laser epoch before mirro movement (us)
 #define LOSTCONTACTTIME   ((unsigned long) 2 << 25)  // Shut down the mirrors if you don't talk to the computer in about 4 sec.
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
+
+// Time pads:
+#define TIMERCAPTUREPAD  (40ul << 4)      // Don't loop again within...
+#define TIMERWARNINGPAD  (10ul << 4)      // Throw timer warning if less time
+#define LASERENDPAD      (95ul << 4)      // Laser epoch end to mirror movement
+
 
 // Error codes:
 #define MISSEDTIMERERROR 5
@@ -71,7 +76,6 @@
   unsigned long nextTimeGap;
   unsigned long prevTimePoint;
   unsigned long lastComputerContact;
-  unsigned int timerCapturePad = (40 << 4);      // uS to Clock cycles
   unsigned char sreg;                            // System registers for timer disabling
   
   // Variables for thermometer
@@ -148,16 +152,25 @@ void loop() {
 //  }
 
 
-  
   // Kill interrupts and get the time
   sreg = SREG;
   cli();
   timeNow = uTimer();
   
+  // Check to see if we've missed a time target
+  if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {
+    // If we missed the interval throw an error!
+    // catchError(MISSEDTIMERERROR);
+    queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
+    // If we missed the interval, try to recover in 2 ms
+    nextTimeGap = ((unsigned long) 1 << 15);
+    SREG = sreg;
+    return;
+  }
   
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
-  if ((timeNow - prevTimePoint + timerCapturePad) < nextTimeGap) {
+  if ((timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
     SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
     if (mode > 0) {
@@ -170,16 +183,7 @@ void loop() {
   }
    
   
-  // Check to see if we've missed a time target
-  if ((timeNow - prevTimePoint) > nextTimeGap) {
-    // If we missed the interval throw an error!
-    // catchError(MISSEDTIMERERROR);
-    queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
-    // If we missed the interval, try to recover in 2 ms
-    nextTimeGap = ((unsigned long) 1 << 15);
-    SREG = sreg;
-    return;
-  }
+
   // Calculate the gap until the next target time.  Then delay for the gap.
   coarseDelayTime = (nextTimeGap - (timeNow - prevTimePoint));
   fineDelayTime   = (byte) coarseDelayTime & B00000111; 
