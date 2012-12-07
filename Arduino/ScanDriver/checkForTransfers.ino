@@ -1,5 +1,5 @@
 void checkForTransfers() {
-SERIALPINON;
+//SERIALPINON;
   byte nTransfers;
   byte dataLoc;
   unsigned long aTime;
@@ -62,6 +62,6 @@ SERIALPINON;
           sleepMode();
      }
   }
-  SERIALPINOFF;
+//  SERIALPINOFF;
 }
 
