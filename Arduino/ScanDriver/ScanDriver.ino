@@ -151,6 +151,10 @@ void loop() {
 //        i++;     
 //  }
 
+  if (timerErrorFlag) {
+    catchError(8);
+  }
+
 
   // Kill interrupts and get the time
   sreg = SREG;
@@ -160,7 +164,7 @@ void loop() {
   // Check to see if we've missed a time target
   if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {
     // If we missed the interval throw an error!
-    timerFlag = true;
+    timerErrorFlag = true;
     queueSerialReturn(0xfd, timeNow - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
     nextTimeGap = ((unsigned long) 1 << 15);
