@@ -20,15 +20,15 @@ void checkForTransfers() {
       availableBytes = Serial.available();
       // If there's new serial data, get it.
       if ((availableBytes > 0) && (availableBytes >= Serial.peek()) && !doneSerialRx) {
-         //SERIALPINON;
+         SERIALPINON;
           receiveSerial();
-         //SERIALPINOFF;
+         SERIALPINOFF;
          doneSerialRx = true;
       // If there's not, pass data to the next DAC  
       } else if ((DACsLeftToUpdate > 0) && !doneDAC) {
-         //DACPINON;
+         DACPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
-         //DACPINOFF;
+         DACPINOFF;
           DACsLeftToUpdate--;
           nextDACIndex = nextDACIndex + 1; 
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }  
@@ -46,7 +46,7 @@ void checkForTransfers() {
             for (n=0; n < 10; n++) {
               // queueSerialReturn(0x23, prevTimePoint);
               // Don't send too many bytes
-
+              SERIALPINON;
                 dataLoc = retDataIdxH - retDataIdxGap;
                 aTime = returnTimes[dataLoc];
                 Serial.write(returnData[dataLoc]);
@@ -55,6 +55,7 @@ void checkForTransfers() {
                 Serial.write((aTime >> 8)&0xFF);
                 Serial.write((aTime >> 0)&0xFF);
                 retDataIdxGap--;
+              SERIALPINOFF;  
             }
           }    
           doneSerialTx = true;

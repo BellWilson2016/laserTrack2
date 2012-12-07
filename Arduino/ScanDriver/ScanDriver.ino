@@ -149,7 +149,6 @@ void loop() {
 //  }
 
 
-
   // Kill interrupts and get the time
   sreg = SREG;
   cli();
@@ -159,7 +158,6 @@ void loop() {
   if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
     // If we missed the interval, halt execution
     // catchError(MISSEDTIMERERROR);
-    SERIALPINON;
     // If we missed the interval, notify via serial
     queueSerialReturn(0xfd, timeNow + TIMERWARNINGPAD - prevTimePoint - nextTimeGap); 
     // If we missed the interval, try to recover in 2 ms
@@ -168,8 +166,6 @@ void loop() {
     SREG = sreg;
     return;
   }
-  
-  SERIALPINOFF;
   
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
