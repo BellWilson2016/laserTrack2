@@ -139,13 +139,13 @@ void loop() {
   unsigned int coarseDelayTime;
   byte           fineDelayTime;  
   
-  // Throttling code to stress-test for inexpected interrupt combinations
-  //    that cause missed timer events.
-  //  i = 0;
-  //  while (i < 20) {
-  //        NOP; NOP; NOP; NOP;
-  //        i++;     
-  //  }
+// Throttling code to stress-test for inexpected interrupt combinations
+//    that cause missed timer events.
+  i = 0;
+  while (i < 20) {
+        NOP; NOP; NOP; NOP;
+        i++;     
+  }
 
 
   
@@ -224,8 +224,8 @@ void loop() {
         phase = 3;
       } else {
         phase = 1;
-        queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);      // Denotes laser on.  Do this in advance in case of short laser epochs.
-        queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Causes crash. Don't know why.
+        queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);                  // Denotes laser on.  Do this in advance in case of short laser epochs.
+        queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Denotes laser off.
       }     
       break;
     

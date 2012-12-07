@@ -1,5 +1,5 @@
 void checkForTransfers() {
-
+SERIALPINON;
   byte nTransfers;
   byte dataLoc;
   unsigned long aTime;
@@ -13,22 +13,22 @@ void checkForTransfers() {
   boolean doneTherm    = false;
 
   nTransfers = nextTimeGap / TRANSFERWINDOWSIZE;
-  // Limit transfers to two
-  if (nTransfers > 2) { nTransfers = 2; }
+  // Limit transfers
+  if (nTransfers > 1) { nTransfers = 1; }
 
   for (i=0; i < nTransfers; i++) {
       availableBytes = Serial.available();
       // If there's new serial data, get it.
       if ((availableBytes > 0) && (availableBytes >= Serial.peek()) && !doneSerialRx) {
-         SERIALPINON;
+         //SERIALPINON;
           receiveSerial();
-         SERIALPINOFF;
+         //SERIALPINOFF;
          doneSerialRx = true;
       // If there's not, pass data to the next DAC  
       } else if ((DACsLeftToUpdate > 0) && !doneDAC) {
-         DACPINON;
+         //DACPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
-         DACPINOFF;
+         //DACPINOFF;
           DACsLeftToUpdate--;
           nextDACIndex = nextDACIndex + 1; 
           if (nextDACIndex >= numZones) {nextDACIndex = 0; }  
@@ -62,5 +62,6 @@ void checkForTransfers() {
           sleepMode();
      }
   }
+  SERIALPINOFF;
 }
 
