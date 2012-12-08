@@ -2,4 +2,6 @@
 *.mat
 *.m~
 *.html
+*.fig
+
 
