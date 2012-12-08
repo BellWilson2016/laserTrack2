@@ -1,7 +1,0 @@
-function showBoundingBox(trueOrFalse)
-
-	if (showBoundingBox)
-
-	else
-
-	end
