@@ -1,3 +1,48 @@
+// Serial port parameters
+#define BAUDRATE 115200        // Serial baudrate
+#define POSPOWERSIZE 41        // Size of data transmissions blocks
+#define SCANPARAMSIZE 27
+#define MODEPARAMSIZE 3        // Size of special mode parameters
+
+// Variables for Serial Return Storage buffer
+#define STORAGESIZE 256   
+unsigned long returnTimes[STORAGESIZE];
+byte          returnData[STORAGESIZE];
+byte retDataIdxH;
+byte retDataIdxGap;
+
+
+void setupSerial() {
+  Serial.begin(BAUDRATE);
+}
+
+/* Serial return codes:
+    00-07: Mirror movement
+    08-0F: DAC update
+    10-17: LaserOn
+    18-1F: LaserOff
+    20: ------------------
+    21: Serial received scan parameters
+    22: serial received modes
+    23: Serial returned data
+    24 + 0-3f (24-73): Serial received scan data + ID code
+    
+    fd: Serial alarm codes
+    fe: Overtemperature alarm
+    ff: Temp sample
+*/
+void queueSerialReturn(byte leadingByte, unsigned long timeStamp) {
+  
+    returnData[retDataIdxH] = leadingByte;
+    returnTimes[retDataIdxH] = timeStamp;
+    retDataIdxH++;
+    retDataIdxGap++;
+    if (retDataIdxH >= STORAGESIZE) { retDataIdxH = 0; } 
+    if (retDataIdxGap >= (STORAGESIZE)) {
+      catchError(STORAGEFULL);
+    }
+}
+
 // Receives serial transmissions once the Serial buffer is full enough
 // The first byte should tell the size of the serial transmission
 void receiveSerial() {
@@ -82,7 +127,3 @@ void receiveSerial() {
   
   
 }
-
-
-
-

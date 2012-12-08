@@ -1,48 +1,41 @@
-#include <Wire.h>
+/* ScanDriver
+ *
+ * This Arduino sketch implements code for a fast scan mirror controller.  It receives serial data, passes it to a pair of Two-Wire DACs, 
+ * orchestrates timing of the DACs and a laser command signal, and sends timing information back to the computer over USB.  It also 
+ * manages a One-Wire thermometer.  It includes an improvedHardwareSerial.cpp class, and programatically increases the TWI clock speed
+ * to 400 kHz.
+ *
+ * JSB 12/10/2012
+ *
+ * -------------------
+ *
+ * Outstanding Issues:
+ *
+ * Occasionally misses some timer intervals with dense serial returns.
+ * Account for latency before mirror movement starts?
+ *
+ */
+
+#include "improvedHardwareSerial.h"                    // Need to include is first before arduino.h is imported because this #ifndef's out the exsisting HardwareSerial core library.
 #include "ScanDriverPinDefs.h"
-#define BAUDRATE 115200        // Serial baudrate
-#define POSPOWERSIZE 41        // Size of data transmissions blocks
-#define SCANPARAMSIZE 27
-#define MODEPARAMSIZE 3        // Size of special mode parameters
-#define WRITECODE B00110000    // Writes and updates to DAC
-#define XDACADDR B1010100      // XDAC I2C Address
-#define YDACADDR B1010111      // YDAC I2C Address
-#define ADDRMASK 7
-#define SERIALPINON  PORTD |= B00001000
-#define SERIALPINOFF PORTD &= B11110111
-#define LASERPINON   PORTD |= B00100000
-#define LASERPINOFF  PORTD &= B11011111
-#define DACPINON     PORTD |= B00010000
-#define DACPINOFF    PORTD &= B11101111
-#define SYNC1PINON   PORTD |= B01000000
-#define SYNC1PINOFF  PORTD &= B10111111
+#include <Wire.h>                                      // Nb. We programatically sets the TWI speed to 400 kHz at DAC setup.
+                                 
+// In-line assembly utilities
 #define NOP asm volatile("nop\n\t"::)
-#define TRANSFERWINDOWSIZE (450ul << 4)      // Allow 450 usec for serial and I2C transfers
-#define STORAGESIZE 256                     // Storage buffer for serial return
-#define LOSTCONTACTTIME   ((unsigned long) 2 << 25)  // Shut down the mirrors if you don't talk to the computer in about 4 sec.
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
 
 // Time pads:
-#define TIMERCAPTUREPAD  (45ul << 4)      // Don't loop again within...
-#define TIMERWARNINGPAD  (4ul  << 4)      // Throw timer warning if less time
-#define LASERENDPAD      (95ul << 4)      // Laser epoch end to mirror movement
-
+#define TRANSFERWINDOWSIZE (450ul <<  4)      // Allow 450 usec for serial and I2C transfers
+#define TIMERCAPTUREPAD    ( 45ul <<  4)      // Don't loop again within this time of the trigger
+#define TIMERWARNINGPAD    (  4ul <<  4)      // Throw timer warning if less time than this before trigger
+#define LASERENDPAD        ( 95ul <<  4)      // Ensure laser off this long before mirror movement starts
+#define LOSTCONTACTTIME    (  2ul << 25)      // Shut down the mirrors if you don't talk to the computer in about 4 sec.
 
 // Error codes:
 #define MISSEDTIMERERROR 5
 #define WRONGSWITCHCASE  6
 #define STORAGEFULL      7
- 
-// Issues:
-// 
-// Remember to set I2C speed to 400kHz in the environment
-// Remember to set Serial buffer to 128 bytes in the environment
-// Edited HardwareSerial.cpp to flag buffer overruns, 
-//         allow manual read of hardware buffer, and test for tx buffer space
-//         Need to bring this in as a daughter class
-// Serial interrupt problems with dense serial returns
-// Account for latency before mirror movement starts
-
+  
 
   // Variable definitions
   byte availableBytes;
@@ -83,50 +76,25 @@
   unsigned long lastTemp;
   boolean tempLock;
   
-  // Variables for Serial Return
-  unsigned long returnTimes[STORAGESIZE];
-  byte          returnData[STORAGESIZE];
-  byte retDataIdxH;
-  byte retDataIdxGap;
-  
- 
-  
- 
+
 void setup() {
   
-  
-  // Setup pins
- pinMode(SERIALSYNCPIN, OUTPUT); digitalWrite(SERIALSYNCPIN, LOW);
- pinMode(DACSYNCPIN, OUTPUT);    digitalWrite(DACSYNCPIN, LOW);
- pinMode(LASERPIN, OUTPUT);      digitalWrite(LASERPIN, LOW);
- pinMode(SYNC1PIN, OUTPUT);      digitalWrite(SYNC1PIN, LOW);
- pinMode(SYNC2PIN, OUTPUT);      digitalWrite(SYNC2PIN, LOW);
- pinMode(A0PIN, OUTPUT); 
- pinMode(A1PIN, OUTPUT);
- pinMode(A2PIN, OUTPUT);
- pinMode(CLRPIN, OUTPUT);
- pinMode(XLDACPIN, OUTPUT);
- pinMode(YLDACPIN, OUTPUT);
- 
-  // Initialize thermometer
+  setupPins();
   setupThermometer();
- 
-  // Initialize the DACs
   setupDACs();
 
   // Setup timing, and start
   currentZone = ScanOrder[zoneIndex];
   nextDACIndex = zoneIndex + 1;
   nextTimeGap = (mirrorMoveTime[currentZone] << 4);   // Allow a large time gap to allow initialization
-  PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone    
+  SETCURRENTZONE;  // Outputs address of currentZone    
   
-  // Setup Serial Link
-  Serial.begin(BAUDRATE);
+  setupSerial();
   
   setupUTimer();
   sreg = SREG;
   cli();
-  prevTimePoint = uTimer(); // uTimer needs interrupts off
+  prevTimePoint = uTimer();     // uTimer needs interrupts off
   SREG = sreg;
   lastComputerContact = prevTimePoint;
     
@@ -224,7 +192,7 @@ void loop() {
     // Phase 0 is End of lasing until mirror movement  
     case 0: 
       // Find the next zone and output it
-      PORTB = (currentZone & ADDRMASK) | (PORTB & ~ADDRMASK);  // Outputs address of currentZone
+      SETCURRENTZONE;  // Outputs current zone address
       SREG = sreg;
       laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD))/255;  
       prevTimePoint += nextTimeGap;
