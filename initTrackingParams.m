@@ -74,7 +74,11 @@ function trackingParams = initTrackingParams()
     trackingParams.mirrorTemp = 0;
 	   
     % Write a new status file if the old one is too big
-    load('statusData.mat');
+	if (exist('statusData.mat'))
+    	load('statusData.mat');
+	else
+		messageList = [];
+	end
     if (size(messageList,1) < 1200)
         messageList{end+1,1} = datestr(now);
         messageList{end,2} = 'RTFW Started.';
