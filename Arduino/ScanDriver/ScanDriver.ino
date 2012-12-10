@@ -117,6 +117,11 @@ void loop() {
 //  }
 
 
+
+// Add space here to ensure interrupts can run?
+// Or add space right before RETURN values?
+
+
   // Kill interrupts and get the time
   sreg = SREG;
   cli();
