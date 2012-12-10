@@ -128,7 +128,7 @@ void loop() {
   timeNow = uTimer();
   
   // Check to see if we've missed a time target
-  if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
+  if ((long) (timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
     // If we missed the interval, halt execution
     // catchError(MISSEDTIMERERROR);
     // If we missed the interval, notify via serial
@@ -142,7 +142,7 @@ void loop() {
   
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
-  if ((timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
+  if ((long) (timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
     SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
     if (mode > 0) {
