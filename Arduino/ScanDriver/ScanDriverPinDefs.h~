@@ -22,3 +22,12 @@
 #define SETCURRENTZONE PORTB = (currentZone & B00000111) | (PORTB & ~B00000111)  
 
 
+
+
+
+
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> correctCurrent

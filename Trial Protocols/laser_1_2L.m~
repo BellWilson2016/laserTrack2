@@ -1,20 +1,20 @@
-function exp = laser_1_2L(laserDistribution, laserParams)
+function exp = laser_1_2L(exp)
 
-    laserParams1     = laserParams(1);
-    laserParams2     = laserParams(2);
+			exp.protocol	 = @laser_1_2L;
+			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
     
-    exp.protocolName      = 'laser_1_2L';
+	laserDistribution = exp.protocolArgs{1};
+	laserParams       = exp.protocolArgs{2};
+
     exp.laserDistribution = laserDistribution;
-    exp.laserDistributionName = func2str(laserDistribution);
-    exp.laserParams1      = laserParams1;
-    exp.laserParams2      = laserParams2;
+    exp.laserParams       = laserParams;
     exp.nullEpochs   = [1];
     exp.leftEpochs   = [2];
-
-    
+	exp.rightEpochs  =  [];
+  
     setLaserOff = {@setLaserDistribution,{@laserOff,[]}};
-    setLaserL   = {@setLaserDistribution,{laserDistribution,[laserParams1, laserParams2]}};
-    setLaserR   = {@setLaserDistribution,{laserDistribution,[laserParams2, laserParams1]}};
+    setLaserL   = {@setLaserDistribution,{laserDistribution,[laserParams(1), laserParams(2)]}};
+    setLaserR   = {@setLaserDistribution,{laserDistribution,[laserParams(2), laserParams(1)]}};
     
 % Times in minutes
     exp.protocolDesign = {...

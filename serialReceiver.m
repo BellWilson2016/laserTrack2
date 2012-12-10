@@ -6,15 +6,17 @@ function serialReceiver(obj,event)
     global trackingParams;
 
 	% If we're currently acquiring a frame, don't take the buffer now
-	if (trackingParams.busyLock)
-		return;
+	if isfield(trackingParams,'busyLock')
+		if (trackingParams.busyLock)
+			return;
+		end
 	end
-
-    displayTemp = false;
     
     bytesHere = obj.BytesAvailable;
 	if (bytesHere >= obj.InputBufferSize)
-		disp(['SERIAL INPUT BUFFER FULL']);
+		alertString = '-SERIAL INPUT BUFFER FULL-';
+		updateWebStatus(alertString,false);
+		disp(alertString);
 	end
     blocksHere = floor(bytesHere/5);
     if ( (blocksHere > 0) )
@@ -33,7 +35,9 @@ function serialReceiver(obj,event)
             end
 			switch (code)
 				case 253 % hex2dec('fd')
-					disp(['Serial alarm code: ',dec2hex(time)]);
+					alertString = ['Serial alarm code: ',dec2hex(time),'  ',num2str(time)];
+					disp(alertString);
+					updateWebStatus(alertString,false);
 				case 254 % hex2dec('fe')
 		            trackingParams.mirrorTemp = (bitshift(x((n-1)*5+2),24) + ...
 		                bitshift(x((n-1)*5+3),16) + ...

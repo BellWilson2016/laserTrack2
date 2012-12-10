@@ -117,6 +117,7 @@ function liveTrack(obj, event)
                     trackingParams.dXdT(regionN) = 0; trackingParams.dYdT(regionN) = 0;
                     trackingParams.headXpix(regionN) = -trackingParams.headXpix(regionN);
                     trackingParams.headYpix(regionN) = -trackingParams.headYpix(regionN);
+			
                     disp(['Flipped fly head #',num2str(regionN)]);
                     % updateWebStatus(['Flipped fly head #',num2str(regionN)] , false)
                 end

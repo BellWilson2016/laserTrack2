@@ -1,4 +1,4 @@
-function returnPower = laserOff(X,Y,args)
+function returnPower = laserOff(args)
 
 	returnPower = 0;   
 

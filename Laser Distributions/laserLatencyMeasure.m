@@ -1,4 +1,4 @@
-function returnPower = laserLatencyMeasure(X,Y,args)
+function returnPower = laserLatencyMeasure(args)
 
     global trackingParams;
     

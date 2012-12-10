@@ -10,7 +10,7 @@ global USBscanController;
 largeJump = 575-12;
 smallJump = 250-12;
 cyclePeriod = 10000;
-laserEndPad = 80;
+laserEndPad = 95;
 
 mirrorMoveTime = uint16([largeJump,smallJump,smallJump,smallJump,...
     smallJump,smallJump,smallJump,smallJump]);
@@ -19,6 +19,7 @@ extraTime = cyclePeriod - sum(mirrorMoveTime) - 8*scanTime;
 mirrorMoveTime(1) = mirrorMoveTime(1) + extraTime;
 totalCycle = sum(mirrorMoveTime) + 8*scanTime;
 maxDuty = 8*double(scanTime - laserEndPad)./double(totalCycle);
+maxLaser = double(scanTime - laserEndPad);
 
 scanOrder = [0,1,2,3,4,5,6,7];
 numZones = 8;
@@ -28,6 +29,7 @@ disp(['Setting scan time: ',num2str(scanTime),' us']);
 disp(['Mirror move times: ',num2str(mirrorMoveTime)]);
 disp(['Scan order: ',num2str(scanOrder)]);
 disp(['Total cycle: ',num2str(totalCycle),' us']);
+disp(['Max laser time: ', num2str(maxLaser),' us']);
 disp(['Laser max duty: ',num2str(maxDuty)]);
 disp(' ');
 

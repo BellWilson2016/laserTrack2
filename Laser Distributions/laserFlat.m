@@ -1,4 +1,4 @@
-function returnPower = laserFlat(X,Y,args)  
+function returnPower = laserFlat(args)  
 
 	
     lp = args(1);

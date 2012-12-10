@@ -16,7 +16,7 @@ function haltVideo(obj, event)
         end
     end
     
-    webPush = true;
+    webPush = false;
     updateWebStatus('RTFW Halted.', webPush);
     
     stop(vid);

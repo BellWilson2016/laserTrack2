@@ -24,6 +24,12 @@ function webUpdateTimerFcn(obj, event)
         else
             webPush = false; 
         end
-        disp([mirrorString,tempString,faultString]);
-        updateWebStatus([mirrorString,tempString,faultString],webPush);
+		
+		% For command line aesthetics
+		if webPush
+		    fprintf([mirrorString,tempString,faultString,'   ']);
+		else
+			disp([mirrorString,tempString,faultString]);
+		end
+		updateWebStatus([mirrorString,tempString,faultString],webPush);
         

@@ -1,23 +1,18 @@
-function runLaserProtocol(protocol, laserDistribution, parameters)
+function runLaserProtocol(exp)
+
+	runString = ['Running protocol: ',func2str(exp.protocol)];
+	disp(runString);
+	pushNow = false;
+	updateWebStatus(runString,pushNow);
 
     global trackingParams;
 
-    exp = feval(protocol, laserDistribution, parameters);
+	% Unpack the protocol by running its handle
+    exp = feval(exp.protocol, exp);
 
-    exp.genotype     = 'ChR-Ctrl';
-    exp.flyAge       = 10;    % Days
-    exp.sex          = 'M';
-    exp.odor         = 'none';
-    exp.odorConc     = 0;          % log10
-    exp.flowRate     = 300;        % mL/side
-
-    
-    exp.comment      = ['-',exp.protocolName,...
-                        '-',exp.laserDistributionName];
-    exp.expName = ['RTFW',exp.comment];
-    exp.trackingParams = trackingParams;
-       
-
+	% Store a copy of the tracking parameters
+    exp.trackingParams = trackingParams;     
+  
 	% Clear the recording buffers
 	trackingParams.recording = false;
 	trackingParams.recordingSerial = false;
@@ -68,12 +63,9 @@ function startEpoch(exp, epochN)
         
 %%    
 function finishEpoch(obj, event, exp, epochN)
-
-        
+       
     	global trackingParams;    
- 
-
-        
+      
 		% If there's another epoch to do, do it
 		% Temember there are n+1 entries for nEpochs
         if (epochN + 1 <= exp.nEpochs)
@@ -111,16 +103,23 @@ function finishEpoch(obj, event, exp, epochN)
 			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
 			trackingParams.serialRecord = [];  
 
+			% Notify of finish
+			disp('Finishing up protocol...');
+			disp(' ');
 			% Synchronize clocks and concatenate data epochs.
 			exp = catSyncTracks(exp);
 
-
 		    % Save data
 		    filename = ['RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
-		    expName  = exp.expName;
+		    expName  = exp.experimentName;
 			% Use evalc to suppress commandline output
 			T = evalc('saveExperimentData(expName,filename, ''exp'')');
 			listRecent(0);
+
+			% Update website
+			runString = ['Finished protocol, wrote: ',num2str(nextFileNumber() - 1)];
+			pushNow = false;
+			updateWebStatus(runString,pushNow);
 		end
 
 

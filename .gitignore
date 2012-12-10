@@ -1,1 +1,7 @@
 .*.mat
+*.mat
+*.m~
+*.html
+*.fig
+
+

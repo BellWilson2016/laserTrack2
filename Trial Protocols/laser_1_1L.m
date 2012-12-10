@@ -1,14 +1,15 @@
 function exp = laser_1_1L(laserDistribution, laserParams)
 
     
-    exp.protocolName      = 'laser_1_1L';
+	laserDistribution = exp.protocolArgs{1};
+	laserParams       = exp.protocolArgs{2};
+
     exp.laserDistribution = laserDistribution;
-    exp.laserDistributionName = func2str(laserDistribution);
-    exp.laserParams      = laserParams;
+    exp.laserParams       = laserParams;
     exp.nullEpochs   = [1];
     exp.leftEpochs   = [2];
-
-    
+	exp.rightEpochs  =  [];
+  
     setLaserOff = {@setLaserDistribution,{@laserOff,[]}};
     setLaserL   = {@setLaserDistribution,{laserDistribution,[laserParams(1), laserParams(2)]}};
     setLaserR   = {@setLaserDistribution,{laserDistribution,[laserParams(2), laserParams(1)]}};

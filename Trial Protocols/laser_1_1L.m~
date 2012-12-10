@@ -7,6 +7,7 @@ function exp = laser_1_1L(laserDistribution, laserParams)
     exp.laserParams      = laserParams;
     exp.nullEpochs   = [1];
     exp.leftEpochs   = [2];
+	exp.rightEpochs   = [];
 
     
     setLaserOff = {@setLaserDistribution,{@laserOff,[]}};
