@@ -9,7 +9,7 @@ void phase2() {
         currentZone = ScanOrder[zoneIndex]; 
         // queueSerialReturn(0x00 + currentZone, prevTimePoint + nextTimeGap);  // Denotes mirror movement.   
         pT.queueNextEvent(nextTimeGap, phase0); 
-        if (laserDuration <= (450ul << 4)) {
+        if (nextTimeGap > (475ul << 4)) {
           checkForTransfers();
         }
 }

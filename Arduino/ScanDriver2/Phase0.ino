@@ -3,7 +3,7 @@ void phase0() {
     // Find the next zone and output it
     SETCURRENTZONE;  // Outputs current zone address
     pT.restoreInterrupts();
-    laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD))/255;  
+    laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) << 8;  
     nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;
     if (laserDuration == 0) {
       pT.queueNextEvent(nextTimeGap, phase3);

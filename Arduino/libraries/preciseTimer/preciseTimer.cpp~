@@ -164,9 +164,9 @@ ISR(TIMER1_COMPA_vect) {
 ISR(TIMER1_COMPB_vect) {
   
     byte fineIntDelayTime;
-    int timeNow;
-    timeNow = TCNT1;    
-    fineIntDelayTime = 4 - ((timeNow - (pT.eventTime & 0xffff) + 3) % 4);
+    int timeIntNow;
+    timeIntNow = TCNT1;    
+    fineIntDelayTime = 4 - ((timeIntNow - (pT.eventTime & 0xffff) + 3) % 4);
     
     // ISR has variable return times, so remove this
     // Cycle-accurate assembly delay
@@ -182,7 +182,7 @@ ISR(TIMER1_COMPB_vect) {
                   "nop                   \n\t" 
                 "end:                    \n\t"
               :
-              : [delay] "r" (fineDelayTime)
+              : [delay] "r" (fineIntDelayTime)
               :
               "r30","r31");
        

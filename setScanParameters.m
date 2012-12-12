@@ -18,8 +18,8 @@ scanTime = uint16((cyclePeriod - sum(mirrorMoveTime))/8);
 extraTime = cyclePeriod - sum(mirrorMoveTime) - 8*scanTime;
 mirrorMoveTime(1) = mirrorMoveTime(1) + extraTime;
 totalCycle = sum(mirrorMoveTime) + 8*scanTime;
-maxDuty = 8*double(scanTime - laserEndPad)./double(totalCycle);
-maxLaser = double(scanTime - laserEndPad);
+maxDuty = 8*double(scanTime - laserEndPad)*(255/256)./double(totalCycle);
+maxLaser = double(scanTime - laserEndPad)*(255/256);
 
 scanOrder = [0,1,2,3,4,5,6,7];
 numZones = 8;

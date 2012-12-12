@@ -68,7 +68,7 @@ void setup() {
   pT.addInterrupt(&UCSR0B,(1<<RXCIE0)|(1<<TXCIE0)|(1<<UDRIE0));
   pT.addInterrupt(&TWCR,  (1<<TWIE));
  
-  pT.setInterruptBlockTime(30ul << 4);
+  pT.setInterruptBlockTime(45ul << 4);
   pT.start();
   pT.queueNextEvent((mirrorMoveTime[currentZone] << 4), phase3);
   

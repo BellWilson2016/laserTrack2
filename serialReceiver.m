@@ -59,6 +59,7 @@ function serialReceiver(obj,event)
 		                bitshift(x((n-1)*5+3),16) + ...
 		                bitshift(x((n-1)*5+4),8) + ...
 		                bitshift(x((n-1)*5+5),0))/2;
+					% disp(num2str(trackingParams.mirrorTemp));
 
              end
         end

@@ -11,7 +11,7 @@ void phase1() {
         pT.restoreInterrupts();
         nextTimeGap = laserDuration;
         pT.queueNextEvent(nextTimeGap, phase2);
-        if (laserDuration > (450ul << 4)) {
+        if (nextTimeGap > (475ul << 4)) {
           checkForTransfers();
         }
     // But for short pulses, delay a bit, then jump right to the next phase     

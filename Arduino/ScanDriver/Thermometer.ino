@@ -25,7 +25,7 @@ void doThermometer() {
   switch (thermPhase) {
     case 0:
       thermReset1();
-      delayMicroseconds(400);
+      delayMicroseconds(300);
       thermReset2();
       break;
     case 1:
@@ -44,7 +44,7 @@ void doThermometer() {
     case 5:
       PULLUPLO;
       thermReset1();
-      delayMicroseconds(400);
+      delayMicroseconds(300);
       thermReset2();
       break;
     case 6:

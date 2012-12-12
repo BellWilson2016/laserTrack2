@@ -25,11 +25,11 @@
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
 
 // Time pads:
-#define TRANSFERWINDOWSIZE (450ul <<  4)      // Allow 450 usec for serial and I2C transfers
+#define TRANSFERWINDOWSIZE (475ul <<  4)      // Allow 450 usec for serial and I2C transfers
 #define TIMERCAPTUREPAD    ( 45ul <<  4)      // Don't loop again within this time of the trigger
 #define TIMERWARNINGPAD    (  4ul <<  4)      // Throw timer warning if less time than this before trigger
 #define LASERENDPAD        ( 95ul <<  4)      // Ensure laser off this long before mirror movement starts
-#define LOSTCONTACTTIME    (  2ul << 25)      // Shut down the mirrors if you don't talk to the computer in about 4 sec.
+#define LOSTCONTACTTIME    (  2ul << 25)      // Shut down the mirrors if you don't talk to the computer in about 4 sec. 2 << 25
 
 // Error codes:
 #define MISSEDTIMERERROR 5
@@ -199,7 +199,7 @@ void loop() {
       // Find the next zone and output it
       SETCURRENTZONE;  // Outputs current zone address
       SREG = sreg;
-      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD))/255;  
+      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;  
       prevTimePoint += nextTimeGap;
       nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;
       if (laserDuration == 0) {
@@ -207,7 +207,7 @@ void loop() {
       } else {
         phase = 1;
         queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);                  // Denotes laser on.  Do this in advance in case of short laser epochs.
-        // queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Denotes laser off.
+        queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Denotes laser off.
       }     
       break;
     
@@ -299,8 +299,7 @@ void loop() {
         prevTimePoint += nextTimeGap;
         nextTimeGap = ((unsigned long) scanTime) << 4;        
         // If there's enough time to Rx or Tx check the serial port and I2C
-        checkForTransfers();
-        
+        checkForTransfers();      
         // Update zone here for speed at start of phase 0
         zoneIndex++;
         if (zoneIndex >= numZones) {zoneIndex = 0;}

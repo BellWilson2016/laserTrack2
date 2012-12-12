@@ -27,14 +27,14 @@ void checkForTransfers() {
           }
       } else if (pT.eventTime - lastTemp > thermDelay)  {
           doThermometer();  
-      } else if (retDataIdxGap > 10) {
+      } else if (retDataIdxGap > 8) {
           // If the dataGap is big, report it
           if (retDataIdxGap > STORAGESIZE - 20) {
               queueSerialReturn(0xfd, (unsigned long) retDataIdxGap);
           }
           // If there's space in the buffer...
-          if (Serial.txBufferSpace() > 10*5) {     
-            for (n=0; n < 10; n++) {
+          if (Serial.txBufferSpace() > 8*5) {     
+            for (n=0; n < 8; n++) {
               // queueSerialReturn(0x23, prevTimePoint);
               // Don't send too many bytes
                 SERIALPINON;

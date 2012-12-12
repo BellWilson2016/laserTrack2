@@ -59,7 +59,7 @@ void preciseTimer::queueNextEvent(unsigned long eventDelay, function scheduleFcn
   }
   currentTime = ((unsigned long) timerOverflows) << 16 + currentCounts;
   // If there's not enough time to catch the interrupt, throw an error and run the function
-  if ((preEventTime - currentTime) < PREEVENTPAD) {
+  if ((long) (preEventTime - currentTime) < PREEVENTPAD) {
     eventFcn();
   }
   
