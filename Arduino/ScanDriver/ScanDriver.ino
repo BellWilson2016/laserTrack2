@@ -50,7 +50,8 @@
 // Variables updated for each fly, 40 byte transmission
   byte Xpositions[16];
   byte Ypositions[16];
-  byte LaserPowers[8] = {0,0,0,0,0,0,0,0};  // 0-255 scaled to 0 - scanTime microseconds
+  byte LaserPowers[8] = {0,0,0,0,0,0,0,0};       // 0-255 scaled to 0 - scanTime microseconds
+  byte LaserPowersBuffer[8] = {0,0,0,0,0,0,0,0}; // Buffer to sync with DAC
   
   // Scan movement parameters, 28 byte transmission
   unsigned int  scanTime =  971u;            // Max microseconds to allow for each laser hit.

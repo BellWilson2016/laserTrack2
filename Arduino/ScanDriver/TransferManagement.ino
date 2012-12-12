@@ -19,6 +19,7 @@ void checkForTransfers() {
        DACPINON;
        //SERIALPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
+          LaserPowers[ScanOrder[nextDACIndex]] = LaserPowersBuffer[ScanOrder[nextDACIndex]];
        //SERIALPINOFF;   
        DACPINOFF;
           DACsLeftToUpdate--;

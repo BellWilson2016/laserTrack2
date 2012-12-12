@@ -61,12 +61,9 @@ void receiveSerial() {
     transmissionID = Serial.read();
     Serial.readBytes(((char *) Xpositions), 16);
     Serial.readBytes(((char *) Ypositions), 16);
-    Serial.readBytes(((char *) LaserPowers),8);   
+    Serial.readBytes(((char *) LaserPowersBuffer),8);   
     DACsLeftToUpdate = numZones;
-    nextDACIndex = zoneIndex + 1;
-    if (nextDACIndex >= numZones) {
-      nextDACIndex = 0;
-    }
+    nextDACIndex = (zoneIndex + 2) % numZones;
     lastComputerContact = prevTimePoint;
     queueSerialReturn(0x24 + transmissionID, prevTimePoint);
     // If the max-temperature flag is tripped, keep the mirrors locked.
