@@ -23,8 +23,7 @@ void checkForTransfers() {
        //SERIALPINOFF;   
        DACPINOFF;
           DACsLeftToUpdate--;
-          nextDACIndex = nextDACIndex + 1; 
-          if (nextDACIndex >= numZones) {nextDACIndex = 0; }        
+          nextDACIndex++; nextDACIndex %= numZones;    
       } else if (timeNow - lastTemp > thermDelay) {
        // DACPINON;
        //SERIALPINON;

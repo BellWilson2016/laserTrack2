@@ -87,8 +87,7 @@ void doThermometer() {
   
   lastTemp = prevTimePoint;
   // Increment the temp phase to run the next instruction
-  thermPhase++;
-  if (thermPhase > 14) { thermPhase = 0; }
+  thermPhase++; thermPhase %= 14;
   
 }
 

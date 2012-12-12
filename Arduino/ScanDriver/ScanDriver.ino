@@ -284,8 +284,7 @@ void loop() {
         // If there's enough time to Rx or Tx check the serial port and I2C
         checkForTransfers(); 
         // Update zone here for speed at start of phase 0
-        zoneIndex++;
-        if (zoneIndex >= numZones) {zoneIndex = 0;}
+        zoneIndex++;  zoneIndex %= numZones;       
         currentZone = ScanOrder[zoneIndex]; 
         // queueSerialReturn(0x00 + currentZone, prevTimePoint + nextTimeGap);  // Denotes mirror movement.
       break;
@@ -302,7 +301,7 @@ void loop() {
         // If there's enough time to Rx or Tx check the serial port and I2C
         checkForTransfers();      
         // Update zone here for speed at start of phase 0
-        zoneIndex++;
+        zoneIndex++;  zoneIndex %= numZones;
         if (zoneIndex >= numZones) {zoneIndex = 0;}
         currentZone = ScanOrder[zoneIndex]; 
         // queueSerialReturn(0x00 + currentZone, prevTimePoint + nextTimeGap);  // Denotes mirror movement.
