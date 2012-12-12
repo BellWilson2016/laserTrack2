@@ -32,6 +32,7 @@ void sleepMode() {
       Ypositions[2*n+0] = 0x80;
       Ypositions[2*n+1] = 0x80;
       LaserPowers[n] = 0;
+      LaserPowersBuffer[n] = 0;
     }
     
     // Flag that the DACs need updating

@@ -22,7 +22,6 @@ function calibrateLaser()
     trackingParams.invert = true;
     
     laserCam();
-	showRawView();
     updateScanDriver(A.*-(2^13)*.95,A.*-2^11,A.*calibrationPower*1);
     disp('Click beam reflection zone');
     pts = ginput(2);

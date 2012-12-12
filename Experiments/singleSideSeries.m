@@ -5,9 +5,9 @@ function singleSideSeries()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYMMDD-HHmmss-'),'singleSideSeries'];
-    exp.genotype       = 'ChR-Ctrl';
-    exp.flyAge         = 10;    % Days
-    exp.sex            = 'M';
+    exp.genotype       = 'NorpA7';
+    exp.flyAge         = '?';    % Days
+    exp.sex            = 'M+F';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 300;        % mL/side

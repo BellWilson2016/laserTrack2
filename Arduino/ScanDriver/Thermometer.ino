@@ -25,7 +25,7 @@ void doThermometer() {
   switch (thermPhase) {
     case 0:
       thermReset1();
-      delayMicroseconds(300);
+      delayMicroseconds(400);
       thermReset2();
       break;
     case 1:
@@ -44,7 +44,7 @@ void doThermometer() {
     case 5:
       PULLUPLO;
       thermReset1();
-      delayMicroseconds(300);
+      delayMicroseconds(400);
       thermReset2();
       break;
     case 6:
@@ -87,7 +87,7 @@ void doThermometer() {
   
   lastTemp = prevTimePoint;
   // Increment the temp phase to run the next instruction
-  thermPhase++; thermPhase %= 14;
+  thermPhase++; thermPhase %= 15;
   
 }
 
