@@ -22,20 +22,6 @@
                                  
 // In-line assembly utilities
 #define NOP asm volatile("nop\n\t"::)
-<<<<<<< HEAD
-#define TRANSFERWINDOWSIZE (450 << 4)      // Allow 450 usec for serial and I2C transfers
-#define STORAGESIZE 256                     // Storage buffer for serial return
-#define LASERENDPAD (80 << 4)              // Pad time after longest laser epoch before mirro movement (us)
-#define LOSTCONTACTTIME   ((unsigned long) 2 << 25)  // Shut down the mirrors if you don't talk to the computer in about 4 sec.
- 
-// Issues:
-// 
-// Remember to set I2C speed to 400kHz in the environment
-// Remember to set Serial buffer to 128 bytes in the environment
-//   Edited HardwareSerial.cpp to flag buffer overruns
-// Serial interrupt problems with dense serial returns
-// Account for latency before mirror movement starts
-=======
 #define DONOTOPTIMIZE __attribute__((optimize("O0")))
 
 // Time pads:
@@ -44,7 +30,6 @@
 #define TIMERWARNINGPAD    (  4ul <<  4)      // Throw timer warning if less time than this before trigger
 #define LASERENDPAD        ( 95ul <<  4)      // Ensure laser off this long before mirror movement starts
 #define LOSTCONTACTTIME    (  2ul << 25)      // Shut down the mirrors if you don't talk to the computer in about 4 sec.
->>>>>>> correctCurrent
 
 // Error codes:
 #define MISSEDTIMERERROR 5
@@ -143,7 +128,7 @@ void loop() {
   timeNow = uTimer();
   
   // Check to see if we've missed a time target
-  if ((timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
+  if ((long) (timeNow + TIMERWARNINGPAD - prevTimePoint) > nextTimeGap) {     
     // If we missed the interval, halt execution
     // catchError(MISSEDTIMERERROR);
     // If we missed the interval, notify via serial
@@ -157,7 +142,7 @@ void loop() {
   
   // If we're not at a time point, return and check again as soon as possible, 
   // otherwise proceed with fine timing.
-  if ((timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
+  if ((long) (timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
     SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
     if (mode > 0) {

@@ -1,0 +1,112 @@
+// TWI port parameters
+#define TWIRATE   400000        // TWI SCL frequence
+#define WRITECODE B00110000     // Writes and updates to DAC
+#define XDACADDR  B1010100      // XDAC I2C Address
+#define YDACADDR  B1010111      // YDAC I2C Address
+
+// This sends the data to the DACs over I2C
+// DACs are set to update synchronously with the transfer
+// This does transfers for the given address in X and Y
+void passDataToDAC(byte addr) {
+  
+  byte command[3];
+  
+
+  command[0] = WRITECODE | addr;
+  Wire.beginTransmission(XDACADDR);
+    command[1] =  Xpositions[2*addr + 0];
+    command[2] =  Xpositions[2*addr + 1];
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  Wire.beginTransmission(YDACADDR);
+    command[1] =  Ypositions[2*addr + 0];
+    command[2] =  Ypositions[2*addr + 1];
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  queueSerialReturn(0x08 + addr, pT.eventTime);  
+
+}
+
+void setupDACs() {
+  
+  byte command[3];
+  
+  digitalWrite(CLRPIN, HIGH);   // Leave HIGH to prevent clearing
+  digitalWrite(XLDACPIN, LOW);  // Leave LOW for synchronous updating with data transmission
+  digitalWrite(YLDACPIN, LOW);
+  
+  // Set the TWI bit rate; use this rate that we've defined, not TWI_FREQ from the library
+  TWBR = ((F_CPU / TWIRATE) - 16) / 2;     
+  
+  Wire.begin();    // Start the I2C bus as Master  
+  
+  // Setup XDAC
+  Wire.beginTransmission(XDACADDR);
+    // Turn on internal reference on
+    command[0] = B10000000;
+    command[1] = 0;
+    command[2] = 1;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  Wire.beginTransmission(XDACADDR);
+    // Clear-code set to mid-scale
+    command[0] = B01010000;
+    command[1] = 0;
+    command[2] = B00000001;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  // Set outputs to clear code
+  digitalWrite(CLRPIN,LOW);
+  digitalWrite(CLRPIN,HIGH);
+  
+  Wire.beginTransmission(XDACADDR);
+    // Sets LDACs to synchronous, not pin controlled
+    command[0] = B01100000;
+    command[1] = 0;
+    command[2] = B11111111;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  Wire.beginTransmission(XDACADDR);
+    // Power-down set to normal operation for all channels
+    command[0] = B01000000;
+    command[1] = 0;
+    command[2] = B11111111;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+
+    // Setup YDAC
+  Wire.beginTransmission(YDACADDR);
+    // Turn on internal reference on
+    command[0] = B10000000;
+    command[1] = 0;
+    command[2] = 1;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  Wire.beginTransmission(YDACADDR);
+    // Clear-code set to mid-scale
+    command[0] = B01010000;
+    command[1] = 0;
+    command[2] = B00000001;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  // Set outputs to clear code
+  digitalWrite(CLRPIN,LOW);
+  digitalWrite(CLRPIN,HIGH);
+  
+  Wire.beginTransmission(YDACADDR);
+    // Sets LDACs to synchronous, not pin controlled
+    command[0] = B01100000;
+    command[1] = 0;
+    command[2] = B11111111;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  Wire.beginTransmission(YDACADDR);
+    // Power-down set to normal operation for all channels
+    command[0] = B01000000;
+    command[1] = 0;
+    command[2] = B11111111;
+    Wire.write(command, 3);
+  Wire.endTransmission();
+  
+}
+
