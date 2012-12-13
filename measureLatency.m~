@@ -1,4 +1,4 @@
-function latencyList = measureLatency()
+function measureLatency()
 
 	global trackingParams;
 
@@ -32,6 +32,6 @@ function dropFrameFcn(obj,event,nFrames)
 
 function doAnalysisFcn(obj,event,nFrames,frameRate,fileN)
 
-	disp(fileN);
+	calculateLatency(fileN);
 
 	
