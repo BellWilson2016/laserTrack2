@@ -206,31 +206,31 @@ void loop() {
       // Find the next zone and output it
       SETCURRENTZONE;  // Outputs current zone address
       // Do a video trigger
-//      if (currentZone == 0) {
-//        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
-//        if (vidTrigPhase == 0) {
-//          if (dropFrames == 0) {
-//            VIDTRIGPINON;
-//            SREG = sreg;
-//            queueSerialReturn(0x64, prevTimePoint);
-//          } else {
-//            dropFrames--;
-//            SREG = sreg;
-//            queueSerialReturn(0x65, prevTimePoint);
-//          }         
-//        } else if (vidTrigPhase == 1) {
-//          VIDTRIGPINOFF;
-//          SREG = sreg;
-//        }      
-//      } 
       if (currentZone == 0) {
         vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
         if (vidTrigPhase == 0) {
+          if (dropFrames == 0) {
             VIDTRIGPINON;
+            SREG = sreg;
+            queueSerialReturn(0x64, prevTimePoint);
+          } else {
+            dropFrames--;
+            SREG = sreg;
+            queueSerialReturn(0x65, prevTimePoint);
+          }         
         } else if (vidTrigPhase == 1) {
-            VIDTRIGPINOFF;
+          VIDTRIGPINOFF;
+          SREG = sreg;
         }      
       } 
+//      if (currentZone == 0) {
+//        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
+//        if (vidTrigPhase == 0) {
+//            VIDTRIGPINON;
+//        } else if (vidTrigPhase == 1) {
+//            VIDTRIGPINOFF;
+//        }      
+//      } 
  
       SREG = sreg;
       
