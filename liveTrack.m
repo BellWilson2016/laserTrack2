@@ -16,24 +16,19 @@ function liveTrack(obj, event)
 
 	% Set a lock to prevent processing of serial data if we're currently working on a frame
 	trackingParams.busyLock = true;
-    
-	if (obj.FramesAvailable > 0)
-		frame = getdata(obj,1);
-	else
-		return;
-	end
-	
+    	
     % Get the most recent frame if multiple are available
-%    allFrames = getdata(obj,obj.FramesAvailable);
+    allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
-%    if size(allFrames,1) > 0
+    if size(allFrames,1) > 0
 %		if (size(allFrames,4) > 1)
 %			disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
 %		end
-%        frame = allFrames(:,:,:,end);
-%    else
-%        return;
-%    end
+        frame = allFrames(:,:,:,end);
+    else
+		busyLock = false;
+        return;
+    end
     
     % Get trackingParams   
     trackThresh = trackingParams.trackThresh;
