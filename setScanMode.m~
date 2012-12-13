@@ -1,0 +1,18 @@
+function setScanMode(vals)
+
+global USBscanController;
+global writeLock;
+
+list = [3,vals];
+
+    % Write them all to USB if idle, otherwise drop
+    transmitted = false;
+    while ~transmitted
+		if ~writeLock
+			writeLock = true;
+		    if strcmp(USBscanController.TransferStatus,'idle')
+				    fwrite(USBscanController, [uint8(list)],  'uint8','async');
+				    transmitted = true;
+		    end
+		end
+    end

@@ -1,4 +1,4 @@
-function measureLatency()
+function latencyList = measureLatency()
 
 	global trackingParams;
 

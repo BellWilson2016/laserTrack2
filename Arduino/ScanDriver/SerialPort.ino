@@ -27,6 +27,7 @@ void setupSerial() {
     23: Serial returned data
     24 + 0-3f (36d-99d): Serial received scan data + ID code
     64: Video frame triggered
+    65: Video frame dropped (intentionally)
     
     fd: Serial alarm codes
     fe: Overtemperature alarm
@@ -107,7 +108,7 @@ void receiveSerial() {
       mode = 0;
     } else if (mode == 3) {
       mode = 0;
-      dropFrame = true;
+      dropFrames = byte2;
     }  
     queueSerialReturn(0x22, prevTimePoint);
     

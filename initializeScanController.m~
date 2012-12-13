@@ -6,6 +6,7 @@
 function USBscanController = initializeScanController()
 
 global USBscanController;
+global writeLock;
 
     if ispc()
         portLocation = 'COM10';        
@@ -23,6 +24,9 @@ global USBscanController;
 	set(USBscanController,'InputBufferSize',5*64*200);
     % set(USBscanController,'Terminator',10);
     % set(USBscanController,'Timeout',.2);
+
+	writeLock = false;
+	set(USBscanController,'OutputEmptyFcn',@outputEmptyFcn);
         
     fopen(USBscanController);
     pause(2);

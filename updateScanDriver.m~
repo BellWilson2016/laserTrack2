@@ -23,7 +23,7 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     list = [41,transmissionID,XPos,YPos,pVals];
     
     % Write them all to USB if idle, otherwise drop
-	if strcmp(USBscanController.TransferStatus,'idle') && (USBscanController.BytesToOutput == 0)
+	if strcmp(USBscanController.TransferStatus,'idle') 
 		fwrite(USBscanController, [uint8(list)],  'uint8','async');
 	else
 			   % disp(['Serial collision: ',datestr(now)]);
