@@ -1,6 +1,6 @@
-function calculateLatency()
+function calculateLatency(expN)
 
-	loadData(4161);
+	loadData(expN);
 
 	serialID = exp.wholeTrack.serialID.Data;
 	serialTimes = exp.wholeTrack.serialID.Time;

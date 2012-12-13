@@ -37,14 +37,13 @@ function calculateLatency(expN)
 	offLatency = transferForLast' - lastTrigTimes;
 	onLatency  = transferForFirst' - firstTrigTimes;
 
+	figure();
 	subplot(2,1,1);
 	hist(offLatency);
 	subplot(2,1,2);
 	hist(onLatency);	
 
-	figure();
-
-	
+	figure();	
 	h = quickRaster(0,1,serialTimes(vidTrigs)); hold on;
 	set(h,'Color','g');
 	h = quickRaster(0,1,serialTimes(vidNoTrigs));

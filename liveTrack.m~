@@ -149,7 +149,8 @@ function liveTrack(obj, event)
             end  
         end % End if pixels are found
     end  % End for each lane
-
+	
+	trackingParams.nPixels = nPixels;
 
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
@@ -179,6 +180,7 @@ function liveTrack(obj, event)
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
     end
+
         
 
     

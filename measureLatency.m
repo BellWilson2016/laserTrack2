@@ -9,9 +9,6 @@ function measureLatency()
 	frameDropTimer = timer('ExecutionMode','fixedRate','Period',3,...
         'TimerFcn',{@dropFrameFcn, nFrames}, 'StartDelay',3,'TasksToExecute',180/3);
 
-	doAnalysisTimer = timer('ExecutionMode','singleShot','StartDelay',190,...
-		'TimerFcn',{@doAnalysisFcn,fileN});
-
 	% Setup an experiment to run
 	exp.experimentName = ['latencyMeasurement'];
 	powerL = 0;
@@ -21,16 +18,12 @@ function measureLatency()
 	runLaserProtocol(exp);
 
 	start(frameDropTimer);
-	start(doAnalysisTimer);
-
 
 
 function dropFrameFcn(obj,event,nFrames)
 
 	setScanMode([3,nFrames,0]);
 
-function doAnalysisFcn(obj,event, fileN)
 
-	calculateLatency(fileN);
 
 	
