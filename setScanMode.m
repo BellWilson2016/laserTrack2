@@ -1,15 +1,18 @@
 function setScanMode(vals)
 
 global USBscanController;
+global trackingParams;
 
 list = [3,vals];
 
-    % Write them all to USB if idle, otherwise drop
-    transmitted = false;
-    while ~transmitted
-
-		if strcmp(USBscanController.TransferStatus,'idle')  && (USBscanController.BytesToOutput == 0)
+% If the mirrors are off, transmit away
+if ~trackingParams.scanMirrors
 			fwrite(USBscanController, [uint8(list)],  'uint8','async');
-			transmitted = true;
-		end
-    end
+% Otherwise, queue it for transmission along with position data
+% This seems to be necessary to prevent serial collisions in MATLAB
+else
+	trackingParams.queuedData = [trackingParams.queuedData,list];
+end
+
+
+

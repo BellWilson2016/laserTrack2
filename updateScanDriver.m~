@@ -21,9 +21,15 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);
     list = [41,transmissionID,XPos,YPos,pVals];
+
+	% Output any other queued output data along with position info
+	if (size(trackingParams.queuedData,2) > 0)
+		list = [list,trackingParams.queuedData];
+		trackingParams.queuedData = [];
+	end
     
     % Write them all to USB if idle, otherwise drop
-	if strcmp(USBscanController.TransferStatus,'idle') 
+	if strcmp(USBscanController.TransferStatus,'idle') && (USBscanController.BytesToOutput == 0)
 		fwrite(USBscanController, [uint8(list)],  'uint8','async');
 	else
 			   % disp(['Serial collision: ',datestr(now)]);

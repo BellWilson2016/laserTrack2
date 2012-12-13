@@ -65,6 +65,7 @@ function trackingParams = initTrackingParams()
 	% Serial data logging
     trackingParams.recordingSerial = false;
     trackingParams.serialRecord = [];
+	trackingParams.queuedData = [];
 
 	% Mirror temp safety
     trackingParams.scanMirrors = true;

@@ -123,7 +123,7 @@ void receiveSerial() {
         byte2 = Serial.read();
       }
       // Throw an error back
-      queueSerialReturn(0xfd, ((unsigned long) byte1) << 8);
+      queueSerialReturn(0xfd, ((unsigned long) transmissionSize) << 8);
   }
   
   

@@ -6,7 +6,7 @@
 function transmissionID = updateScanDriver(xVals,yVals,pVals) 
 
     global USBscanController;   % The arduino to talk to
-	global writeLock;
+	global trackingParams;
     
     % DAC calibrations to set zero at zero
     xPosCal = [69,92,3,-2,54,47,7,-61];
@@ -21,6 +21,12 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);
     list = [41,transmissionID,XPos,YPos,pVals];
+
+	% Output any other queued output data along with position info
+	if (size(trackingParams.queuedData,2) > 0)
+		list = [list,trackingParams.queuedData];
+		trackingParams.queuedData = [];
+	end
     
     % Write them all to USB if idle, otherwise drop
 	if strcmp(USBscanController.TransferStatus,'idle') && (USBscanController.BytesToOutput == 0)
