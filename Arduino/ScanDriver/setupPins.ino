@@ -1,6 +1,6 @@
 void setupPins() {
    pinMode(SERIALSYNCPIN, OUTPUT); digitalWrite(SERIALSYNCPIN, LOW);
-   pinMode(DACSYNCPIN, OUTPUT);    digitalWrite(DACSYNCPIN, LOW);
+   pinMode(VIDTRIGPIN, OUTPUT);    digitalWrite(VIDTRIGPIN, HIGH);
    pinMode(LASERPIN, OUTPUT);      digitalWrite(LASERPIN, LOW);
    pinMode(SYNC1PIN, OUTPUT);      digitalWrite(SYNC1PIN, LOW);
    pinMode(SYNC2PIN, OUTPUT);      digitalWrite(SYNC2PIN, LOW);

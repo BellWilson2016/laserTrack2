@@ -2,7 +2,6 @@
 
 void checkForTransfers() {
   
-//SERIALPINON;
   byte dataLoc;
   unsigned long aTime;
   byte n;
@@ -16,20 +15,12 @@ void checkForTransfers() {
         SERIALPINOFF;
       // If there's not, pass data to the next DAC  
       } else if (DACsLeftToUpdate > 0)  {
-       DACPINON;
-       //SERIALPINON;
           passDataToDAC(ScanOrder[nextDACIndex]);
           LaserPowers[ScanOrder[nextDACIndex]] = LaserPowersBuffer[ScanOrder[nextDACIndex]];
-       //SERIALPINOFF;   
-       DACPINOFF;
           DACsLeftToUpdate--;
           nextDACIndex++; nextDACIndex %= numZones;    
       } else if (timeNow - lastTemp > thermDelay) {
-       // DACPINON;
-       //SERIALPINON;
          doThermometer();  
-       //SERIALPINOFF;
-       // DACPINOFF;
       } else if (retDataIdxGap > SERIALSENDBLOCK)  {
           // If the dataGap is big, report it
           if (retDataIdxGap > 0xD0) {
@@ -37,7 +28,6 @@ void checkForTransfers() {
           }
           // If there's space in the buffer...
           if (Serial.txBufferSpace() > SERIALSENDBLOCK*5) {     
-            //SERIALPINON;
             for (n=0; n < SERIALSENDBLOCK; n++) {
               // queueSerialReturn(0x23, prevTimePoint);
               // Don't send too many bytes
@@ -52,12 +42,10 @@ void checkForTransfers() {
                 retDataIdxGap--;
                 
             }
-            //SERIALPINOFF;
           }    
      } else if (prevTimePoint - lastComputerContact > LOSTCONTACTTIME) {
           sleepMode();
      }
   }
-//  SERIALPINOFF;
 }
 

@@ -9,9 +9,9 @@ void DONOTOPTIMIZE catchError(int errorNumber) {
   while (true) {
     cli();
     for (i=0; i < errorNumber; i++) {
-      DACPINON;
-      DACPINOFF;
-      DACPINOFF;
+      SERIALPINON;
+      SERIALPINOFF;
+      SERIALPINOFF;
     }
     i = 0;
     while (i < 20) {

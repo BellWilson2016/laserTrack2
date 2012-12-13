@@ -23,9 +23,10 @@ void setupSerial() {
     18-1F: LaserOff
     20: ------------------
     21: Serial received scan parameters
-    22: serial received modes
+    22: Serial received modes
     23: Serial returned data
-    24 + 0-3f (24-73): Serial received scan data + ID code
+    24 + 0-3f (36d-99d): Serial received scan data + ID code
+    64: Video frame triggered
     
     fd: Serial alarm codes
     fe: Overtemperature alarm
@@ -104,7 +105,10 @@ void receiveSerial() {
         LASERPINON;
       } 
       mode = 0;
-    }
+    } else if (mode == 3) {
+      mode = 0;
+      dropFrame = true;
+    }  
     queueSerialReturn(0x22, prevTimePoint);
     
   } else {

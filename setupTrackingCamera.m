@@ -22,13 +22,17 @@ function vid = setupTrackingCamera()
     % vid = videoinput('dcam',1,'Y8_640x480');
     if ispc()
         vid = videoinput('dcam',1,'F7_Y8_640x480');
+		set(vid,'FramesPerTrigger',inf);
+		set(vid,'FrameGrabInterval', 1);
+		% set(vid,'LoggingMode','disk');
+    triggerconfig(vid, 'Manual');
     elseif isunix()
         vid = videoinput('dcam',1,'F7_Y8_640x480_mode0');
+		triggerconfig(vid,'hardware','risingEdge','externalTriggerMode0-Source0');
+		set(vid,'FramesPerTrigger',1);
+		set(vid,'TriggerRepeat',inf);
+		set(vid,'FrameGrabInterval', 1);
     end
-    set(vid,'FramesPerTrigger',inf);
-    set(vid,'FrameGrabInterval', 1);
-    % set(vid,'LoggingMode','disk');
-    triggerconfig(vid, 'Manual');
     
     % Setup the camera
     mcam(5000);
@@ -46,14 +50,14 @@ function vid = setupTrackingCamera()
             'Position',[1057, 356, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');
     elseif isunix()
-		% BytesPerPacket:   FPS:
-		% 	524				30
+		% BytesPerPacket:   FPS:  (This changes in external trigger mode!)
+		% 	524 / 600		30
 		%	704				40
 		%	792				45
-		%	884				50
+		%	884 / 920		50
 		%	976				55
 		%	1060			60
-        set(vid.Source, 'BytesPerPacket',524); 
+        set(vid.Source, 'BytesPerPacket',600); 
         set(trackingParams.previewFigure, 'Name', 'Live video...', ...
             'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');
@@ -96,7 +100,9 @@ function vid = setupTrackingCamera()
 
     % Start the video running so tracking will continue
     start(vid);
-    trigger(vid);
+	if ispc()
+    	trigger(vid);
+	end
     
 
      

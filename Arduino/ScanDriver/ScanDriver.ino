@@ -19,6 +19,9 @@
 #include "improvedHardwareSerial.h"                    // Need to include is first before arduino.h is imported because this #ifndef's out the exsisting HardwareSerial core library.
 #include "ScanDriverPinDefs.h"
 #include <Wire.h>                                      // Nb. We programatically sets the TWI speed to 400 kHz at DAC setup.
+
+// Video triggering
+#define VIDTRIGINTERVAL 3
                                  
 // In-line assembly utilities
 #define NOP asm volatile("nop\n\t"::)
@@ -45,6 +48,9 @@
   byte mode;      
   byte phase;
   byte currentZone;
+  
+  byte vidTrigPhase;
+  boolean dropFrame;
   
   
 // Variables updated for each fly, 40 byte transmission
@@ -199,7 +205,24 @@ void loop() {
     case 0: 
       // Find the next zone and output it
       SETCURRENTZONE;  // Outputs current zone address
+      // Do a video trigger
+      if (currentZone == 0) {
+        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
+        if (vidTrigPhase == 0) {
+          if (!dropFrame) {
+            VIDTRIGPINON;
+          } else {
+            dropFrame = false;
+          }
+          SREG = sreg;
+          queueSerialReturn(0x64, prevTimePoint);
+        } else if (vidTrigPhase == VIDTRIGINTERVAL - 1) {
+          VIDTRIGPINOFF;
+          SREG = sreg;
+        }      
+      } 
       SREG = sreg;
+      
       laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;  
       prevTimePoint += nextTimeGap;
       nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;

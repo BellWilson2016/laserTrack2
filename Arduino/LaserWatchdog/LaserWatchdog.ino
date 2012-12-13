@@ -17,7 +17,7 @@
 #define DISARMPIN      4     // Input from laser arming switch
 #define ARMLIGHTPIN    5     // Controls arming indicator light
 #define FAULTLIGHTPIN  6     // Controls alarm light
-#define TIMINGPIN      7     // Strobes each cycle, to check sampling time
+#define DRIVERFAULTPIN 7     // Mirror Driver drives LOW on fault
 
 #define SAMPLEPERIOD    50u    // In us,
 #define RINGBUFFERSIZE  250u   // In bytes.  400 us/byte x 250 bytes = 100 ms in 2000 samples 
@@ -29,6 +29,7 @@ unsigned long lastSample;      // Time of last sample
 boolean       armed;
 boolean       SSR;
 boolean       faultTripped;
+boolean       driverFault;
 
 byte          ringBuffer[RINGBUFFERSIZE];
 unsigned int  currentTotal;
@@ -44,13 +45,12 @@ void setup() {
   pinMode(DISARMPIN, INPUT);
   pinMode(ARMLIGHTPIN, OUTPUT);
   pinMode(FAULTLIGHTPIN, OUTPUT);
-  pinMode(TIMINGPIN, OUTPUT);
+  pinMode(DRIVERFAULTPIN, INPUT);
   
   digitalWrite(SSRPIN, LOW);
   digitalWrite(DISARMPIN, HIGH);       // Set pull-up resistor on
   digitalWrite(ARMLIGHTPIN, LOW);
   digitalWrite(FAULTLIGHTPIN, LOW);
-  digitalWrite(TIMINGPIN, LOW);
   
   // Initialize ringBuffer to zero
   for (unsigned int ringPos = 0; ringPos < RINGBUFFERSIZE; ringPos++) {
@@ -65,13 +65,15 @@ void setup() {
   armed = false;
   SSR = false;
   faultTripped = false;
+  driverFault = false;
   
   // Wait for other systems to boot and settle
   delay(200);                      
   
-  armed = !(digitalRead(DISARMPIN)); 
+  armed = !(digitalRead(DISARMPIN));
+  driverFault = !(digitalRead(DRIVERFAULTPIN)); 
   // Trip the alarm if the laser is armed on system booting.
-  if (armed) {
+  if (armed || driverFault) {
     faultTripped = true;
     digitalWrite(FAULTLIGHTPIN, faultTripped);
     // Blink the arm light pin until disarmed
@@ -82,7 +84,8 @@ void setup() {
       delay(200);
       // Proceed when arm switch is off
       armed = !digitalRead(DISARMPIN);
-      if (!armed) {
+      driverFault = !(digitalRead(DRIVERFAULTPIN)); 
+      if (!armed && !driverFault) {
           faultTripped = false;
       }
       digitalWrite(FAULTLIGHTPIN, faultTripped);
@@ -108,8 +111,9 @@ void loop() {
     
     // Read the arming
     armed = !digitalRead(DISARMPIN);
+    driverFault = !(digitalRead(DRIVERFAULTPIN)); 
     // Only turn on the SSR if it's armed and there's no fault.
-    if (armed && !faultTripped) {
+    if (armed && !faultTripped && !driverFault) {
       SSR = true;
     } else {
       SSR = false;
@@ -120,8 +124,6 @@ void loop() {
     digitalWrite(FAULTLIGHTPIN, faultTripped);
     digitalWrite(SSRPIN, SSR);
     
-    // Strobe the timing pin, positive edge for each sample taken
-    digitalWrite(TIMINGPIN, HIGH);  
     // Grab a sample
     thisSample = digitalRead(LASERCMDPIN);
     // Fetch a byte from the ring buffer
@@ -149,7 +151,7 @@ void loop() {
   
   
      // If too many counts are set and we're armed, faultTripped
-     if ((currentTotal > threshSamples) && (armed)) {    
+     if (((currentTotal > threshSamples) && (armed)) || driverFault) {    
        faultTripped = true;
        // Turn off the SSR
        SSR = false;
@@ -162,13 +164,13 @@ void loop() {
           delay(200);
           // Cancel the fault if the arm button is disarmed
           armed = !digitalRead(DISARMPIN);
-          if (!armed) {
+          driverFault = !(digitalRead(DRIVERFAULTPIN));
+          if (!armed && !driverFault) {
             faultTripped = false;
           }
        }
      }
      
-     digitalWrite(TIMINGPIN, LOW);
    }
  
 }

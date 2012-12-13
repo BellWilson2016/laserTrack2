@@ -43,7 +43,9 @@ function mcam(varargin)
       
       if runningFlag
           start(vid);
-          trigger(vid);
+		  if ispc()
+          	trigger(vid);
+		  end
       end
     end
               
