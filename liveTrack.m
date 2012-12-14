@@ -12,7 +12,7 @@ function liveTrack(obj, event)
 
     global vid;
     global trackingParams;
-    global tempData;
+	global USBscanController;
 
 	% Set a lock to prevent processing of serial data if we're currently working on a frame
 	trackingParams.busyLock = true;
@@ -164,9 +164,6 @@ function liveTrack(obj, event)
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
 
-	% If the positions are output, we can do other things, so unlock the lock
-	trackingParams.busyLock = false;
-
 
     % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
@@ -181,6 +178,11 @@ function liveTrack(obj, event)
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
     end
+
+	% If the positions are output, we can do other things, so unlock the lock
+	trackingParams.busyLock = false;
+	% Force a read, since we have time now
+	serialReceiver(USBscanController,0);
 
         
 

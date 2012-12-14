@@ -6,7 +6,6 @@
 function USBscanController = initializeScanController()
 
 global USBscanController;
-global writeLock;
 
     if ispc()
         portLocation = 'COM10';        
@@ -18,15 +17,14 @@ global writeLock;
     
 
     set(USBscanController,'BytesAvailableFcn',@serialReceiver);
-    set(USBscanController,'BytesAvailableFcnCount',5*64);
+    set(USBscanController,'BytesAvailableFcnCount',5*64*100); % Was 5*64*1
     set(USBscanController,'BytesAvailableFcnMode','byte');
+	% set(USBscanController,'ReadAsyncMode','manual');
+
 
 	set(USBscanController,'InputBufferSize',5*64*200);
     % set(USBscanController,'Terminator',10);
     % set(USBscanController,'Timeout',.2);
-
-	writeLock = false;
-	set(USBscanController,'OutputEmptyFcn',@outputEmptyFcn);
         
     fopen(USBscanController);
     pause(2);

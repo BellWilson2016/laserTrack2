@@ -241,8 +241,8 @@ void loop() {
         phase = 3;
       } else {
         phase = 1;
-        //queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);                  // Denotes laser on.  Do this in advance in case of short laser epochs.
-        //queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Denotes laser off.
+        queueSerialReturn(0x10 + currentZone, prevTimePoint + nextTimeGap);                  // Denotes laser on.  Do this in advance in case of short laser epochs.
+        queueSerialReturn(0x18 + currentZone, prevTimePoint + nextTimeGap + laserDuration);  // Denotes laser off.
       }     
       break;
     

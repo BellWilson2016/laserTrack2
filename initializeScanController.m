@@ -17,8 +17,10 @@ global USBscanController;
     
 
     set(USBscanController,'BytesAvailableFcn',@serialReceiver);
-    set(USBscanController,'BytesAvailableFcnCount',5*64);
+    set(USBscanController,'BytesAvailableFcnCount',5*64*100); % Was 5*64*1
     set(USBscanController,'BytesAvailableFcnMode','byte');
+	% set(USBscanController,'ReadAsyncMode','manual');
+
 
 	set(USBscanController,'InputBufferSize',5*64*200);
     % set(USBscanController,'Terminator',10);
@@ -32,10 +34,7 @@ global USBscanController;
     disp(['ScanController initialized on ',portLocation]); 
     tic;
 
-function outputEmptyFcn(obj, event)
 
-	global writeLock;
-	writeLock = false;
 
 
 
