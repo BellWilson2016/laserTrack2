@@ -10,7 +10,7 @@ function measureLatency()
 	exp.experimentName = ['latencyMeasurement'];
 	powerL = 0;
 	powerR = 10;	
-	% exp.protocol	 = @laser_1_2L_1_2Rx4;
+	% exp.protocol	 = @laser_1_2L_1_2Rx4;   expLength = 26;
 	exp.protocol	 = @laser_1_2L; 	expLength = 3;
 	exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 	runLaserProtocol(exp);
