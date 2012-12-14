@@ -182,7 +182,8 @@ function liveTrack(obj, event)
 	% If the positions are output, we can do other things, so unlock the lock
 	trackingParams.busyLock = false;
 
-
+	% Force a read, since we have time now
+	serialReceiver(USBscanController,0);
         
 
     
@@ -231,7 +232,6 @@ function liveTrack(obj, event)
     anEvent.Timestamp = [num2str(tVec(4),'%02.f'),':',num2str(tVec(5),'%02.f'),':',num2str(floor(tVec(6)),'%02i'),'.',num2str(floor((tVec(6)-floor(tVec(6)))*100),'%02i')];
     livePreview(obj, anEvent,trackingParams.hImage);
 
-	% Force a read, since we have time now
-	serialReceiver(USBscanController,0);
+
     
 end
