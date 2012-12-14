@@ -1,6 +1,6 @@
 function serialReceiver(obj,event)
 
-%	tic();
+	tic();
 
     global trackingParams;
 
