@@ -181,6 +181,7 @@ function liveTrack(obj, event)
 
 	% If the positions are output, we can do other things, so unlock the lock
 	trackingParams.busyLock = false;
+	% Force a read, since we have time now
 	serialReceiver(USBscanController,0);
 
         
