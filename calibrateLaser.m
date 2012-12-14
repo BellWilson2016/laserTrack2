@@ -2,7 +2,7 @@ function calibrateLaser()
 
     calibrationPower = 3;  % of 255
     averagingTime = 15;    % sec
-    stdLimit = 6;          % For rejecting reflections
+    stdLimit = 5.5;          % For rejecting reflections
     nPixThresh = 2;
     A = ones(1,8);
     
@@ -25,7 +25,7 @@ function calibrateLaser()
 	showRawView();
     updateScanDriver(A.*-(2^13)*.95,A.*-2^11,A.*calibrationPower*1);
     disp('Click beam reflection zone');
-    pts = ginput(2);
+    pts = jGinput(2);
     updateScanDriver(A.*-(2^13),A.*0,A.*calibrationPower*0);
     disp('Averaging out background');
     showAvgView;
@@ -145,14 +145,14 @@ function calibrateLaser()
     plot(Tcoords(:,1),Tcoords(:,1)-Tcoords(:,5),'.b'); hold on;
     % Yerror vs. X
     plot(Tcoords(:,1),Tcoords(:,2)-Tcoords(:,6),'.r'); 
-    xlabel('Coord (px)');
+    xlabel('X Coord (px)');
     ylabel('Residual (px)');
     subplot(2,1,2);
     % Xerror vs. Y
     plot(Tcoords(:,2),Tcoords(:,1)-Tcoords(:,5),'.r'); hold on;
     % Yerror vs. Y
     plot(Tcoords(:,2),Tcoords(:,2)-Tcoords(:,6),'.b');
-    xlabel('Coord (px)');
+    xlabel('Y Coord (px)');
     ylabel('Residual (px)');
     
     %% Turn laser off

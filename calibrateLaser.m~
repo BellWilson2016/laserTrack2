@@ -2,7 +2,7 @@ function calibrateLaser()
 
     calibrationPower = 3;  % of 255
     averagingTime = 15;    % sec
-    stdLimit = 6;          % For rejecting reflections
+    stdLimit = 5.5;          % For rejecting reflections
     nPixThresh = 2;
     A = ones(1,8);
     
@@ -22,9 +22,10 @@ function calibrateLaser()
     trackingParams.invert = true;
     
     laserCam();
+	showRawView();
     updateScanDriver(A.*-(2^13)*.95,A.*-2^11,A.*calibrationPower*1);
     disp('Click beam reflection zone');
-    pts = ginput(2);
+    pts = jGinput(2);
     updateScanDriver(A.*-(2^13),A.*0,A.*calibrationPower*0);
     disp('Averaging out background');
     showAvgView;

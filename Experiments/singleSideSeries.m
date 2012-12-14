@@ -4,15 +4,15 @@ function singleSideSeries()
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYMMDD-HHmmss-'),'singleSideSeries'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeries'];
     exp.genotype       = 'NorpA7';
-    exp.flyAge         = '?';    % Days
-    exp.sex            = 'M+F';
+    exp.flyAge         = 3;    % Days
+    exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 300;        % mL/side
-	exp.laserPowers    = [0,5,10,15,20,25,30];
-	exp.nReps          = 1;	
+	exp.laserPowers    = [0,10,20,30,40,50,60];
+	exp.nReps          = 6;	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
