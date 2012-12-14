@@ -1,5 +1,8 @@
 function calculateLatency(expN)
 
+
+	showRaster = false;	
+
 	loadData(expN);
 
 	serialID = exp.wholeTrack.serialID.Data;
@@ -37,14 +40,48 @@ function calculateLatency(expN)
 	offLatency = transferForLast' - lastTrigTimes;
 	onLatency  = transferForFirst' - firstTrigTimes;
 
-	subplot(2,1,1);
-	hist(offLatency);
-	subplot(2,1,2);
-	hist(onLatency);	
-
 	figure();
+	subplot(3,2,1);
+	[n1,xout1] = hist(offLatency,min(offLatency):.002:max(offLatency));
+	plot(xout1*1000,n1/max(n1),'b'); hold on;
+	plot(xout1*1000,cumsum(n1)/sum(n1),'r');
+	xlabel('Off latency (ms)'); ylabel('P');
+	xlim([40 140]);
+	subplot(3,2,2);
+	[n2,xout2] = hist(onLatency,min(onLatency):.002:max(onLatency));	
+	plot(xout2*1000,n2/max(n2),'b'); hold on;
+	plot(xout2*1000,cumsum(n2)/sum(n2),'r');
+	xlabel('On latency (ms)'); ylabel('P');
+	xlim([40 140]);
+	subplot(3,2,3);
+	plot(transferForLast, offLatency*1000, 'b');
+	xlabel('Time (s)');
+	ylabel('Latency (ms)');
+	subplot(3,2,4);
+	plot(transferForFirst, onLatency*1000, 'b');
+	xlabel('Time (s)');
+	ylabel('Latency (ms)');
+	subplot(3,2,5);
+	[n3, xout3] = hist(diff(transferTimes)*1000,0:2:200);
+	plot(xout3,n3/max(n3),'b'); hold on;
+	plot(xout3,cumsum(n3)/sum(n3),'r');
+	xlim([0 140]);
+	xlabel('Data transfer interval (ms)');
+	subplot(3,2,6);
+	intervals = diff(transferTimes);
+	meanIntervals = smooth(intervals,181);
+	plot(transferTimes(1:(end-1)),1./meanIntervals);
+	xlabel('Time (s)');
+	ylabel('Mean data transfer rate (Hz)');
+	ylim([0 35]);
+	lims = xlim();
+	xlim([0 lims(2)]);
 
 	
+	
+
+if showRaster
+	figure();	
 	h = quickRaster(0,1,serialTimes(vidTrigs)); hold on;
 	set(h,'Color','g');
 	h = quickRaster(0,1,serialTimes(vidNoTrigs));
@@ -59,6 +96,7 @@ function calculateLatency(expN)
 	set(h,'Color','r');
 	h = quickRaster(1.3,1.5,transferForFirst);
 	set(h,'Color','g');
+end
 	
 
 

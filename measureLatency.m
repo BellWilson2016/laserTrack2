@@ -6,16 +6,17 @@ function measureLatency()
 	nFrames = 6;
 	fileN = nextFileNumber();
 
-	frameDropTimer = timer('ExecutionMode','fixedRate','Period',3,...
-        'TimerFcn',{@dropFrameFcn, nFrames}, 'StartDelay',3,'TasksToExecute',26*60/3);
-
 	% Setup an experiment to run
 	exp.experimentName = ['latencyMeasurement'];
 	powerL = 0;
 	powerR = 10;	
-	exp.protocol	 = @laser_1_2L_1_2Rx4;
+	% exp.protocol	 = @laser_1_2L_1_2Rx4;
+	exp.protocol	 = @laser_1_2L; 	expLength = 3;
 	exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 	runLaserProtocol(exp);
+
+	frameDropTimer = timer('ExecutionMode','fixedRate','Period',3,...
+        'TimerFcn',{@dropFrameFcn, nFrames}, 'StartDelay',3,'TasksToExecute',expLength*60/3);
 
 	start(frameDropTimer);
 
