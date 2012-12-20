@@ -1,0 +1,6 @@
+if isunix()
+	cd(strrep(userpath(),':',''));
+	opengl software;
+	opengl info
+	disp('Test');
+end
