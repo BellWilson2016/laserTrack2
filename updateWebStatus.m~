@@ -65,6 +65,5 @@ if pushNow
         % cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
     end
     
-
 end
         

@@ -62,6 +62,7 @@ if pushNow
 		    disp(result);
 		end
     elseif isunix()
+		% Don't push in UNIX, allow the PHP script to grab from a local web server.
         % cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
     end
     

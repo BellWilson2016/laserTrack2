@@ -1,3 +1,5 @@
+% This writes a PHP script to the server that will pull data from a local
+% webserver.
 function setupRemotePHP()
 
 	if isunix()
@@ -33,4 +35,12 @@ function setupRemotePHP()
 	fclose(fileID);
 
 	cmd = 'scp ./rtfw.php jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
-    
+    [status,result] = system(cmd);
+	if status == 0
+		disp('Set up remote PHP script to pull data.');
+	else
+		disp('Command line error: ');
+		disp(result);
+	end
+
+
