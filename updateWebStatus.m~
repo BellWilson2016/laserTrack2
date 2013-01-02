@@ -22,7 +22,11 @@ save('statusData.mat','messageList');
 % Now make an html version
 % First, write a header
 maxMessages = 100;
-fileID = fopen('rtfw.html','w');
+if isunix()
+	fileID = fopen('/var/www/rtfw.html','w');
+else
+	fileID = fopen('rtfw.html','w');
+end
 header = ['<style type="text/css"><!-- body, div, table, span { font-size: 32px;}',...
           '--> </style>'];
 tableTop = ['<table border="1"><CAPTION><EM>RTFW Status:</EM></CAPTION>',...
@@ -62,6 +66,7 @@ if pushNow
 		    disp(result);
 		end
     elseif isunix()
+		% Don't push in UNIX, allow the PHP script to grab from a local web server.
         % cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
     end
     

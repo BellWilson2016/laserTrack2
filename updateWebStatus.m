@@ -23,6 +23,7 @@ save('statusData.mat','messageList');
 % First, write a header
 maxMessages = 100;
 fileID = fopen('rtfw.html','w');
+
 header = ['<style type="text/css"><!-- body, div, table, span { font-size: 32px;}',...
           '--> </style>'];
 tableTop = ['<table border="1"><CAPTION><EM>RTFW Status:</EM></CAPTION>',...
@@ -53,18 +54,16 @@ fclose(fileID);
 if pushNow
     if ispc()
         cmd = 'WinSCP\WinSCP.com /script="statusUpdateScriptPC.txt"';
-
-		[status,result] = system(cmd);
-		if status == 0
-		    disp('Pushed Web Update');
-		else
-		    disp('Command line error: ');
-		    disp(result);
-		end
     elseif isunix()
-		% Don't push in UNIX, allow the PHP script to grab from a local web server.
-        % cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
+        cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
     end
-    
+
+    [status,result] = system(cmd);
+	if status == 0
+		disp('Pushed Web Update');
+	else
+		disp('Command line error: ');
+		disp(result);
+	end
 end
         
