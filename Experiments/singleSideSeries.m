@@ -5,7 +5,7 @@ function singleSideSeries()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeries'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or82a-Gal4';
+    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or92a-Gal4';
     exp.flyAge         = 4;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
