@@ -1,4 +1,4 @@
-function singleSideSeries()
+function singleSideSeries() 
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
