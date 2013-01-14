@@ -5,7 +5,7 @@ function singleSideIncreasing()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideIncreasing'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/+';
+    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or22a-Gal4';
     exp.flyAge         = 12;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
