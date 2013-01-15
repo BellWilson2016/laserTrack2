@@ -5,13 +5,13 @@ function singleSideIncreasing()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideIncreasing'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or22a-Gal4';
-    exp.flyAge         = 12;    % Days
+    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or92a-Gal4';
+    exp.flyAge         = 17;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 300;        % mL/side
-	exp.laserPowers    = [0,16,32,48,0,16,32,48];
+	exp.laserPowers    = [16,16,16,48,16,48,16,48];
 	exp.laserFilter    = .25;
 	exp.nReps          = 8;	
 
