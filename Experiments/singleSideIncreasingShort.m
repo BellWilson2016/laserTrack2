@@ -1,16 +1,16 @@
-function singleSideIncreasing() 
+function singleSideIncreasingShort() 
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideIncreasing'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Or92a-Gal4';
-    exp.flyAge         = 17;    % Days
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideIncreasingShort'];
+    exp.genotype       = 'NorpA[7]/y ; ChR2/Or83b-Gal4 ; ChR2/+';
+    exp.flyAge         = 11;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 300;        % mL/side
+    exp.flowRate       = 1200;        % mL/side
 	exp.laserPowers    = [48,0,8,16,32,48];
 	exp.laserFilter    = .25;
 	exp.nReps          = 8;	
@@ -31,7 +31,7 @@ function singleSideIncreasing()
 			powerR = oneBlock(2,order(seqN));
 			% disp([num2str(powerL),' ',num2str(powerR)]);
 			% Setup the protocol, laser distribution, and arguments
-			exp.protocol	 = @laser_1_2L;
+			exp.protocol	 = @laser_1_halfL_1;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
 			scheduleEvent(5 + (3.5*60)*nSched, cmd);  
