@@ -13,7 +13,7 @@ function adaptationSeries()
     exp.flowRate       = 1200;        		% mL/side
 	exp.laserPowers    = [.25,.5,1,2,4,8];    % Actually used as adaptation delay
 	exp.laserFilter    = .25;
-	exp.nReps          = 5;	
+	exp.nReps          = 3;	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
