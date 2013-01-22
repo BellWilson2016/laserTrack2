@@ -58,7 +58,7 @@ if pushNow
         cmd = 'scp ./rtfw.html jsb38@orchestra.med.harvard.edu:/www/wilson.med.harvard.edu/docroot/';
     end
 
-    [status,result] = system(cmd);
+    % [status,result] = system(cmd);
 	if status == 0
 		disp('Pushed Web Update');
 	else
