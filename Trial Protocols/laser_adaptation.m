@@ -5,7 +5,7 @@ function exp = laser_adaptation(exp)
 
     exp.laserDistribution = laserDistribution;
     exp.laserParams       = laserParams;
-    exp.nullEpochs   = [1,3];
+    exp.nullEpochs   = [1,2,3,5,6];
     exp.leftEpochs   = [4];
 	exp.rightEpochs  =  [];
   
