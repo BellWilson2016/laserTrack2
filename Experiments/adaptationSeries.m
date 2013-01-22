@@ -11,7 +11,7 @@ function adaptationSeries()
     exp.odor           = 'none';
     exp.odorConc       = 0;           		% log10
     exp.flowRate       = 1200;        		% mL/side
-	exp.laserPowers    = [.25,.5,1,2,4];    % Actually used as adaptation delay
+	exp.laserPowers    = [.25,.5,1,2,4,8];    % Actually used as adaptation delay
 	exp.laserFilter    = .25;
 	exp.nReps          = 5;	
 
@@ -31,7 +31,7 @@ function adaptationSeries()
 			exp.protocol	 = @laser_adaptation;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
-			scheduleEvent(5 + (8*60)*nSched, cmd);  
+			scheduleEvent(5 + (12*60)*nSched, cmd);  
 			nSched = nSched + 1;
 		end
 	end
