@@ -28,7 +28,7 @@ function adaptationSeries()
 			powerL = onePass(1,order(seqN));
 			powerR = onePass(2,order(seqN));
 			% Setup the protocol, laser distribution, and arguments
-			exp.protocol	 = @laser_1_2L;
+			exp.protocol	 = @laser_adaptation;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
 			scheduleEvent(5 + (8*60)*nSched, cmd);  
