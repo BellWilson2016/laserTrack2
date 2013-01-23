@@ -11,7 +11,7 @@ function singleSideIncreasingShort()
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;        % mL/side
-	exp.laserPowers    = [48,0,8,16,32,48];
+	exp.laserPowers    = [48,0,8,16,32,48,64,96];
 	exp.laserFilter    = .25;
 	exp.nReps          = 8;	
 
