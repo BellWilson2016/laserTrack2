@@ -6,11 +6,11 @@ function singleSideSeries()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeries'];
     exp.genotype       = 'NorpA[7]/y ; ChR2/Or42a-Gal4 ; ChR2/+';
-    exp.flyAge         = 8;    % Days
+    exp.flyAge         = 14;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 300;        % mL/side
+    exp.flowRate       = 1200;        % mL/side
 	exp.laserPowers    = [0:8:48];
 	exp.laserFilter    = .25;
 	exp.nReps          = 9;	
