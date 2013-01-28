@@ -5,15 +5,15 @@ function singleSideSeriesShort()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShort'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/Or42a-Gal4 ; ChR2/+';
-    exp.flyAge         = 10;    % Days
+    exp.genotype       = 'NorpA[7]/y ; ChR2/Or42b-Gal4 ; ChR2/Or82a-Gal4';
+    exp.flyAge         = 12;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 300;        % mL/side
-	exp.laserPowers    = [0:8:48];
+    exp.flowRate       = 1200;        % mL/side
+	exp.laserPowers    = [4,6,9,14,21,32,48,72];
 	exp.laserFilter    = .25;
-	exp.nReps          = 9;	
+	exp.nReps          = 8;	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
