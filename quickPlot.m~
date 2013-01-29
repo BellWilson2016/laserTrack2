@@ -1,0 +1,9 @@
+function quickPlot(experiment)
+
+	list = returnFileList(experiment);
+	dM = makeDataMatrix(list);
+	subplot(2,1,1);
+	laserPowerSeriesFlex(dM,1:8,'PI',20,'b',false,false,false,true,true,true);
+	subplot(2,1,2);
+	laserPowerSeriesFlex(dM,1:8,'PI',20,'b',false,true,true,false,false,false);
+
