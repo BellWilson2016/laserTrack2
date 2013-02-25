@@ -1,7 +1,7 @@
-function quickPlot(experiment, pQ)
+function quickPlot(dM, pQ)
 
-	list = returnFileList(experiment);
-	dM = makeDataMatrix(list);
+%	list = returnFileList(experiment);
+%	dM = makeDataMatrix(list);
 	subplot(3,1,1);
 	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,false,false,true,true,true);
 	subplot(3,1,2);
