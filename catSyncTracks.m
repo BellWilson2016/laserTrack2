@@ -160,10 +160,14 @@ disp('Done catSyncTracks');
 % Both times should start at 0
 function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime) 
 
+disp('In fitTimeModel');
+
 	% Find serial data transmission codes
 	ix = find( (serialID >= hex2dec('24')) & (serialID < (hex2dec('24') + 64)) );
 	transSerialID = serialID(ix) - hex2dec('24');
 	transSerialTime = serialTime(ix);
+
+disp('Got Codes');
 
 	% For each ID, find the closest video time for each serial time
 	% Fit to a linear model
@@ -172,13 +176,18 @@ function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime)
 	for ID = 0:63
 		vIx = find(videoID == ID);
 		sIx = find(transSerialID == ID);
-		vT = videoTime(vIx);
-		sT = transSerialTime(sIx);
-		% Find the closest video time to each serial time
-		ix = dsearchn(vT,sT);
-		allVideoTimes = [allVideoTimes; vT(ix)];
-		allTransSerialTimes = [allTransSerialTimes; sT];
+		% Only fit the times if you find some
+		if ((length(vIx)>0)&(length(sIx)>0))
+			vT = videoTime(vIx);
+			sT = transSerialTime(sIx);
+			% Find the closest video time to each serial time
+			ix = dsearchn(vT,sT);
+			allVideoTimes = [allVideoTimes; vT(ix)];
+			allTransSerialTimes = [allTransSerialTimes; sT];
+		end
 	end
+
+disp('Collected all time codes');
 
 	% Fit a linear time model, remember that model.p1 coefficients refer to the normalized
 	% values
