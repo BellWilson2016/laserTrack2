@@ -45,7 +45,6 @@ function exp = catSyncTracks(exp)
         rawSerialID         = serialRecord(:,1);
         rawSerialTimeCode   = serialRecord(:,2);
 
-		disp('Done get info');
 
         % Normalize videoTime to start at 0, scale to seconds
         videoTime = (rawVideoTime - rawVideoTime(1)).*(24*60*60);
@@ -56,7 +55,6 @@ function exp = catSyncTracks(exp)
         ts4 = timeseries(  headY, videoTime, 'Name', 'headY');
         ts5 = timeseries(videoID, videoTime, 'Name', 'videoID');
 
-		disp('Done get ts');
 
         % Remove themometer ID codes and errors because they don't carry time info
         ix = find(rawSerialID < hex2dec('fd'));
@@ -71,7 +69,6 @@ function exp = catSyncTracks(exp)
             ix = find(diff(serialTimeCode) < 0);
         end
 
-disp('Done remove thermo');
 
 		% Scale to seconds
 		serialTime = serialTimeCode ./ (16*10^6);
@@ -80,13 +77,11 @@ disp('Done remove thermo');
         timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime - serialTime(1));
         fitSerialTime = timeModel(serialTime - serialTime(1));
 
-disp('Done fitSerialTime');
 
         % Remove temperature codes from the serial stream since the time field doesn't contain times
         ts6 = timeseries(             serialID, fitSerialTime,'Name','serialID');
 		ts7 = timeseries(wrappedSerialTimeCode, fitSerialTime,'Name','serialTime');
 
-disp('Done remove tempcodes');
 
         % Collect the time series objects into a structure
         exp.epoch(epochN).track.bodyX           = ts1;
@@ -97,7 +92,6 @@ disp('Done remove tempcodes');
 		exp.epoch(epochN).track.serialID        = ts6;
 		exp.epoch(epochN).track.serialTimeCode  = ts7;
 
-disp('Done cat structure');		
 
 
         % Save variables to concatenated wholeTrack
@@ -110,7 +104,6 @@ disp('Done cat structure');
         wholeRawTrack.serialID   = cat(1,wholeRawTrack.serialID, serialID);
         wholeRawTrack.serialTimeCode = cat(1,wholeRawTrack.serialTimeCode, wrappedSerialTimeCode);
 
-disp('Done cat wholeTrack');
 
     end
 
@@ -153,21 +146,18 @@ disp('Done cat wholeTrack');
 	exp.wholeTrack.serialID = ts6;
 	exp.wholeTrack.serialTimeCode = ts7;
 
-disp('Done catSyncTracks');
 
 
 % All of the rawSerialTimes must contain valid time info and not wrap
 % Both times should start at 0
 function timeModel = fitTimeModel(videoID, videoTime, serialID, serialTime) 
 
-disp('In fitTimeModel');
 
 	% Find serial data transmission codes
 	ix = find( (serialID >= hex2dec('24')) & (serialID < (hex2dec('24') + 64)) );
 	transSerialID = serialID(ix) - hex2dec('24');
 	transSerialTime = serialTime(ix);
 
-disp('Got Codes');
 
 	% For each ID, find the closest video time for each serial time
 	% Fit to a linear model
@@ -187,7 +177,6 @@ disp('Got Codes');
 		end
 	end
 
-disp('Collected all time codes');
 
 	% Fit a linear time model, remember that model.p1 coefficients refer to the normalized
 	% values

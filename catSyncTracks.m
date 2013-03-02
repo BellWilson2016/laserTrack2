@@ -31,7 +31,6 @@ function exp = catSyncTracks(exp)
     % For each epoch extract and normalize data
     for epochN = 1:exp.nEpochs
 
-		epochN
 
         % Get the info from the rawTrack
         rawTrack = exp.epoch(epochN).rawTrack;
