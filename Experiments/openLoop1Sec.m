@@ -5,8 +5,8 @@ function openLoop1Sec()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoop1Sec'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/Or42b-Gal4 ; ChR2/Or22a-Gal4';
-    exp.flyAge         = 12;    % Days
+    exp.genotype       = 'NorpA[7]/y ; ChR2/Or42b-Gal4 ; ChR2/Or82a-Gal4';
+    exp.flyAge         = 13;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
