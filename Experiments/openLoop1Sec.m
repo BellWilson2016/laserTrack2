@@ -5,15 +5,15 @@ function openLoop1Sec()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoop1Sec'];
-    exp.genotype       = 'NorpA[7]/y ; ChR2/+ ; ChR2/Gr21a-Gal4(BD)';
-    exp.flyAge         = 8;    % Days
+    exp.genotype       = 'NorpA[7]/y ; ChR2/Bl ; ChR2/Gr63a-Gal4';
+    exp.flyAge         = 10;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;        % mL/side
-	exp.laserPowers    = [4,6,9,14,21,32,48,72];
+	exp.laserPowers    = [0,6,21,72];
 	exp.laserFilter    = .25;
-	exp.nReps          = 30;	
+	exp.nReps          = 60;	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , exp.laserPowers ;...
