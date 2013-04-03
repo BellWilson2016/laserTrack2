@@ -6,11 +6,11 @@ function singleSideSeriesShort()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShort'];
     exp.genotype       = 'NorpA[7]/y ; ChR2/Gr21a-Gal4  (Suh) ; ChR2/+';
-    exp.flyAge         = 8;    % Days
+    exp.flyAge         = 9;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 1200;        % mL/side
+    exp.flowRate       = 0;        % mL/side
 	exp.laserPowers    = [4,6,9,14,21,32,48,72];
 	%exp.laserPowers    = [108,162];
 	exp.laserFilter    = .25;
@@ -32,7 +32,7 @@ function singleSideSeriesShort()
 			exp.protocol	 = @laser_1_halfL_1;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
-			scheduleEvent(5 + (7*60)*nSched, cmd);  
+			scheduleEvent(5 + (3.5*60)*nSched, cmd);  
 			nSched = nSched + 1;
 		end
 	end
