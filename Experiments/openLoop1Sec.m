@@ -6,11 +6,11 @@ function openLoop1Sec()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoop1Sec'];
     exp.genotype       = 'NorpA[7]/y ; ChR2/Gr21a-Gal4 (Suh) ; ChR2/+';
-    exp.flyAge         = 8;    % Days
+    exp.flyAge         = 9;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 1200;        % mL/side
+    exp.flowRate       = 0;        % mL/side
 	exp.laserPowers    = [0,6,21,72];
 	exp.laserFilter    = .25;
 	exp.nReps          = 60;	
