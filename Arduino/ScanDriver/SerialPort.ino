@@ -111,8 +111,8 @@ void receiveSerial() {
       dropFrames = byte2;
     // Mode 4: Pulsed stimulation
     } else if (mode == 4) {  
-      mode = 4;
-      pulsePeriod = byte2;
+      mode = 0;
+      pulsePeriod = byte2;  
     } 
     queueSerialReturn(0x22, prevTimePoint);
     

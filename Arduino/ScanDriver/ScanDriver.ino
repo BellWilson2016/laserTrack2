@@ -48,7 +48,7 @@
   byte mode;      
   byte phase;
   byte currentZone;
-  byte pulsePeriod;    // Used for mode 4, pulsed stimulation
+  byte pulsePeriod = 0;    // Used for mode 4, pulsed stimulation
   byte LaserPhases[8] = {0,0,0,0,0,0,0,0};
   
   byte vidTrigPhase;
