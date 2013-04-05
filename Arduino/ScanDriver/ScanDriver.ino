@@ -48,6 +48,8 @@
   byte mode;      
   byte phase;
   byte currentZone;
+  byte pulsePeriod;    // Used for mode 4, pulsed stimulation
+  byte LaserPhases[8] = {0,0,0,0,0,0,0,0};
   
   byte vidTrigPhase;
   byte dropFrames;
@@ -234,7 +236,15 @@ void loop() {
  
       SREG = sreg;
       
-      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;  
+      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
+      // Implement pulsatile laser
+      if (LaserPhases[currentZone] > 0) {
+         laserDuration = 0;
+         LaserPhases[currentZone] -= 1;
+      } else if (laserDuration > 0) {
+        LaserPhases[currentZone] = pulsePeriod;
+      }
+      
       prevTimePoint += nextTimeGap;
       nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;
       if (laserDuration == 0) {

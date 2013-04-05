@@ -17,6 +17,7 @@ void checkForTransfers() {
       } else if (DACsLeftToUpdate > 0)  {
           passDataToDAC(ScanOrder[nextDACIndex]);
           LaserPowers[ScanOrder[nextDACIndex]] = LaserPowersBuffer[ScanOrder[nextDACIndex]];
+          
           DACsLeftToUpdate--;
           nextDACIndex++; nextDACIndex %= numZones;    
       } else if (timeNow - lastTemp > thermDelay) {
