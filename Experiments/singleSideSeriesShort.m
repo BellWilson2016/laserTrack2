@@ -14,7 +14,7 @@ function singleSideSeriesShort()
 	%exp.laserPowers    = [4,6,9,14,21,32,48,72];
 	exp.laserPowers    = [0,4,6,9,14,21,32,48].*5;
 	%exp.laserPowers    = [108,162];
-	exp.laserFilter    = .25;
+	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
 	% One pass has each power versus 0 on each side;
