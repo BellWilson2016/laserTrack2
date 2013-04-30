@@ -236,14 +236,32 @@ void loop() {
  
       SREG = sreg;
       
-      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
-      // Implement pulsatile laser
-      if (LaserPhases[currentZone] > 0) {
+      // Mode 5 is frequency mode
+      if (mode == 5) {
+        // Pulse duratino comes from pulsePeriod global parameter
+        laserDuration = (((unsigned long) pulsePeriod) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
+        // If we're out of phase, don't laser and continue counting down
+        if (LaserPhases[currentZone] > 0) {
+          laserDuration = 0;
+          LaserPhases[currentZone] -= 1;
+        // If we are in phase and the power is > 0, allow laser and reset the countdown  
+        } else if (LaserPowers[currentZone] > 0) {
+          LaserPhases[currentZone] = LaserPowers[currentZone];
+        // If the power is 0, don't reset the countdown and don't laser  
+        } else {
          laserDuration = 0;
-         LaserPhases[currentZone] -= 1;
-      } else if (laserDuration > 0) {
-        LaserPhases[currentZone] = pulsePeriod;
+        } 
+      } else {  
+        laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
+        // Implement pulsatile laser
+        if (LaserPhases[currentZone] > 0) {
+           laserDuration = 0;
+           LaserPhases[currentZone] -= 1;
+        } else if (laserDuration > 0) {
+          LaserPhases[currentZone] = pulsePeriod;
+        }
       }
+        
       
       prevTimePoint += nextTimeGap;
       nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;
