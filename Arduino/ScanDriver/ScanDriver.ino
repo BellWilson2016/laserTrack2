@@ -154,7 +154,7 @@ void loop() {
   if ((long) (timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
     SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
-    if (mode > 0) {
+    if (mode == 1) {
       availableBytes = Serial.available();
       if ((availableBytes > 0) && (availableBytes >= Serial.peek())) {
             receiveSerial();
@@ -246,7 +246,7 @@ void loop() {
           LaserPhases[currentZone] -= 1;
         // If we are in phase and the power is > 0, allow laser and reset the countdown  
         } else if (LaserPowers[currentZone] > 0) {
-          LaserPhases[currentZone] = LaserPowers[currentZone];
+          LaserPhases[currentZone] = 0xFF - LaserPowers[currentZone];
         // If the power is 0, don't reset the countdown and don't laser  
         } else {
          laserDuration = 0;
@@ -357,7 +357,9 @@ void loop() {
         SREG = sreg;
         LASERPINOFF;
         phase = 0;
-        mode = 0;   // Needed to recover from watchdog test mode
+        if (mode == 1) {
+          mode = 0;   // Needed to recover from watchdog test mode
+        }
         prevTimePoint += nextTimeGap;
         nextTimeGap = ((unsigned long) scanTime) << 4;        
         // If there's enough time to Rx or Tx check the serial port and I2C
