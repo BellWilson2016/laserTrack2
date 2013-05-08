@@ -6,7 +6,7 @@ function gradientFreqSeries()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'gradientFreqSeries'];
     exp.genotype       = 'NorpA[7]/y ; ChR2/Or42b-Gal4 ; ChR2/+';
-    exp.flyAge         = 8;    % Days
+    exp.flyAge         = 9;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
@@ -16,7 +16,7 @@ function gradientFreqSeries()
 	%exp.laserPowers    = [108,162];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = 'Freq. gradient series';	
+	exp.comment		   = 'Freq. gradient series, air from L only';	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
