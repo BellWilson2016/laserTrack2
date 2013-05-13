@@ -10,6 +10,11 @@ function returnPower = laserFlatFreqHalves(args)
 
 	leftP  = round(256 - 1./(.01.*leftF));
 	rightP = round(256 - 1./(.01.*rightF));
+
+	ix = find(leftP < 0);
+	leftP(ix) = 0;
+	ix = find(rightP < 0);
+	rightP(ix) = 0;
     
     returnPower = (trackingParams.bodyX + trackingParams.headX < 0).*leftP +...
 			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightP;
