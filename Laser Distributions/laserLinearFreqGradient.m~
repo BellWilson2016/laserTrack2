@@ -12,6 +12,6 @@ function returnPower = laserLinearFreqGradient(args)
 	returnF(ix) = 0;
 
 	returnPower = round(256 - 1./(.01.*returnF));
-	disp(returnPower)
+
 
 
