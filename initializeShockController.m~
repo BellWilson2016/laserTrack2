@@ -5,7 +5,7 @@ function USBshockController = initializeShockController()
 	if ispc()
         portLocation = 'COM10';        
     elseif isunix()
-        portLocation = '/dev/ttyACM0';  
+        portLocation = '/dev/ttyACM1';  
     end
     USBshockController = serial(portLocation);
     USBshockController.BaudRate=115200;   

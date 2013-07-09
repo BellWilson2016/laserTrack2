@@ -8,8 +8,8 @@ global trackingParams;
 
 clearPorts();
 
-setupRemotePHP();   % Setup a remote PHP script that can pull data from
-					% the local webserver.
+%setupRemotePHP();   % Setup a remote PHP script that can pull data from
+%					 % the local webserver.
 
 % USBolfactometer = initializeArduino();
 % setValve(0,0);
