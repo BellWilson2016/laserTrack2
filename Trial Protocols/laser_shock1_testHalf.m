@@ -20,8 +20,14 @@ function exp = laser_shock1_testHalf(exp)
 
 	if (laserParams(1) > laserParams(2))
 		setShock = setShockR;
-	else
+	elseif (laserParams(2) > laserParams(1)) 
 		setShock = setShockL;
+	elseif (laserParams(1) == laserParams(2))
+		if (rand() > .5)
+			setShock = setShockL;
+		else
+			setShock = setShockR;
+		end
 	end
     
 % Times in minutes
