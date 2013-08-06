@@ -5,7 +5,7 @@ function contingentMiesenbock()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbock'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / Or7a-Gal4 ; + / +';
+    exp.genotype       = 'NorpA[7]/y ; H134R / + ; Or22a-Gal4 / +';
     exp.flyAge         = 4;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
