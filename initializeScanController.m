@@ -10,7 +10,7 @@ global USBscanController;
     if ispc()
         portLocation = 'COM10';        
     elseif isunix()
-        portLocation = '/dev/ttyACM1';  
+        portLocation = '/dev/ttyACM0';  
     end
     USBscanController = serial(portLocation);
     USBscanController.BaudRate=115200;   
