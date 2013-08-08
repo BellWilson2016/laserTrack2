@@ -5,13 +5,13 @@ function contingentMiesenbock()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbock'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / + ; Or22a-Gal4 / +';
-    exp.flyAge         = 5;    % Days
+    exp.genotype       = 'NorpA[7]/y ; H134R / Or42b-Gal4 ; + / +';
+    exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;        % mL/side
-	exp.laserPowers    = [70,0];
+	exp.laserPowers    = [30,0];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
