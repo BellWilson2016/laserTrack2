@@ -15,7 +15,7 @@ function contingentMiesenbockNoShock()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
-	exp.protocol	 = @laser_cont_shock_Miesenbock;
+	exp.protocol	 = @laser_cont_noshock_Miesenbock;
 	exp.protocolArgs = {@laserFlatHalves, exp.laserPowers};
 	cmd = {@runLaserProtocol,exp};
 	scheduleEvent(10, cmd);  
