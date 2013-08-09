@@ -1,10 +1,10 @@
-function contingentMiesenbock()
+function contingentMiesenbockNoShock()
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbock'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbockNoShock'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Or67d-Gal4 ; + / +';
     exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
