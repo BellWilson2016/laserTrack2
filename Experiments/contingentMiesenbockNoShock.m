@@ -11,7 +11,7 @@ function contingentMiesenbockNoShock()
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;        % mL/side
-	exp.laserPowers    = [45,0];
+	exp.laserPowers    = [12,0];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
