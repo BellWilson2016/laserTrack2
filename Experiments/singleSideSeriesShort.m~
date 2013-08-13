@@ -5,7 +5,7 @@ function singleSideSeriesShort()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShort'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / Or56a-Gal4 (LV) ; [MKRS] / +';
+    exp.genotype       = 'NorpA[7]/y ; H134R / Or42b-Gal4 ; Or22a-Gal4 / +';
     exp.flyAge         = 6;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
@@ -16,7 +16,7 @@ function singleSideSeriesShort()
 	%exp.laserPowers    = [108,162];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = '20 Hz - No Wind';	
+	exp.comment		   = '20 Hz';	
 
 	% One pass has each power versus 0 on each side;
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
