@@ -1,10 +1,10 @@
-function contingentMiesenbockNoShock()
+function contingentMiesenbockShortNoShock()
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbockNoShock'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'contingentMisenbockShortNoShock'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Or42b-Gal4 ; + / +';
     exp.flyAge         = 3;    % Days
     exp.sex            = 'M';
@@ -15,7 +15,7 @@ function contingentMiesenbockNoShock()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
-	exp.protocol	 = @laser_cont_noshock_Miesenbock;
+	exp.protocol	 = @laser_cont_short_noshock_Miesenbock;
 	exp.protocolArgs = {@laserFlatHalves, exp.laserPowers};
 	cmd = {@runLaserProtocol,exp};
 	scheduleEvent(10, cmd);  
