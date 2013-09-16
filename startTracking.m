@@ -15,7 +15,7 @@ clearPorts();
 % USBolfactometer = initializeArduino();
 % setValve(0,0);
 USBscanController =   initializeScanController();
-USBshockController = initializeShockController();
+%USBshockController = initializeShockController();
 
 vid = setupTrackingCamera();
 

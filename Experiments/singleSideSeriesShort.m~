@@ -6,18 +6,18 @@ function singleSideSeriesShort()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShort'];
     exp.genotype       = 'NorpA[7]/y ; ChR2[T] / + ; ChR2[T] / Or92a-Gal4';
-    exp.flyAge         = 4;    % Days
+    exp.flyAge         = 5;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
 	%exp.laserPowers    = [2,3,5,7,11,16,24,36];
 	%exp.laserPowers    = [4,6,9,14,21,32,48,72]*2;
-	exp.laserPowers    = [0,4,6,9,14,21,32,48]*2;
+	exp.laserPowers    = [0,4,6,9,14,21,32,48];
 	%exp.laserPowers    = [108,162];
-	exp.laserFilter    = 1;
+	exp.laserFilter    = .25;
 	exp.nReps          = 8;
-	exp.comment		   = 'All light - 20 Hz';	
+	exp.comment		   = 'All light - 100 Hz';	
 
 	% One pass has each power versus 0 on each side; 
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
