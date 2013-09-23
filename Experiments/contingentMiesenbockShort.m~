@@ -11,7 +11,7 @@ function contingentMiesenbockShort()
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;        % mL/side
-	exp.laserPowers    = [32,0];
+	exp.laserPowers    = [16,0];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;	
 
