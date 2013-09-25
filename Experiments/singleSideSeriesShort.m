@@ -17,7 +17,7 @@ function singleSideSeriesShort()
 	%exp.laserPowers    = [108,162];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = 'Dark raised, ATR spiked 4d - 20 Hz';	
+	exp.comment		   = 'Dark raised, extra ATR layer - 20 Hz';	
 
 	% One pass has each power versus 0 on each side; 
 	onePass = [exp.laserPowers , zeros(1,size(exp.laserPowers,2)) ;...
