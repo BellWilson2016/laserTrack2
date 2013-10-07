@@ -16,7 +16,7 @@ function singleSideSeriesShort()
 	exp.laserPowers    = [0,4,6,9,14,21,32,48];
 	%exp.laserPowers    = [108,162];
 	exp.laserFilter    = 1;
-	exp.nReps          = 2;
+	exp.nReps          = 4;
 	exp.comment		   = '20 Hz';	
 
 	% One pass has each power versus 0 on each side; 
