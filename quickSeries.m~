@@ -1,4 +1,4 @@
-function quickSeries(dM)
+function quickSeries(dM, textCode)
 
 	pQ = 'PI';
 	subplot(3,3,1);
@@ -10,6 +10,7 @@ function quickSeries(dM)
 	pQ = 'decPI';
 	subplot(3,3,2);
 	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,false,false,true,true,true);
+	title(textCode);
 	subplot(3,3,5);
 	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,true,false,false,false,false);
 	subplot(3,3,8);
@@ -21,3 +22,5 @@ function quickSeries(dM)
 	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,true,false,false,false,false);
 	subplot(3,3,9);
 	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,false,true,false,false,false);
+
+	saveTallPDF([textCode,'.pdf']);
