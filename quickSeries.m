@@ -1,10 +1,10 @@
-function quickSeries(dM, textCode)
+function quickSeries(dM, textCode, plotColor)
 
 	pQ = 'PI';
 %	subplot(3,3,1);
 %	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,false,false,true,true,true);
 %	subplot(3,3,4);
-	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,true,false,false,false,false);
+	laserPowerSeriesFlex(dM,1:8,pQ,20/4,plotColor,false,true,false,false,false,false);
 %	subplot(3,3,7);
 %	laserPowerSeriesFlex(dM,1:8,pQ,20/4,'b',false,false,true,false,false,false);
 
