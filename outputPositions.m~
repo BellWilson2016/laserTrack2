@@ -7,8 +7,8 @@ function transmissionID = outputPositions(xPos,yPos,powers)
     global trackingParams;
 	global gridDeviation;
 
-%	xPos(6) = 75 + gridDeviation.x;
-%	yPos(6) = 450 + gridDeviation.y;
+	xPos(6) = 75 + gridDeviation.x;
+	yPos(6) = 450 + gridDeviation.y;
 
 
     if (trackingParams.calibrationSet)  
