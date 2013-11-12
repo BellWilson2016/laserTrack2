@@ -1,7 +1,7 @@
 function probeGrid(letterCode)
 
-	xDev = [-1.2:.1:1.2]+2; % mm
-	yDev = [-1.2:.1:1.2];
+	xDev = [-1:.1:1]; % mm
+	yDev = [-1:.1:1];
 
 %	xDev = [-5:1:5]+2; % mm
 %	yDev = [-5:1:5];

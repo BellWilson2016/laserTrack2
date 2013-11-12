@@ -32,18 +32,20 @@ function mcam(varargin)
             runningFlag = true;
             stop(vid);
         end
-        
+       % Gain 80 
        set(vid.Source,...
           'Exposure',0,...
           'Brightness',brightness,...
-          'Gain', 80,...
+          'Gain', 511,...
           'Sharpness', 0,...
           'Shutter', shutter1394(shutter),...
           'ShutterMode','manual');
       
       if runningFlag
           start(vid);
-          trigger(vid);
+		  if ispc()
+          	trigger(vid);
+		  end
       end
     end
               

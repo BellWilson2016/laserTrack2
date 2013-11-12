@@ -59,7 +59,7 @@ function liveTrack(obj, event)
         
         % Only track on 2 or more positive pixels
 		nPixels(regionN) = size(row,1);
-    	if (nPixels(regionN) > 1)
+    	if (nPixels(regionN) > 0)
             
             % If there are too many pixels, throw the rest out
             % This keeps speed up?
