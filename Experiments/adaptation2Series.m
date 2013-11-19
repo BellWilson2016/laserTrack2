@@ -39,7 +39,7 @@ function adaptation2Series()
 			exp.protocol	 = @laser_adaptation2;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR, adaptDelay, adaptPower]};
 			cmd = {@runLaserProtocol,exp};
-			scheduleEvent((60*60)*2 + (8*60)*nSched, cmd);  
+			scheduleEvent((60*60)*0 + 5 + (8*60)*nSched, cmd);  
 			nSched = nSched + 1;
 		end
 	end
