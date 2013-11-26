@@ -9,7 +9,7 @@ global USBscanController;
 % Min small jump:   250 - 12
 largeJump = 575-12;
 smallJump = 250-12;
-cyclePeriod = 10000;
+cyclePeriod = 10000*5;
 laserEndPad = 95;
 
 mirrorMoveTime = uint16([largeJump,smallJump,smallJump,smallJump,...

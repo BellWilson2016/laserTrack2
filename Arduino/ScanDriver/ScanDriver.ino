@@ -21,7 +21,7 @@
 #include <Wire.h>                                      // Nb. We programatically sets the TWI speed to 400 kHz at DAC setup.
 
 // Video triggering
-#define VIDTRIGINTERVAL 3
+#define VIDTRIGINTERVAL 2
                                  
 // In-line assembly utilities
 #define NOP asm volatile("nop\n\t"::)
@@ -209,9 +209,7 @@ void loop() {
       SETCURRENTZONE;  // Outputs current zone address
       // Do a video trigger
       if (currentZone == 0) {
-        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
-        if (vidTrigPhase == 0) {
-          if (dropFrames == 0) {
+         if (dropFrames == 0) {
             VIDTRIGPINON;
             SREG = sreg;
             queueSerialReturn(0x64, prevTimePoint);
@@ -220,11 +218,11 @@ void loop() {
             SREG = sreg;
             queueSerialReturn(0x65, prevTimePoint);
           }         
-        } else if (vidTrigPhase == 1) {
+        } else if (currentZone == 1) {
           VIDTRIGPINOFF;
           SREG = sreg;
         }      
-      } 
+ 
 //      if (currentZone == 0) {
 //        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
 //        if (vidTrigPhase == 0) {
