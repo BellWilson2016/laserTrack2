@@ -48,6 +48,8 @@
   byte mode;      
   byte phase;
   byte currentZone;
+  byte pulsePeriod = 0;    // Used for mode 4, pulsed stimulation
+  byte LaserPhases[8] = {0,0,0,0,0,0,0,0};
   
   byte vidTrigPhase;
   byte dropFrames;
@@ -152,7 +154,7 @@ void loop() {
   if ((long) (timeNow + TIMERCAPTUREPAD - prevTimePoint) < nextTimeGap) {
     SREG = sreg; 
     // If we're in a special mode, keep polling the serial port to make sure buffer doesn't overflow
-    if (mode > 0) {
+    if (mode == 1) {
       availableBytes = Serial.available();
       if ((availableBytes > 0) && (availableBytes >= Serial.peek())) {
             receiveSerial();
@@ -234,7 +236,33 @@ void loop() {
  
       SREG = sreg;
       
-      laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;  
+      // Mode 5 is frequency mode
+      if (mode == 5) {
+        // Pulse duratino comes from pulsePeriod global parameter
+        laserDuration = (((unsigned long) pulsePeriod) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
+        // If we're out of phase, don't laser and continue counting down
+        if (LaserPhases[currentZone] > 0) {
+          laserDuration = 0;
+          LaserPhases[currentZone] -= 1;
+        // If we are in phase and the power is > 0, allow laser and reset the countdown  
+        } else if (LaserPowers[currentZone] > 0) {
+          LaserPhases[currentZone] = 0xFF - LaserPowers[currentZone];
+        // If the power is 0, don't reset the countdown and don't laser  
+        } else {
+         laserDuration = 0;
+        } 
+      } else {  
+        laserDuration = (((unsigned long) LaserPowers[currentZone]) * ((((unsigned long) scanTime) << 4) - LASERENDPAD)) >> 8;
+        // Implement pulsatile laser
+        if (LaserPhases[currentZone] > 0) {
+           laserDuration = 0;
+           LaserPhases[currentZone] -= 1;
+        } else if (laserDuration > 0) {
+          LaserPhases[currentZone] = pulsePeriod;
+        }
+      }
+        
+      
       prevTimePoint += nextTimeGap;
       nextTimeGap = ((unsigned long) mirrorMoveTime[currentZone]) << 4;
       if (laserDuration == 0) {
@@ -329,7 +357,9 @@ void loop() {
         SREG = sreg;
         LASERPINOFF;
         phase = 0;
-        mode = 0;   // Needed to recover from watchdog test mode
+        if (mode == 1) {
+          mode = 0;   // Needed to recover from watchdog test mode
+        }
         prevTimePoint += nextTimeGap;
         nextTimeGap = ((unsigned long) scanTime) << 4;        
         // If there's enough time to Rx or Tx check the serial port and I2C

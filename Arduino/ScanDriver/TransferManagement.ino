@@ -17,6 +17,11 @@ void checkForTransfers() {
       } else if (DACsLeftToUpdate > 0)  {
           passDataToDAC(ScanOrder[nextDACIndex]);
           LaserPowers[ScanOrder[nextDACIndex]] = LaserPowersBuffer[ScanOrder[nextDACIndex]];
+// On a new zero power, reset phase to 0
+// * Don't do this.  Prevents boundary over-lasing
+//          if (LaserPowers[ScanOrder[nextDACIndex]] == 0) {
+//            LaserPhases[ScanOrder[nextDACIndex]] = 0;
+//          }      
           DACsLeftToUpdate--;
           nextDACIndex++; nextDACIndex %= numZones;    
       } else if (timeNow - lastTemp > thermDelay) {

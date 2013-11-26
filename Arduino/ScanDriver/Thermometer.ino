@@ -9,7 +9,7 @@
 #define THERMLO       PORTC &= B11111110
 #define THERMREAD     ((PINC &  B00000001)>>0)
 
-#define TEMPSHUTDOWN  (29 << 1)   // Define max and min temps
+#define TEMPSHUTDOWN  (34 << 1)   // Define max and min temps
 #define MINTEMP (15 << 1)         // Use a min temp to guard against 0 errors when disconnected
 
 byte thermPhase;

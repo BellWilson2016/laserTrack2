@@ -110,7 +110,7 @@ function finishEpoch(obj, event, exp, epochN)
 			exp = catSyncTracks(exp);
 
 		    % Save data
-		    filename = ['RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
+		    filename = ['RTFW',datestr(now,'yymmdd'),'/','RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
 		    expName  = exp.experimentName;
 			% Use evalc to suppress commandline output
 			T = evalc('saveExperimentData(expName,filename, ''exp'')');

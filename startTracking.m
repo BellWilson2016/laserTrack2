@@ -4,6 +4,7 @@
 
 global vid;
 global USBscanController;
+global USBshockController;
 global trackingParams;
 
 clearPorts();
@@ -14,6 +15,7 @@ clearPorts();
 % USBolfactometer = initializeArduino();
 % setValve(0,0);
 USBscanController =   initializeScanController();
+%USBshockController = initializeShockController();
 
 vid = setupTrackingCamera();
 
