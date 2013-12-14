@@ -11,7 +11,7 @@ function singleSideSeriesShort()
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
-	exp.laserPowers =  [0,4,8,16,32,64,128,192];
+	exp.laserPowers =  [0,2,4,8,16,32,64,128];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz - Long Pulses';	
