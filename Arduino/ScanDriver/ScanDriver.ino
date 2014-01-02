@@ -53,7 +53,7 @@
   
   byte vidTrigPhase;
   byte dropFrames;
-  byte colorSwitch = 0;    // 1 for blue only, 2 for red only, 3 for both
+  byte colorSwitch[8] = {0,0,0,0,0,0,0,0};    // 1 for blue only, 2 for red only, 3 for both
   
   
 // Variables updated for each fly, 40 byte transmission
@@ -278,10 +278,10 @@ void loop() {
         // Short delay for alignment
         NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
         // Turn on the laser
-        if (colorSwitch & 2) {
+        if (colorSwitch[currentZone] & 2) {
           REDPINON;
         }
-        if (colorSwitch & 1) {
+        if (colorSwitch[currentZone] & 1) {
           LASERPINON;
         }
         // For long pulses, go back through the counter
