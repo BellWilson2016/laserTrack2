@@ -31,6 +31,7 @@ function trackingParams = initTrackingParams()
 	trackingParams.laneCenterX = 0;   % Lane centers (in pixels) - all lanes should be equally sized...
 	trackingParams.laneCenterY = 0;
 	trackingParams.pxPerMM = 1;		  % Video scale factor
+	trackingParams.colorSwitch = 1;   % Use blue,red,both
 
 	% Regions in which to track each fly
     trackingParams.reg(1,:) = [5,trackingParams.width-5,5,trackingParams.height-5];

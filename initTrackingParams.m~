@@ -31,6 +31,7 @@ function trackingParams = initTrackingParams()
 	trackingParams.laneCenterX = 0;   % Lane centers (in pixels) - all lanes should be equally sized...
 	trackingParams.laneCenterY = 0;
 	trackingParams.pxPerMM = 1;		  % Video scale factor
+	trackingParams.colorSwitch = 1;
 
 	% Regions in which to track each fly
     trackingParams.reg(1,:) = [5,trackingParams.width-5,5,trackingParams.height-5];
@@ -65,6 +66,7 @@ function trackingParams = initTrackingParams()
 	% Serial data logging
     trackingParams.recordingSerial = false;
     trackingParams.serialRecord = [];
+	trackingParams.queuedData = [];
 
 	% Mirror temp safety
     trackingParams.scanMirrors = true;

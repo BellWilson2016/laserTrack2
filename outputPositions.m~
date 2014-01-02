@@ -2,13 +2,13 @@
 % This function outputs in terms of screen pixel position.
 %
 %
-function transmissionID = outputPositions(xPos,yPos,powers)
+function transmissionID = outputPositions(xPos,yPos,powers,colorSwitch)
 
     global trackingParams;
 	global gridDeviation;
 
-	xPos(6) = 169 + gridDeviation.x;
-	yPos(6) = 430 + gridDeviation.y;
+%	xPos(6) = 169 + gridDeviation.x;
+%	yPos(6) = 430 + gridDeviation.y;
 %	xPos(6)
 %	yPos(6)
 
