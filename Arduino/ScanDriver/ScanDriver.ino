@@ -53,6 +53,7 @@
   
   byte vidTrigPhase;
   byte dropFrames;
+  byte colorSwitch = 0;    // 0 for blue only, 1 for red only, 2 for both
   
   
 // Variables updated for each fly, 40 byte transmission
@@ -277,7 +278,12 @@ void loop() {
         // Short delay for alignment
         NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
         // Turn on the laser
-        LASERPINON;
+        if (colorSwitch & 2) {
+          REDPINON;
+        }
+        if (colorSwitch & 1) {
+          LASERPINON;
+        }
         // For long pulses, go back through the counter
         if (laserDuration > (85 << 4)) {         
             SREG = sreg;
@@ -336,7 +342,7 @@ void loop() {
         NOP; NOP; NOP; NOP;          
         // Turn off the laser
      LaserOff:   
-        LASERPINOFF;
+        BOTHLASEROFF;
         SREG = sreg;
         prevTimePoint += nextTimeGap;
         nextTimeGap = (((unsigned long) scanTime) << 4) - ((unsigned long) laserDuration);  // The amount of time left in the laser phase
@@ -353,7 +359,7 @@ void loop() {
     case 3:
         // Don't turn on the laser
         SREG = sreg;
-        LASERPINOFF;
+        BOTHLASEROFF;
         phase = 0;
         if (mode == 1) {
           mode = 0;   // Needed to recover from watchdog test mode
