@@ -20,7 +20,7 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
 	transmissionID = randi(64)-1;
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);
-    list = [42,transmissionID,XPos,YPos,pVals,trackingParams.colorSwitch];
+    list = [43,transmissionID,XPos,YPos,pVals,trackingParams.colorSwitch(1),trackingParams.colorSwitch(2)];
 
 	% Output any other queued output data along with position info
 	if (size(trackingParams.queuedData,2) > 0)
