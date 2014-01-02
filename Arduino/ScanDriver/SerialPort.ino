@@ -67,7 +67,7 @@ void receiveSerial() {
     Serial.readBytes(((char *) LaserPowersBuffer),8);
     CS14 = Serial.read(); 
     CS58 = Serial.read();
-    for (i=0; i < 3; i++) {
+    for (i=0; i < 4; i++) {
       colorSwitch[i]   = ((CS14 & (3 << 2*i)) >> 2*i);
       colorSwitch[i+4] = ((CS58 & (3 << 2*i)) >> 2*i);
     }  
