@@ -3,7 +3,7 @@
 % This outputs in terms of 16-bit DAC index numbers   
 %
 % JSB 11/2012
-function transmissionID = updateScanDriver(xVals,yVals,pVals) 
+function transmissionID = updateScanDriver(xVals,yVals,pVals,colorSwitch) 
 
     global USBscanController;   % The arduino to talk to
 	global trackingParams;
@@ -20,7 +20,7 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
 	transmissionID = randi(64)-1;
     XPos = byteBlock(xVals+xPosCal);
     YPos = byteBlock(yVals+yPosCal);
-    list = [41,transmissionID,XPos,YPos,pVals];
+    list = [42,transmissionID,XPos,YPos,pVals,colorSwitch];
 
 	% Output any other queued output data along with position info
 	if (size(trackingParams.queuedData,2) > 0)
