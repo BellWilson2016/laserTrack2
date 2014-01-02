@@ -4,7 +4,7 @@ function singleSideSeriesShortRBCal()
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRBCal'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShort'];
     exp.genotype       = 'NorpA[7]/y ; H134R / + ; + / +';
     exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
