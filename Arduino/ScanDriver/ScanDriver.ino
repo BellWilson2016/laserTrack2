@@ -54,6 +54,7 @@
   byte vidTrigPhase;
   byte dropFrames;
   byte colorSwitch[8] = {0,0,0,0,0,0,0,0};    // 1 for blue only, 2 for red only, 3 for both
+  byte colorSwitchBuffer[8] = {0,0,0,0,0,0,0,0};    
   
   
 // Variables updated for each fly, 40 byte transmission

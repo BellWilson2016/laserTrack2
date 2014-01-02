@@ -68,8 +68,8 @@ void receiveSerial() {
     CS14 = Serial.read(); 
     CS58 = Serial.read();
     for (i=0; i < 4; i++) {
-      colorSwitch[i]   = ((CS14 & (3 << 2*i)) >> 2*i);
-      colorSwitch[i+4] = ((CS58 & (3 << 2*i)) >> 2*i);
+      colorSwitchBuffer[i]   = ((CS14 & (3 << 2*i)) >> 2*i);
+      colorSwitchBuffer[i+4] = ((CS58 & (3 << 2*i)) >> 2*i);
     }  
     DACsLeftToUpdate = numZones;
     nextDACIndex = (zoneIndex + 2) % numZones;
