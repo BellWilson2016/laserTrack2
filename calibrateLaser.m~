@@ -1,6 +1,6 @@
 function calibrateLaser()
 
-    calibrationPower = 3;  % of 255
+    calibrationPower = 2;  % of 255
     averagingTime = 15;    % sec
     stdLimit = 5.5;          % For rejecting reflections
     nPixThresh = 2;

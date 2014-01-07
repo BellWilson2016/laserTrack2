@@ -11,8 +11,8 @@ function singleSideSeriesShortRBCal()
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
-	exp.bluePower      = 64;
-	exp.laserPowers =  [0,32,48,64,96,128,160,192];
+	exp.bluePower      = 16;
+	exp.laserPowers =  [0,8,16,32,64,128,160,192];
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz - Long Pulses';	
