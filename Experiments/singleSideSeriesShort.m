@@ -33,7 +33,7 @@ function singleSideSeriesShort()
 			exp.protocol	 = @laser_1_halfL_1;
 			exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
 			cmd = {@runLaserProtocol,exp};
-			scheduleEvent(exp.acclimationTime*(60*60) + (3.5*60)*nSched, cmd);  
+			scheduleEvent(exp.acclimationTime*(60*60) + 5 + (3.5*60)*nSched, cmd);  
 			nSched = nSched + 1;
 		end
 	end
