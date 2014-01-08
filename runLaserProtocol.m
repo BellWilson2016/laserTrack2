@@ -114,7 +114,8 @@ function finishEpoch(obj, event, exp, epochN)
 		    expName  = exp.experimentName;
 			% Use evalc to suppress commandline output
 			disp('Immediately before write');
-			T = evalc('saveExperimentData(expName,filename, ''exp'')');
+			% T = evalc('saveExperimentData(expName,filename, ''exp'')');
+			eval('saveExperimentData(expName,filename, ''exp'')');
 			disp('Immediately after write');
 			listRecent(0);
 
