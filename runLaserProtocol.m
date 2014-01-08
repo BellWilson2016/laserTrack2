@@ -113,10 +113,9 @@ function finishEpoch(obj, event, exp, epochN)
 		    filename = ['RTFW',datestr(now,'yymmdd'),'/','RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
 		    expName  = exp.experimentName;
 			% Use evalc to suppress commandline output
-			disp('Immediately before write');
-			% T = evalc('saveExperimentData(expName,filename, ''exp'')');
-			eval('saveExperimentData(expName,filename, ''exp'')');
-			disp('Immediately after write');
+
+			T = evalc('saveExperimentData(expName,filename, ''exp'')');
+
 			listRecent(0);
 
 			% Update website
