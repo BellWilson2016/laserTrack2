@@ -7,12 +7,26 @@ function transmissionID = outputPositions(xPos,yPos,powers)
     global trackingParams;
 	global gridDeviation;
 
-%	xPos(6) = 169 + gridDeviation.x;
-%	yPos(6) = 430 + gridDeviation.y;
-	xPos(6) = 76.5;
-	yPos(6) = 436;
-	xPos(6) = -10;
-%	yPos(6) = 436;
+	if ~isfield(trackingParams,'bias')
+		trackingParams.bias = 0;
+		trackingParams.goRight = true;
+	end
+
+	if trackingParams.bias < -5
+		trackingParams.goRight = true;	
+	elseif trackingParams.bias > 5
+		trackingParams.goRight = false;
+	end
+
+	if trackingParams.goRight
+		trackingParams.bias = trackingParams.bias + 1;
+	else
+	    trackingParams.bias = trackingParams.bias - 1;
+	end
+
+	xPos = 5*ones(1,8)*trackingParams.bias;
+
+
 
     if (trackingParams.calibrationSet)  
         xV = trackingParams.laserCal.fX([xPos',yPos']);

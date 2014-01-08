@@ -220,10 +220,10 @@ void loop() {
             SREG = sreg;
             queueSerialReturn(0x65, prevTimePoint);
           }         
-        } else if (currentZone == 1) {
+       } else if (currentZone == 1) {
           VIDTRIGPINOFF;
           SREG = sreg;
-        }      
+       } 
  
 //      if (currentZone == 0) {
 //        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
