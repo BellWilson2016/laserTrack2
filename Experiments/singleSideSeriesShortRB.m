@@ -12,11 +12,11 @@ function singleSideSeriesShortRB()
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
 	exp.laserPowers =  [0, 2, 4, 8,16,32, 64,128];
-	exp.redPowers   =  [0, 4, 8,16,32,64,128,240];
+	exp.redPowers   =  [0, 4, 8,16,32,64,128,250];
 	exp.laserFilter    = 1;
-	exp.nReps          = 4;
+	exp.nReps          = 8;
 	exp.comment		   = '20 Hz - Long Pulses';	
-	exp.acclimationTime = 0; % Hours
+	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
 
