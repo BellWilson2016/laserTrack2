@@ -6,15 +6,15 @@ function singleSideSeriesShortRBCal()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRBCal'];
     exp.genotype       = 'NorpA[7]/y ; H134R / + ; + / +';
-    exp.flyAge         = 7;    % Days
+    exp.flyAge         = 9;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
-	exp.bluePower      = 16;
+	exp.bluePower      = 64;
 	exp.laserPowers =  [0,8,16,32,64,128,160,192];
 	exp.laserFilter    = 1;
-	exp.nReps          = 8;
+	exp.nReps          = 4;
 	exp.comment		   = '20 Hz - Long Pulses';	
 	exp.acclimationTime = 0; % Hours
 
