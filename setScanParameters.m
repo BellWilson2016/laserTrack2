@@ -1,6 +1,6 @@
 function setScanParameters()
 
-global USBscanController;
+%global USBscanController;
 
 % Total cycle time is sum of mirrorMoveTimes + 8*scanTime
 % Laser has 12 usec latency to start of rising phase
@@ -44,10 +44,10 @@ for n = 1:8
 end
 
     % Write them all to USB if idle, otherwise drop
-    transmitted = false;
-    while ~transmitted
-        if strcmp(USBscanController.TransferStatus,'idle') 
-            fwrite(USBscanController, [uint8(list)],  'uint8','async');
-            transmitted = true;
-        end
-    end
+%    transmitted = false;
+%    while ~transmitted
+%        if strcmp(USBscanController.TransferStatus,'idle') 
+%            fwrite(USBscanController, [uint8(list)],  'uint8','async');
+%            transmitted = true;
+%        end
+%    end

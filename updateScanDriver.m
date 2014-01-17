@@ -5,7 +5,6 @@
 % JSB 11/2012
 function transmissionID = updateScanDriver(xVals,yVals,pVals) 
 
-    global USBscanController;   % The arduino to talk to
 	global trackingParams;
     
     % DAC calibrations to set zero at zero
@@ -29,12 +28,12 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
 	end
     
     % Write them all to USB if idle, otherwise drop
-	if strcmp(USBscanController.TransferStatus,'idle') && (USBscanController.BytesToOutput == 0)
-		fwrite(USBscanController, [uint8(list)],  'uint8','async');
-	else
+%	if strcmp(USBscanController.TransferStatus,'idle') && (USBscanController.BytesToOutput == 0)
+%		fwrite(USBscanController, [uint8(list)],  'uint8','async');
+%	else
 			   % disp(['Serial collision: ',datestr(now)]);
 			   % disp(USBscanController.BytesAvailable);
-	end
+%	end
 
 
 

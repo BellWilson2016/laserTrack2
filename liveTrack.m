@@ -12,7 +12,6 @@ function liveTrack(obj, event)
 
     global vid;
     global trackingParams;
-	global USBscanController;
 
 	% Set a lock to prevent processing of serial data if we're currently working on a frame
 	trackingParams.busyLock = true;
@@ -183,7 +182,7 @@ function liveTrack(obj, event)
 	trackingParams.busyLock = false;
 
 	% Force a read, since we have time now
-	serialReceiver(USBscanController,0);
+	% serialReceiver(USBscanController,0);
         
 
     
