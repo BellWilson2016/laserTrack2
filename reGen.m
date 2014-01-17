@@ -34,7 +34,10 @@ classdef reGen < handle
 		COtaskHandle
 		repRate			= 20;	  % Hz
 		sampPerRep	    = 2500;
-		sampleRate		
+		sampleRate
+		lookAheadAO		= .02;
+		lookAheadDO		= .04;	  % Write to buffer this far ahead of current point in cycle
+		timeOut			= .005;	  % Seconds. 	
 
 		videoRate  =  40;		  % Hz
 		AOFIFOSize = 500;
@@ -165,48 +168,86 @@ classdef reGen < handle
 				laser1wave(RG.beam1WindowStarts(laneN):beam1Ends(laneN)) = 1;
 				laser2wave(RG.beam2WindowStarts(laneN):beam2Ends(laneN)) = 1;
 			end
+			
 
-			% Configure write relative to 0
-			DAQmx_Val_FirstSample = 10424;
-			err = calllib(RG.libName, 'DAQmxSetWriteRelativeTo',RG.AOtaskHandle,...
-				DAQmx_Val_FirstSample);
-			RG.errorCheck(err);
 
-			% Configure write relative to 0
-			DAQmx_Val_FirstSample = 10424;
-			err = calllib(RG.libName, 'DAQmxSetWriteRelativeTo',RG.DOtaskHandle,...
-				DAQmx_Val_FirstSample);
-			RG.errorCheck(err);
 
-			% Ensure offset is 0
+			
+			%% Update the AO buffer	
+			% Set offset to zero
 			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.AOtaskHandle,...
-				0);
+								0);
 			RG.errorCheck(err);
-
-			% Ensure offset is 0
-			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.DOtaskHandle,...
-				0);
+						
+			% Check how much buffer available from 0
+			% Note that DAQmxGetWriteCurrWritePos returns a value that increases monotonically			
+			buffSize0 = int32(1);
+			[err, buffSize0] = calllib(RG.libName, 'DAQmxGetWriteSpaceAvail',RG.AOtaskHandle,...
+				buffSize0);
 			RG.errorCheck(err);
-
-			% Write the AO waves to the DAQ buffer
-			timeOut = -1;
+			
+			% Set write offset past the end of the available buffer	
+			writeStart = round(buffSize0 + RG.lookAheadAO*RG.sampPerRep);	
+			% Set offset ahead to maximize writing.
+			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.AOtaskHandle,...
+							writeStart);
+			RG.errorCheck(err);
+			writeStart = mod(writeStart,RG.sampPerRep) + 1;
+					
+			timeOut = RG.timeOut;	% Use -1 for indefinite, 0 to try once	
 			DAQmx_Val_GroupByChannel = 0;
-			dataOut = [Xwave,Ywave]; dataOut = dataOut(:); 
+			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
+			dataOut = [Xwave(scanOrder),...
+					   Ywave(scanOrder)];	
+			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteAnalogF64', RG.AOtaskHandle,...
-				RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
+					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
+			RG.errorCheck(err); % Don't throw an error, just return;
+				
+			
+			
+			%% Update the DO buffer	
+			% Set offset to zero
+			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.DOtaskHandle,...
+								0);
+			RG.errorCheck(err);
+						
+			% Check how much buffer available from 0
+			% Note that DAQmxGetWriteCurrWritePos returns a value that increases monotonically			
+			buffSize0 = int32(1);
+			[err, buffSize0] = calllib(RG.libName, 'DAQmxGetWriteSpaceAvail',RG.DOtaskHandle,...
+				buffSize0);
 			RG.errorCheck(err);
 			
-			% Write the DO waves to the DAQ buffer
-			timeOut = -1;
+			% Set write offset past the end of the available buffer	
+			writeStart = round(buffSize0 + RG.lookAheadDO*RG.sampPerRep);	
+			% Set offset ahead to maximize writing.
+			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.DOtaskHandle,...
+							writeStart);
+			RG.errorCheck(err);
+			writeStart = mod(writeStart,RG.sampPerRep) + 1;
+
+% Buffer size diagnostics			
+%			buffSizePost = int32(1);
+%			[err, buffSizePost] = calllib(RG.libName, 'DAQmxGetWriteSpaceAvail',RG.DOtaskHandle,...
+%				buffSizePost);
+%			RG.errorCheck(err);
+%			buffSizePost
+			
+			timeOut = RG.timeOut;	% Use -1 for indefinite, 0 to try once		
 			DAQmx_Val_GroupByChannel = 0;
-			dataOut = [laser1wave, laser2wave]; dataOut = dataOut(:);
+			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
+			dataOut = [laser1wave(scanOrder),...
+					   laser2wave(scanOrder)];	
+			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
 			autoStart = 0;
-			[err, dataOut, samplesWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines',RG.DOtaskHandle,...
-				RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
-			RG.errorCheck(err);
+			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines', RG.DOtaskHandle,...
+					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
+			RG.errorCheck(err); % Don't throw an error, just return;
+			
 		end
 
 

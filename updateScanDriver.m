@@ -6,6 +6,7 @@
 function transmissionID = updateScanDriver(xVals,yVals,pVals) 
 
 	global trackingParams;
+	global RG;
     
     % DAC calibrations to set zero at zero
     xPosCal = [69,92,3,-2,54,47,7,-61];
@@ -34,6 +35,11 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
 			   % disp(['Serial collision: ',datestr(now)]);
 			   % disp(USBscanController.BytesAvailable);
 %	end
+
+	CMD1 = zeros(1,8);
+	CMD2 = CMD1;
+
+	RG.updateOutput((xVals - 32000)./65000, (yVals - 32000)./65000, CMD1, CMD2);
 
 
 
