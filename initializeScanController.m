@@ -26,6 +26,7 @@ global USBscanController;
     % set(USBscanController,'Terminator',10);
     % set(USBscanController,'Timeout',.2);
         
+
     fopen(USBscanController);
     pause(2);
     % Need to pause for bootloader before MCU starts listening
