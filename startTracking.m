@@ -13,9 +13,6 @@ clearPorts();			% Clear all serial ports
 % USBscanController =   initializeScanController();
 % USBshockController = initializeShockController();
 
-%matlabpool close;
-%matlabpool open 2;
-
 RG = reGen('Dev1');		% Setup regenerating DAC output
 RG.setupTiming();		% Set the clocks
 RG.start();				% Start the output running

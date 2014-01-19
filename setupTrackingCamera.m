@@ -35,7 +35,7 @@ function vid = setupTrackingCamera()
     end
     
     % Setup the camera
-    mcam(5000);
+    mcam(6000);
 
     % Use an ROI in Format 7
     % Note the image will be rotated 90 degrees
@@ -57,7 +57,7 @@ function vid = setupTrackingCamera()
 		%	884 / 920		50
 		%	976				55
 		%	1060			60
-        set(vid.Source, 'BytesPerPacket',600); 
+        set(vid.Source, 'BytesPerPacket',2724); 
         set(trackingParams.previewFigure, 'Name', 'Live video...', ...
             'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');

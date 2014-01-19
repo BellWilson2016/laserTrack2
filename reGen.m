@@ -39,7 +39,7 @@ classdef reGen < handle
 		lookAheadDO		= .04;	  % Write to buffer this far ahead of current point in cycle
 		timeOut			= .005;	  % Seconds. 	
 
-		videoRate  =  40;		  % Hz
+		videoRate  =  50;		  % Hz
 		AOFIFOSize = 500;
 		DOFIFOSize = 500;
 

@@ -21,7 +21,9 @@ function liveTrack(obj, event)
     % If no frames were returned, abort
     if size(allFrames,1) > 0
 		if (size(allFrames,4) > 1)
-	%		disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+		%	disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+		else
+		%	fprintf('.');
 		end
         frame = allFrames(:,:,:,end);
     else
@@ -29,7 +31,8 @@ function liveTrack(obj, event)
         return;
     end
 
-	tic;
+
+	
     
     % Get trackingParams   
     trackThresh = trackingParams.trackThresh;
@@ -44,9 +47,8 @@ function liveTrack(obj, event)
 	lastHeadYpix = trackingParams.headYpix;
 
     % For each subregion
-	% Can we use parfor here?
-	% Or an SPMD block?
-	parfor regionN = 1:numRegions
+    % Nb: All this tracking math only takes about 1 ms
+	for regionN = 1:numRegions
         
         subFrame = frame(reg(regionN,1):reg(regionN,2),...
             		reg(regionN,3):reg(regionN,4));
@@ -155,6 +157,11 @@ function liveTrack(obj, event)
     end  % End for each lane
 	
 	trackingParams.nPixels = nPixels;
+	
+	
+	
+
+
 
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
@@ -167,11 +174,6 @@ function liveTrack(obj, event)
            transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
     end
 
-
-a = toc();
-if randi(10) == 1
-	% a
-end
 
     % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
@@ -241,5 +243,5 @@ end
     livePreview(obj, anEvent,trackingParams.hImage);
 
 
-    
+
 end
