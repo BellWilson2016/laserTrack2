@@ -11,3 +11,5 @@
     clearPorts();
     close all;
     clear all;
+	jDAQmx.jDAQmxReset('Dev1');
+	imaqreset();

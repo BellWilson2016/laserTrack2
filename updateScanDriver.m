@@ -39,7 +39,9 @@ function transmissionID = updateScanDriver(xVals,yVals,pVals)
 	CMD1 = zeros(1,8);
 	CMD2 = CMD1;
 
-	RG.updateOutput((xVals - 32000)./65000, (yVals - 32000)./65000, CMD1, CMD2);
+	if (length(xVals) == 8)
+		RG.updateOutput((xVals - 32000)./65000, (yVals - 32000)./65000, CMD1, CMD2);
+	end
 
 
 

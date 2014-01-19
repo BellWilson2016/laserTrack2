@@ -95,6 +95,7 @@ classdef reGen < handle
 			RG.setupAO();
 			RG.setupDO();
 			RG.setupCO();
+			
 		end
 
 		function setupTiming(RG)
@@ -379,6 +380,8 @@ classdef reGen < handle
 		end
 
 		function setupCO(RG)
+		
+			
 
 			% Create the counter out task
 			taskName = ['CO-',datestr(now,'MMSS')];
@@ -386,14 +389,19 @@ classdef reGen < handle
 			[err,b,RG.COtaskHandle] = calllib(RG.libName,...
 					'DAQmxCreateTask', taskName, RG.COtaskHandle);
 			RG.errorCheck(err);
-
+			
 			% Set to generate short pulses at the video rate
 			DAQmx_Val_Hz  = 10373; 
 			DAQmx_Val_Low = 10214;	% For idle state
 			initDelay = 0;
 			err = calllib(RG.libName, 'DAQmxCreateCOPulseChanFreq', RG.COtaskHandle,...
 						[RG.deviceName,'/ctr0'],'', DAQmx_Val_Hz, DAQmx_Val_Low,...
-						initDelay, RG.videoRate, .05);
+						initDelay, RG.videoRate, .25);
+			RG.errorCheck(err);
+												
+			% Pulse on PFI0 to allow BNC connection
+			err = calllib(RG.libName, 'DAQmxSetCOPulseTerm', RG.COtaskHandle,...
+						[RG.deviceName,'/ctr0'],['/',RG.deviceName,'/PFI0']);
 			RG.errorCheck(err);
 
 			% Configure for continuous generation
