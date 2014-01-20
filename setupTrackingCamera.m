@@ -82,6 +82,9 @@ function vid = setupTrackingCamera()
     trackingTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.003,'TimerFcn',@liveTrack);
     start(trackingTimer);
     
+    displayTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.050,'TimerFcn',@livePreview);
+    start(displayTimer);
+    
 
      
 

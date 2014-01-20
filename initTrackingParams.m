@@ -56,6 +56,8 @@ function trackingParams = initTrackingParams()
 	% For measuring latency and frame rate
 	trackingParams.latencyMeasurePhase = 0;
 	trackingParams.measureFrameRate = false;
+	trackingParams.lastFrame = [];
+	trackingParams.bestLatency = false;
 
 	% Setup calibration marks
 	trackingParams.displayPhase = 0;

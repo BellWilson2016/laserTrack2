@@ -38,8 +38,7 @@ function liveTrack(obj, event)
 
     % Get trackingParams   
     trackThresh = trackingParams.trackThresh;
-    invert = trackingParams.invert;
-    boxSize = 5;            % Size of bounding box to draw    
+    invert = trackingParams.invert;   
     reg = trackingParams.reg;    
 	numRegions = size(reg,1);
     runAvg = trackingParams.runningAvg;
@@ -188,59 +187,7 @@ function liveTrack(obj, event)
 	     %  Sample# Field# Fly#
         trackingParams.tempData(end+1,1:6,:) = sample;
     end
-
-
-
-	% Don't redraw every frame. This boosts frame rates
-	trackingParams.displayPhase = mod(trackingParams.displayPhase+1,trackingParams.displayInterval);
-	if (trackingParams.displayPhase > 0)
-		return;
-	end
-
-%	 Cut, this is a major computational load.		
-%    % Draw annotations to the preview figure
-%    set(0,'CurrentFigure',trackingParams.previewFigure);
-%    for regionN = 1:numRegions
-%        % Draw tracking box
-%        delete(trackingParams.lastLine(regionN));
-%        if trackingParams.trackHead
-%            trackingParams.lastLine(regionN) = patch(...
-%                trackingParams.xTarget(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
-%				-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN),  NaN],...
-%                trackingParams.yTarget(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
-%				trackingParams.headXpix(regionN), -trackingParams.headXpix(regionN),  NaN],...
-%                'k','EdgeColor','w','EdgeAlpha',.5);
-%        else
-%            trackingParams.lastLine(regionN) = patch(...
-%                trackingParams.xTarget(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
-%                trackingParams.yTarget(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
-%                'k','EdgeColor','w','EdgeAlpha',.5);
-%        end
-%    end
-       
-
-       
-    % Show tracking for the whole screen, but make sure
-    % to do this AFTER live-tracking is output
-    % This duplicates some work, but lowers latency
-    if invert
-        diffPix = frame - uint8(runAvg);
-    else
-        diffPix = uint8(runAvg) - frame;
-    end
-    trackingParams.redPix = (diffPix > trackThresh);
     
-    % Update the running avg if necessary
-    if trackingParams.updateAvg
-        flyDecayN = 30*trackingParams.imageTau;
-        trackingParams.runningAvg = runAvg(:,:)*(flyDecayN - 1)/flyDecayN + double(frame)/flyDecayN;
-    end
-             
-    % Call the preview window
-    anEvent.Data = frame;
-    tVec = now;
-    anEvent.Timestamp = datestr(now,'HH:MM:SS.FFF');
-    livePreview(obj, anEvent, trackingParams.hImage);
-    
+    trackingParams.lastFrame = frame;
 
 end

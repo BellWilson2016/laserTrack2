@@ -27,5 +27,5 @@ else
     cmd = 2400;
     actShutter = 780000;
 end
-cmd
+
 disp(['Set shutter to: ',num2str(actShutter),' us']);

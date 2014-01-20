@@ -36,6 +36,7 @@ showFlyView;
 % Set tracking laser to fly
 loadLaserCal();
 setScanMirrors(true);
+setTrackHead(true);
 
 
 
