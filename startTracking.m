@@ -20,8 +20,22 @@ RG.start();				% Start the output running
 vid = setupTrackingCamera();
 
 showRawView();
-disp('Running trackFly()...');
-trackFly();
+
+setScanParameters();
+trackingParams.getStd = false;
+trackingParams.trackThresh = 50;
+trackingParams.invert = false;
+    
+mcam(6000);    
+showAvgView;
+setAvg(true);
+pause(5);
+setAvg(false);
+showFlyView;
+    
+% Set tracking laser to fly
+loadLaserCal();
+setScanMirrors(true);
 
 
 

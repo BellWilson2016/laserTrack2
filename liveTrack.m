@@ -13,13 +13,15 @@ function liveTrack(obj, event)
     global vid;
     global trackingParams;
 
-	% Set a lock to prevent processing of serial data if we're currently working on a frame
-	trackingParams.busyLock = true;
-    	
+
     % Get the most recent frame if multiple are available
     allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
     if size(allFrames,1) > 0
+    	if trackingParams.latencyMeasurePhase == 2
+    		disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+    		toc
+    	end
 		if (size(allFrames,4) > 1)
 		%	disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
 		else
@@ -27,13 +29,10 @@ function liveTrack(obj, event)
 		end
         frame = allFrames(:,:,:,end);
     else
-		busyLock = false;
         return;
     end
 
 
-	
-    
     % Get trackingParams   
     trackThresh = trackingParams.trackThresh;
     invert = trackingParams.invert;
@@ -160,19 +159,20 @@ function liveTrack(obj, event)
 	
 	
 	
-
-
-
 	transmissionID = 0;
     % Once each subregion is tracked, output the result to the scan mirrors
     if (trackingParams.scanMirrors)
 			% Get the powers
 		   	laserFcn = trackingParams.laseredZoneFcn{1};
 		   	laserArgs = trackingParams.laseredZoneFcn{2};
-			trackingParams.power = laserFcn(laserArgs);
+			[trackingParams.powerB, trackingParams.powerR] = laserFcn(laserArgs);
             % Output to the scanController
-           transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,trackingParams.power);
+           transmissionID = outputPositions(trackingParams.xTarget,trackingParams.yTarget,...
+           						trackingParams.powerB, trackingParams.powerR);
     end
+
+
+return;
 
 
     % Save the data, scale to lane origin and calibration size
@@ -189,11 +189,7 @@ function liveTrack(obj, event)
         trackingParams.tempData(end+1,1:6,:) = sample;
     end
 
-	% If the positions are output, we can do other things, so unlock the lock
-	trackingParams.busyLock = false;
 
-	% Force a read, since we have time now
-	% serialReceiver(USBscanController,0);
         
 
     
@@ -241,7 +237,6 @@ function liveTrack(obj, event)
     tVec = event.Data.AbsTime;
     anEvent.Timestamp = [num2str(tVec(4),'%02.f'),':',num2str(tVec(5),'%02.f'),':',num2str(floor(tVec(6)),'%02i'),'.',num2str(floor((tVec(6)-floor(tVec(6)))*100),'%02i')];
     livePreview(obj, anEvent,trackingParams.hImage);
-
 
 
 end

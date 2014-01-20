@@ -1,30 +1,39 @@
 function measureLatency()
 
 	global trackingParams;
-
-	% Frames to drop each time
-	nFrames = 6;
-	fileN = nextFileNumber();
-
-	% Setup an experiment to run
-	exp.experimentName = ['latencyMeasurement'];
-	powerL = 0;
-	powerR = 10;	
-	% exp.protocol	 = @laser_1_2L_1_2Rx4;   expLength = 26;
-	exp.protocol	 = @laser_1_2L; 	expLength = 3;
-	exp.protocolArgs = {@laserFlatHalves, [powerL, powerR]};
-	runLaserProtocol(exp);
-
-	frameDropTimer = timer('ExecutionMode','fixedRate','Period',3,...
-        'TimerFcn',{@dropFrameFcn, nFrames}, 'StartDelay',3,'TasksToExecute',expLength*60/3);
-
-	start(frameDropTimer);
-
-
-function dropFrameFcn(obj,event,nFrames)
-
-	setScanMode([3,nFrames,0]);
-
-
-
 	
+	latSpacing = .5;
+	nMeasures = 50;
+	
+	setLaserDistribution({@laserLatencyMeasure,[]});
+	disp('Set laser distribution to: @laserLatencyMeasure');
+
+	trackingParams.latencyList = [];
+	trackingParams.oldInvert = trackingParams.invert;
+	trackingParams.invert = true;
+	
+
+	T = timer('ExecutionMode','fixedRate','Period',latSpacing,'TimerFcn', @triggerLaser, 'TasksToExecute', nMeasures);
+	start(T);
+	
+	TF = timer('ExecutionMode','singleShot','StartDelay',latSpacing*(nMeasures+2),'TimerFcn', @finishLatency);
+	start(TF);
+
+
+	function triggerLaser(obj,event)
+
+	global trackingParams;
+	
+	disp('Latency trig.');
+	trackingParams.latencyMeasurePhase = 1;
+	
+function finishLatency(obj,event)
+
+	global trackingParams;
+	
+	disp('Finishing up latency measurement.');
+	trackingParams.invert = trackingParams.oldInvert;
+	
+	figure();
+	hist(trackingParams.latencyList,[0:.005:.2]);
+	xlabel('Latency (sec)'); ylabel('N');

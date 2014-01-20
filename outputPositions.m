@@ -2,39 +2,27 @@
 % This function outputs in terms of screen pixel position.
 %
 %
-function transmissionID = outputPositions(xPos,yPos,powers)
+function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
 
     global trackingParams;
-	global gridDeviation;
-
-%	if ~isfield(trackingParams,'bias')
-%		trackingParams.bias = 0;
-%		trackingParams.goRight = true;
-%	end
-
-%	if trackingParams.bias < -5
-%		trackingParams.goRight = true;	
-%	elseif trackingParams.bias > 5
-%		trackingParams.goRight = false;
-%	end
-
-%	if trackingParams.goRight
-%		trackingParams.bias = trackingParams.bias + 1;
-%	else
-%	    trackingParams.bias = trackingParams.bias - 1;
-%	end
-
-	% xPos = 5*ones(1,8)*trackingParams.bias;
-
-
+	global RG;
 
     if (trackingParams.calibrationSet)  
         xV = trackingParams.laserCal.fX([xPos',yPos']);
         yV = trackingParams.laserCal.fY([xPos',yPos']);
     else
-        xV = zeros(8,1);
-        yV = zeros(8,1);
+        % Just leave it as is.
+        xV = xPos;
+        yV = yPos;
     end
 
 
-    transmissionID = updateScanDriver(xV',yV',powers);
+	transmissionID = randi(64);
+	if length(xV) ~=8
+		xV = ones(1,8).*xV(1);
+		yV = ones(1,8).*yV(1);
+		powersB = ones(1,8).*powersB(1);
+		powersR = ones(1,8).*powersR(1);
+	end
+	RG.updateOutput(xV, yV, powersB, powersR);
+

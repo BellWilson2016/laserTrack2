@@ -1,19 +1,20 @@
 %%
 % Returns flat laser distributions on each half.
 %
-function returnPower = laserFlatHalvesBR(args)  
+function [blueP, redP] = laserFlatHalvesBR(args)  
 
 	global trackingParams;
     
-    leftP  = args(1);
-    rightP = args(2);
-	leftColorSwitch = args(3);
-	rightColorSwitch = args(4);
+    leftBP  = args(1);
+    rightBP = args(2);
+	leftRP = args(3);
+	rightRP = args(4);
     
-   returnPower = (trackingParams.bodyX + trackingParams.headX < 0).*leftP +...
-			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightP;
-   csArray     = (trackingParams.bodyX + trackingParams.headX < 0).*leftColorSwitch +...
-			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightColorSwitch;
+    blueP = (trackingParams.bodyX + trackingParams.headX < 0).*leftBP +...
+			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightBP;
+	redP = (trackingParams.bodyX + trackingParams.headX < 0).*leftRP +...
+			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightRP;
+
 
 %	returnPower = [0,0,0,0,0,1,0,0].*leftP;
 %	returnPower = [1,1,1,1,1,1,1,1].*leftP;

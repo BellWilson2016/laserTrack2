@@ -33,15 +33,13 @@ classdef reGen < handle
 		DOtaskHandle
 		COtaskHandle
 		repRate			= 20;	  % Hz
-		sampPerRep	    = 2500;
+		sampPerRep	    = 10000;
 		sampleRate
 		lookAheadAO		= .02;
 		lookAheadDO		= .04;	  % Write to buffer this far ahead of current point in cycle
-		timeOut			= .005;	  % Seconds. 	
+		timeOut			= .005;	  % Abort output update in (sec.) 	
 
-		videoRate  =  50;		  % Hz
-		AOFIFOSize = 500;
-		DOFIFOSize = 500;
+		videoRate  =  20;		  % Hz
 
 		nPoints = 8;
 		scanTimes = [.000500, .000230, .000230, .000230,...
@@ -133,17 +131,33 @@ classdef reGen < handle
 			RG.beam2WindowEnds   = RG.beamTimeEnds - RG.postBeam2S;
 
 		end
+		
+		function setVideoFrameRate(RG, newRate)
+		
+			numSampsPerChan = 1;
+			autoStart = 0;
+			timeOut = -1;
+			DAQmx_Val_GroupByChannel = 0;
+			dutyCycle = .25;
+			sampsWritten = int32(1);
+			[err, b, c, d ,e] = calllib(RG.libName, 'DAQmxWriteCtrFreq',RG.COtaskHandle,...
+								numSampsPerChan, autoStart, timeOut, DAQmx_Val_GroupByChannel,...
+								newRate, dutyCycle, sampsWritten, []);
+			RG.errorCheck(err);
+		end
+		
+			
 
 		function updateOutput(RG, X, Y, CMD1, CMD2)
 
 			% Find the commanded end. Clip it to the window if it's too long.
-			beam1Ends = RG.beam1WindowStarts + CMD1;
+			beam1Ends = RG.beam1WindowStarts + CMD1 - 1;
 			ix = find(beam1Ends > RG.beam1WindowEnds);
 			beam1Ends(ix) = RG.beam1WindowEnds(ix);
 
 			if RG.simultaneousLasers
 				% Find the commanded end. Clip it to the window if it's too long.
-				beam2Ends = RG.beam2WindowStarts + CMD2;
+				beam2Ends = RG.beam2WindowStarts + CMD2 - 1;
 				ix = find(beam2Ends > RG.beam2WindowEnds);
 				beam2Ends(ix) = RG.beam2WindowEnds(ix);
 			else
@@ -152,7 +166,7 @@ classdef reGen < handle
 				RG.beam2WindowEnds   = RG.beamTimeEnds - RG.postBeam2S;
 
 				% Find the commanded end, clip if necessary.
-				beam2Ends = RG.beam2WindowStarts + CMD2;
+				beam2Ends = RG.beam2WindowStarts + CMD2 - 1;
 				ix = find(beam2Ends > RG.beam2WindowEnds);
 				beam2Ends(ix) = RG.beam2WindowEnds(ix);
 			end
@@ -171,9 +185,6 @@ classdef reGen < handle
 			end
 			
 
-
-
-			
 			%% Update the AO buffer	
 			% Set offset to zero
 			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.AOtaskHandle,...
@@ -281,10 +292,17 @@ classdef reGen < handle
 					RG.sampPerRep);
 			RG.errorCheck(err);	
 
-			% Configure hardware FIFO - This is throwing an error -200077
-			%err = calllib(RG.libName, 'DAQmxSetBufOutputOnbrdBufSize',RG.AOtaskHandle,...
-			%	uint32(RG.AOFIFOSize));
-			%RG.errorCheck(err);
+%			% Configure hardware FIFO - This is throwing an error -200077 for invalid value
+%			err = calllib(RG.libName, 'DAQmxSetBufOutputOnbrdBufSize',RG.AOtaskHandle,...
+%				RG.AOFIFOSize);
+%			RG.errorCheck(err);
+
+			DAQmx_Val_OnBrdMemEmpty	= 10235;
+			DAQmx_Val_OnBrdMemHalfFullOrLess = 10239;
+			DAQmx_Val_OnBrdMemNotFull = 10242;	
+			[err, chan] = calllib(RG.libName, 'DAQmxSetAODataXferReqCond',RG.AOtaskHandle,[RG.deviceName,'/ao0:1'],...
+				DAQmx_Val_OnBrdMemHalfFullOrLess);
+			RG.errorCheck(err);	
 
 			% Configure regeneration
 			DAQmx_Val_AllowRegen = 10097;
@@ -347,6 +365,15 @@ classdef reGen < handle
 			%err = calllib(RG.libName, 'DAQmxSetBufOutputOnbrdBufSize',RG.DOtaskHandle,...
 			%	RG.DOFIFOSize);
 			%RG.errorCheck(err);
+			
+			DAQmx_Val_OnBrdMemEmpty	= 10235;
+			DAQmx_Val_OnBrdMemHalfFullOrLess = 10239;
+			DAQmx_Val_OnBrdMemNotFull = 10242;	
+			[err, chan] = calllib(RG.libName, 'DAQmxSetDODataXferReqCond',RG.DOtaskHandle,...
+						[RG.deviceName,'/port0/line0:1'], DAQmx_Val_OnBrdMemHalfFullOrLess);
+			RG.errorCheck(err);	
+			
+
 
 			% Configure regeneration
 			DAQmx_Val_AllowRegen = 10097;
