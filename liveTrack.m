@@ -14,14 +14,17 @@ function liveTrack(obj, event)
     global trackingParams;
 
 
-    % Get the most recent frame if multiple are available
-    allFrames = getdata(obj,obj.FramesAvailable);
     % If no frames were returned, abort
-    if size(allFrames,1) > 0
-    	if trackingParams.latencyMeasurePhase == 2
-    		disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
-    		toc
+    if vid.FramesAvailable > 0
+    	if trackingParams.measureFrameRate
+    		trackingParams.frameLengthList(end+1) = toc();
+    		tic();
     	end
+   		allFrames = getdata(vid,vid.FramesAvailable);
+%    	if trackingParams.latencyMeasurePhase == 2
+%    		disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
+%    		toc
+%    	end
 		if (size(allFrames,4) > 1)
 		%	disp(['Skipped ',num2str(size(allFrames,4)-1),' frames']);
 		else
@@ -172,9 +175,6 @@ function liveTrack(obj, event)
     end
 
 
-return;
-
-
     % Save the data, scale to lane origin and calibration size
     if (trackingParams.recording)
 
@@ -190,31 +190,36 @@ return;
     end
 
 
-        
 
-    
-    % Draw annotations to the preview figure
-    set(0,'CurrentFigure',trackingParams.previewFigure);
-    for regionN = 1:numRegions
-        % Draw tracking box
-        delete(trackingParams.lastLine(regionN));
-        if trackingParams.trackHead
-            trackingParams.lastLine(regionN) = patch(...
-                trackingParams.xTarget(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
-				-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN),  NaN],...
-                trackingParams.yTarget(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
-				trackingParams.headXpix(regionN), -trackingParams.headXpix(regionN),  NaN],...
-                'k','EdgeColor','w','EdgeAlpha',.5);
-        else
-            trackingParams.lastLine(regionN) = patch(...
-                trackingParams.xTarget(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
-                trackingParams.yTarget(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
-                'k','EdgeColor','w','EdgeAlpha',.5);
-        end
+	% Don't redraw every frame. This boosts frame rates
+	trackingParams.displayPhase = mod(trackingParams.displayPhase+1,trackingParams.displayInterval);
+	if (trackingParams.displayPhase > 0)
+		return;
+	end
 
-    end
-    
-    
+%	 Cut, this is a major computational load.		
+%    % Draw annotations to the preview figure
+%    set(0,'CurrentFigure',trackingParams.previewFigure);
+%    for regionN = 1:numRegions
+%        % Draw tracking box
+%        delete(trackingParams.lastLine(regionN));
+%        if trackingParams.trackHead
+%            trackingParams.lastLine(regionN) = patch(...
+%                trackingParams.xTarget(regionN) + [-trackingParams.headXpix(regionN), trackingParams.headXpix(regionN), NaN, ...
+%				-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN),  NaN],...
+%                trackingParams.yTarget(regionN) + [-trackingParams.headYpix(regionN), trackingParams.headYpix(regionN), NaN, ...
+%				trackingParams.headXpix(regionN), -trackingParams.headXpix(regionN),  NaN],...
+%                'k','EdgeColor','w','EdgeAlpha',.5);
+%        else
+%            trackingParams.lastLine(regionN) = patch(...
+%                trackingParams.xTarget(regionN) + boxSize.*[0 0 NaN -1 1 NaN],...
+%                trackingParams.yTarget(regionN) + boxSize.*[-1 1 NaN 0 0 NaN],...
+%                'k','EdgeColor','w','EdgeAlpha',.5);
+%        end
+%    end
+       
+
+       
     % Show tracking for the whole screen, but make sure
     % to do this AFTER live-tracking is output
     % This duplicates some work, but lowers latency
@@ -227,16 +232,15 @@ return;
     
     % Update the running avg if necessary
     if trackingParams.updateAvg
-        fps = '30';
-        flyDecayN = str2num(fps)*trackingParams.imageTau;
+        flyDecayN = 30*trackingParams.imageTau;
         trackingParams.runningAvg = runAvg(:,:)*(flyDecayN - 1)/flyDecayN + double(frame)/flyDecayN;
     end
-        
+             
     % Call the preview window
     anEvent.Data = frame;
-    tVec = event.Data.AbsTime;
-    anEvent.Timestamp = [num2str(tVec(4),'%02.f'),':',num2str(tVec(5),'%02.f'),':',num2str(floor(tVec(6)),'%02i'),'.',num2str(floor((tVec(6)-floor(tVec(6)))*100),'%02i')];
-    livePreview(obj, anEvent,trackingParams.hImage);
-
+    tVec = now;
+    anEvent.Timestamp = datestr(now,'HH:MM:SS.FFF');
+    livePreview(obj, anEvent, trackingParams.hImage);
+    
 
 end

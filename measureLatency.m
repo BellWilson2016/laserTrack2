@@ -2,8 +2,8 @@ function measureLatency()
 
 	global trackingParams;
 	
-	latSpacing = .5;
-	nMeasures = 50;
+	latSpacing = .25;
+	nMeasures = 200;
 	
 	setLaserDistribution({@laserLatencyMeasure,[]});
 	disp('Set laser distribution to: @laserLatencyMeasure');
@@ -35,5 +35,5 @@ function finishLatency(obj,event)
 	trackingParams.invert = trackingParams.oldInvert;
 	
 	figure();
-	hist(trackingParams.latencyList,[0:.005:.2]);
+	hist(trackingParams.latencyList,[0:.001:.080]);
 	xlabel('Latency (sec)'); ylabel('N');

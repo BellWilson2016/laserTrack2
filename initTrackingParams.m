@@ -53,10 +53,13 @@ function trackingParams = initTrackingParams()
 		trackingParams.lastLine(region)    = line([0 0],[1 1]);
 	end
 	
-	% For measuring latency
+	% For measuring latency and frame rate
 	trackingParams.latencyMeasurePhase = 0;
+	trackingParams.measureFrameRate = false;
 
 	% Setup calibration marks
+	trackingParams.displayPhase = 0;
+	trackingParams.displayInterval = 20;	% Update display every Nth frame
 	trackingParams.calPoints = [];
 	trackingParams.calMarks = [];
 

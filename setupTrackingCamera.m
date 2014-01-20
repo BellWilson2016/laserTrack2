@@ -67,8 +67,8 @@ function vid = setupTrackingCamera()
     % Set up the update preview window function.
     % setappdata(trackingParams.hImage,'UpdatePreviewWindowFcn',@livePreview);
     % Set up the tracking function to run every frame
-    set(vid,'FramesAcquiredFcn',@liveTrack);
-    set(vid,'FramesAcquiredFcnCount',1);    
+    %set(vid,'FramesAcquiredFcn',@liveTrack);
+    %set(vid,'FramesAcquiredFcnCount',1);    
     % Make handle to text label available to update function.
     setappdata(trackingParams.hImage,'HandleToTimestampLabel',hTextLabel);
 
@@ -78,6 +78,9 @@ function vid = setupTrackingCamera()
     
     % Start the video running so tracking will continue
     start(vid);
+    
+    trackingTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.003,'TimerFcn',@liveTrack);
+    start(trackingTimer);
     
 
      

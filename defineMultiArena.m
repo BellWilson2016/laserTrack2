@@ -22,13 +22,17 @@ function defineMultiArena(varargin)
     
 	if (nargin == 0) 
 		disp('Click lane 1 top vent');
-		topVent = jGinput(1); 
+		%topVent = jGinput(1); 
+		topVent = [110 59];
 		disp('Click lane 8 top vent');
-		bottomVent = jGinput(1); 
+		%bottomVent = jGinput(1); 
+		bottomVent = [112 541];
 		disp('Click left-bound');
-		leftBound = jGinput(1);
+		%leftBound = jGinput(1);
+		leftBound = [39 384];
 		disp('Click right-bound');
-		rightBound = jGinput(1);
+		%rightBound = jGinput(1);
+		rightBound = [182 384];
 	elseif (nargin > 0)
 		topVent = trackingParams.calPoints.topVent;
 		bottomVent = trackingParams.calPoints.bottomVent;

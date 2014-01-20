@@ -39,7 +39,7 @@ classdef reGen < handle
 		lookAheadDO		= .04;	  % Write to buffer this far ahead of current point in cycle
 		timeOut			= .005;	  % Abort output update in (sec.) 	
 
-		videoRate  =  20;		  % Hz
+		videoRate  =  80;		  % Hz
 
 		nPoints = 8;
 		scanTimes = [.000500, .000230, .000230, .000230,...
@@ -216,7 +216,7 @@ classdef reGen < handle
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteAnalogF64', RG.AOtaskHandle,...
 					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
-			RG.errorCheck(err); % Don't throw an error, just return;
+			%RG.errorCheck(err); % Don't throw an error, just return;
 				
 			
 			
@@ -258,7 +258,7 @@ classdef reGen < handle
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines', RG.DOtaskHandle,...
 					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
-			RG.errorCheck(err); % Don't throw an error, just return;
+			%RG.errorCheck(err); % Don't throw an error, just return;
 			
 		end
 
