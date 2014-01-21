@@ -6,7 +6,11 @@ global vid;				% Global video object
 global RG;				% Global regenerating DAQ object
 global trackingParams;	% Global tracking parameters
 
-clearPorts();			% Clear all serial ports
+cd('~/Desktop/Code/laserTrack2');	% Change to laserTrack directory
+
+if (~isempty(instrfind))
+    fclose(instrfind);      % Closes any MATLAB open serial ports
+end
 
 % USBolfactometer = initializeArduino();
 % setValve(0,0);
