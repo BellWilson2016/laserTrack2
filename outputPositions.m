@@ -22,5 +22,5 @@ function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
 		powersB = ones(1,8).*powersB(1);
 		powersR = ones(1,8).*powersR(1);
 	end
-	RG.updateOutput(xV, yV, powersB, powersR);
+	RG.updateOutput(xV, yV, powersR, powersB); % Do the red pulse first
 

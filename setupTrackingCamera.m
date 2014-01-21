@@ -27,7 +27,7 @@ function vid = setupTrackingCamera()
 
     
     % Setup the camera
-    vcam(6000, 80);
+    vcam(6000, 250);
 
     % Use an ROI in Format 7
     % Note the image will be rotated 90 degrees

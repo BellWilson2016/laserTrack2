@@ -12,7 +12,7 @@ function singleSideSeriesShortRB()
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
-	exp.laserPowers    =  [0,1,2,4,8,16,32,64];
+	exp.laserPowers    =  [0,1,2,4,8,16,32,64].*4;
 	exp.redMultiplier  = 2;
 	exp.redPowers      =  exp.redMultiplier.*(max(exp.laserPowers) - exp.laserPowers);
 	exp.opposingBlue   =  zeros(1,8);

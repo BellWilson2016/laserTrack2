@@ -48,21 +48,25 @@ classdef regeneratingDAC < handle
 		postBeam1 = .000100;
 		preBeam2  = .000025;
 		postBeam2 = .000100;
-		beamGap   = .000050;
-		simultaneousLasers = false;
-
+		beamGap   = .000050;    %    Start                                   End
+		laserSequence = 1;   	% (0) |[CMD1start + CMD2start]                |
+								% (1) |[CMD1start].beamGap.[CMD2start]        |
+								% (2) |[CMD1start]    (beamGap)    [CMD2start]|
+								%% For seq. 0: CMD1,CMD2 <= 1182 
+								%  For seq. 1: CMD1 + CMD2 <= 1158
+								
 		preBeam1S
 		postBeam1S
 		preBeam2S
 		postBeam2S
 		beamGapS
+		maxBeam1Ends
+		maxBeam2Ends
 
 		scanStarts
-		beam1WindowStarts
-		beam1WindowEnds
-		beam2WindowStarts
-		beam2WindowEnds
+		beamTimeStarts
 		beamTimeEnds
+
 
 	end
 
@@ -112,8 +116,8 @@ classdef regeneratingDAC < handle
 			for pointN = 2:RG.nPoints
 				RG.scanStarts(pointN) = 1 + (pointN-1)*beamTimeSamp + sum(scanSamples(1:(pointN-1)));
 			end
-			beamTimeStarts = RG.scanStarts + scanSamples;
-			RG.beamTimeEnds   = beamTimeStarts + beamTimeSamp - 1;
+			RG.beamTimeStarts = RG.scanStarts  + scanSamples;
+			RG.beamTimeEnds   = RG.beamTimeStarts + beamTimeSamp - 1;
 
 			% Get samples #s for component times
 			RG.preBeam1S  = ceil( RG.preBeam1*RG.sampleRate);
@@ -121,14 +125,9 @@ classdef regeneratingDAC < handle
 			RG.preBeam2S  = ceil( RG.preBeam2*RG.sampleRate);
 			RG.postBeam2S = ceil(RG.postBeam2*RG.sampleRate);
 			RG.beamGapS   = ceil(  RG.beamGap*RG.sampleRate);
-
-			% Find suitable start and end windows
-			% (These will get overwritten if lasing is sequential
-			RG.beam1WindowStarts = beamTimeStarts - RG.preBeam1S;
-			RG.beam1WindowEnds   = RG.beamTimeEnds - RG.postBeam1S;
-
-			RG.beam2WindowStarts = beamTimeStarts - RG.preBeam2S;
-			RG.beam2WindowEnds   = RG.beamTimeEnds - RG.postBeam2S;
+			
+			RG.maxBeam1Ends = RG.beamTimeEnds - RG.postBeam1S;
+			RG.maxBeam2Ends = RG.beamTimeEnds - RG.postBeam2S;
 
 		end
 		
@@ -167,31 +166,63 @@ classdef regeneratingDAC < handle
 			hist(latList, .001:.001:.200);
 		end
 		
+		function displayBeamLimit(RG)
+		
+			disp(['Laser sequence: ',num2str(RG.laserSequence)]);
+			CMD1 = 0;
+			CMD2 = 0;
+			[b1S,b1E,b2S,b2E] = RG.getBeamEdges(CMD1,CMD2);
+			b1 = RG.maxBeam1Ends(1)-b1S(1)+1
+			b2 = RG.maxBeam2Ends(1)-b2S(1)+1
+			
+		end
+		
+		
+		function [beam1Starts,beam1Ends,beam2Starts,beam2Ends] = getBeamEdges(RG,CMD1,CMD2)
+				
+			% Start beam1 at the beginning of the window, preloading for onset time.				
+			beam1Starts = RG.beamTimeStarts - RG.preBeam1S;
+			
+			% Find the commanded end. Clip it to the window if it's too long.
+			beam1Ends = beam1Starts + CMD1 - 1;
+			ix = find(beam1Ends > RG.maxBeam1Ends);
+			beam1Ends(ix) = RG.maxBeam1Ends(ix);
+			
+			%% Determine beam2 based on laserSequence		
+			% Simultaneous starts
+			if (RG.laserSequence == 0)
+			
+				beam2Starts = RG.beamTimeStarts - RG.preBeam2S;
+				% Find the commanded end. Clip it to the window if it's too long.
+				beam2Ends = beam2Starts + CMD2 - 1;
+				ix = find(beam2Ends > RG.maxBeam2Ends);
+				beam2Ends(ix) = RG.maxBeam2Ends(ix);
+				
+			% Beam2 starts after Beam1 ends	
+			elseif (RG.laserSequence == 1)
+			
+				% Now put beam2 after beam1
+				beam2Starts = beam1Ends + RG.postBeam1S + RG.beamGapS - RG.preBeam2S;
+	
+				% Find the commanded end. Clip it to the window if it's too long.
+				beam2Ends = beam2Starts + CMD2 - 1;
+				ix = find(beam2Ends > RG.maxBeam2Ends);
+				beam2Ends(ix) = RG.maxBeam2Ends(ix);
+			%	
+			elseif (RG.laserSequence == 2)		
+			
+			end
+		
+		end
+			
+			
+		
 		%% Asynchronously update the software buffer. AO and DO may not be updated in the 
 		%  same place because the hardware FIFOs are different sizes.	
 		function updateOutput(RG, X, Y, CMD1, CMD2)
 
-			% Find the commanded end. Clip it to the window if it's too long.
-			beam1Ends = RG.beam1WindowStarts + CMD1 - 1;
-			ix = find(beam1Ends > RG.beam1WindowEnds);
-			beam1Ends(ix) = RG.beam1WindowEnds(ix);
 
-			if RG.simultaneousLasers
-				% Find the commanded end. Clip it to the window if it's too long.
-				beam2Ends = RG.beam2WindowStarts + CMD2 - 1;
-				ix = find(beam2Ends > RG.beam2WindowEnds);
-				beam2Ends(ix) = RG.beam2WindowEnds(ix);
-			else
-				% Now put beam2 after beam1
-				RG.beam2WindowStarts = beam1Ends + RG.postBeam1S + RG.beamGapS - RG.preBeam2S;
-				RG.beam2WindowEnds   = RG.beamTimeEnds - RG.postBeam2S;
-
-				% Find the commanded end, clip if necessary.
-				beam2Ends = RG.beam2WindowStarts + CMD2 - 1;
-				ix = find(beam2Ends > RG.beam2WindowEnds);
-				beam2Ends(ix) = RG.beam2WindowEnds(ix);
-			end
-
+			[beam1Starts,beam1Ends,beam2Starts,beam2Ends] = getBeamEdges(RG,CMD1,CMD2);
 
 			% Make the waveforms
 			Xwave      = zeros(RG.sampPerRep,1);
@@ -201,8 +232,8 @@ classdef regeneratingDAC < handle
 			for laneN = 1:RG.nPoints
 				Xwave(RG.scanStarts(laneN):RG.beamTimeEnds(laneN)) = X(laneN);
 				Ywave(RG.scanStarts(laneN):RG.beamTimeEnds(laneN)) = Y(laneN);
-				laser1wave(RG.beam1WindowStarts(laneN):beam1Ends(laneN)) = 1;
-				laser2wave(RG.beam2WindowStarts(laneN):beam2Ends(laneN)) = 1;
+				laser1wave(beam1Starts(laneN):beam1Ends(laneN)) = 1;
+				laser2wave(beam2Starts(laneN):beam2Ends(laneN)) = 1;
 			end
 			
 

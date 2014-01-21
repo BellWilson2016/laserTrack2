@@ -28,8 +28,7 @@ showRawView();
 trackingParams.getStd = false;
 trackingParams.trackThresh = 50;
 trackingParams.invert = false;
-    
-vcam(6000, 250);    
+     
 showAvgView;
 setAvg(true);
 disp('Averaging background...');
