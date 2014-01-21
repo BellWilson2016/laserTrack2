@@ -273,7 +273,7 @@ classdef regeneratingDAC < handle
 				disp('AO Timeout');
 			end
 				
-			
+%			mexUpdateDAQ(RG.AOtaskHandle,RG.sampPerRep,autoStart,timeOut,DAQmx_Val_GroupByChannel, dataOut, sampsWritten);
 			
 			%% Update the DO buffer	
 			% Set offset to zero
