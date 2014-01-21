@@ -1,5 +1,5 @@
 %% 
-%	reGen.m
+%	regeneratingDAC.m
 %
 %	This class implements dynamically updatable regenerating output for driving scan mirrors. 
 %	The software buffer is dynamically updated (FIFO buffers can't be manually modified once
@@ -17,14 +17,14 @@
 %
 %	Methods:
 %
-%		RG = reGen()
+%		RG = regeneratingDAC()
 %		RG.start()
 %
 %
 
 
 
-classdef reGen < handle
+classdef regeneratingDAC < handle
 
 	properties
 		libName
@@ -68,7 +68,7 @@ classdef reGen < handle
 
 	methods
 
-		function RG = reGen(deviceName)
+		function RG = regeneratingDAC(deviceName)
 
 			% Platform specific library locations
 			RG.libName = 'libnidaqmx';
@@ -146,8 +146,29 @@ classdef reGen < handle
 			RG.errorCheck(err);
 		end
 		
-			
+		%% Makes a histogram of update latencies.
+		function testRGSpeed(RG, nTimes, pauseTime)
+		
+			outVec = 1:8;
+			latList = [];
+			buffList = [];
 
+			for n=1:nTimes
+		
+				pause(randi(pauseTime)/1000);
+				%pause(pauseTime);
+		
+				tic;
+				RG.updateOutput(mod(n,8).*ones(1,8) - 4,1:8,1:8,1:8);
+				latList(end+1) = toc();
+		
+			end
+
+			hist(latList, .001:.001:.200);
+		end
+		
+		%% Asynchronously update the software buffer. AO and DO may not be updated in the 
+		%  same place because the hardware FIFOs are different sizes.	
 		function updateOutput(RG, X, Y, CMD1, CMD2)
 
 			% Find the commanded end. Clip it to the window if it's too long.

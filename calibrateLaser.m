@@ -21,7 +21,7 @@ function calibrateLaser()
     trackingParams.trackThresh = 110;
     trackingParams.invert = true;
     
-    visCam(20000);
+    vcam(20000, 80);
 	showRawView();
     outputPositions(A.*-1.5,A.*0,A.*calibrationPower*3,A.*0);
     disp('Click beam reflection zone');
@@ -32,8 +32,11 @@ function calibrateLaser()
     setAvg(true);
         pause(averagingTime);
     setAvg(false);
-        zoneOut(pts);
-        pause(2);
+    
+    % Set the running average high so points will never track here.
+    trackingParams.runningAvg((pts(1,1):pts(2,1)),(pts(1,2):pts(2,2))) = 255;
+    
+    pause(2);
     showFlyView;
     
 	%setColorSwitch(3*A);

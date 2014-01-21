@@ -17,22 +17,22 @@ end
 % USBscanController =   initializeScanController();
 % USBshockController = initializeShockController();
 
-RG = reGen('Dev1');		% Setup regenerating DAC output
-RG.setupTiming();		% Set the clocks
-RG.start();				% Start the output running
+RG = regeneratingDAC('Dev1');		% Setup regenerating DAC output
+RG.setupTiming();					% Set the clocks
+RG.start();							% Start the output running
 
 vid = setupTrackingCamera();
 
 showRawView();
 
-setScanParameters();
 trackingParams.getStd = false;
 trackingParams.trackThresh = 50;
 trackingParams.invert = false;
     
-mcam(6000);    
+vcam(6000, 250);    
 showAvgView;
 setAvg(true);
+disp('Averaging background...');
 pause(5);
 setAvg(false);
 showFlyView;

@@ -18,21 +18,25 @@ function vid = setupTrackingCamera()
     trackingParams = initTrackingParams();
         
     % Sets up the video object
-    	warning('off','MATLAB:JavaEDTAutoDelegation');
-        vid = videoinput('dcam',1,'F7_Y8_640x480_mode0');
-		triggerconfig(vid,'hardware','risingEdge','externalTriggerMode0-Source0');
-		set(vid,'FramesPerTrigger',1);
-		set(vid,'TriggerRepeat',inf);
-		set(vid,'FrameGrabInterval', 1);
+	warning('off','MATLAB:JavaEDTAutoDelegation');
+    vid = videoinput('dcam',1,'F7_Y8_640x480_mode0');
+	triggerconfig(vid,'hardware','risingEdge','externalTriggerMode0-Source0');
+	set(vid,'FramesPerTrigger',1);
+	set(vid,'TriggerRepeat',inf);
+	set(vid,'FrameGrabInterval', 1);
 
     
     % Setup the camera
-    mcam(6000);
+    vcam(6000, 80);
 
     % Use an ROI in Format 7
     % Note the image will be rotated 90 degrees
     xOffset = (480 - trackingParams.width)/2;
     set(vid,'ROIPosition',[0,xOffset,trackingParams.height,trackingParams.width]);
+    	%% Note that in Format7 (variable frame size) internally triggered frame rate is 
+    	% determined by the 1394 bus packet size. If we're triggering externally we want
+    	% this to be as fast as possible.
+    	%
 		% BytesPerPacket:   FPS:  (This changes in external trigger mode!)
 		% 	524 / 600		30
 		%	704				40
@@ -44,8 +48,7 @@ function vid = setupTrackingCamera()
         set(trackingParams.previewFigure, 'Name', 'Live video...', ...
             'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');
-    
-        
+          
     warning('off','MATLAB:HandleGraphics:ObsoletedProperty:JavaFrame');
     
     % Create the axes and image for the video feed and timestamp
@@ -64,25 +67,30 @@ function vid = setupTrackingCamera()
         'alimmode','manual');
     set(gca,'CLim',[0 1]);
     
-    % Set up the update preview window function.
-    % setappdata(trackingParams.hImage,'UpdatePreviewWindowFcn',@livePreview);
-    % Set up the tracking function to run every frame
-    %set(vid,'FramesAcquiredFcn',@liveTrack);
-    %set(vid,'FramesAcquiredFcnCount',1);    
-    % Make handle to text label available to update function.
-    setappdata(trackingParams.hImage,'HandleToTimestampLabel',hTextLabel);
-
     % Draw the graticule
     l1 = line([0 trackingParams.width], [1 1].*trackingParams.height/2,'Color','w');
     l2 = line([1 1].*trackingParams.width/2, [0 trackingParams.height],'Color','w');
     
+    
+    %%  Set up the update preview window function, and tracking function.
+    % MATLAB seems not to poll the 1394 driver fast enough to get high frame rates,
+    % so manually polling with the timer (set below) works better
+    % setappdata(trackingParams.hImage,'UpdatePreviewWindowFcn',@livePreview);
+    % set(vid,'FramesAcquiredFcn',@liveTrack);
+    % set(vid,'FramesAcquiredFcnCount',1);    
+    
+    % Make handle to text label available to update function.
+    setappdata(trackingParams.hImage,'HandleToTimestampLabel',hTextLabel);
+    
     % Start the video running so tracking will continue
     start(vid);
     
+    %% Create timers to poll for new frames for tracking, and to creat the live preview.
     trackingTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.003,'TimerFcn',@liveTrack);
     start(trackingTimer);
     
-    displayTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.050,'TimerFcn',@livePreview);
+    displayTimer = timer('ExecutionMode','fixedRate','BusyMode','drop','Period',.050,...
+    					 'StartDelay',2,'TimerFcn',@livePreview);
     start(displayTimer);
     
 

@@ -35,5 +35,6 @@ function finishLatency(obj,event)
 	trackingParams.invert = trackingParams.oldInvert;
 	
 	figure();
-	hist(trackingParams.latencyList,[0:.001:.080]);
+	hist(trackingParams.latencyList,[0:.001:.200]);
 	xlabel('Latency (sec)'); ylabel('N');
+	xlim([0 .080]);

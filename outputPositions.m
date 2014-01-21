@@ -1,6 +1,5 @@
 %%
-% This function outputs in terms of screen pixel position.
-%
+% Converts positions to voltages, outputs to DAC.
 %
 function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
 
@@ -15,7 +14,6 @@ function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
         xV = xPos;
         yV = yPos;
     end
-
 
 	transmissionID = randi(64);
 	if length(xV) ~=8

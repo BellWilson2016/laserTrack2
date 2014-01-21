@@ -28,7 +28,6 @@ function livePreview(obj,event)
     
     boxSize = 5;            % Size of bounding box to draw 
     
-
 		
     % Draw annotations to the preview figure
     % This is a substantial load.
@@ -52,7 +51,6 @@ function livePreview(obj,event)
         end
     end
        
-
 	% If there isn't an available frame, don't update the preview
 	if (size(trackingParams.lastFrame,1) == 0)
 		return;
@@ -108,14 +106,13 @@ function livePreview(obj,event)
             frame(:,:,2) = data;
             frame(:,:,3) = data;
         end        
-        
+              
         % Turn image upright
         frame = permute(frame,[2,1,3]);
         
         set(0,'CurrentFigure',trackingParams.previewFigure);
         set(trackingParams.hImage, 'CData', frame);
         
-
 end
 
     

@@ -8,7 +8,11 @@
         end
     end
     delete(timerfindall);
-    clearPorts();
+
+	if (~isempty(instrfind))
+		fclose(instrfind);      % Closes any MATLAB open serial ports
+	end
+
     close all;
     clear all;
 	jDAQmx.jDAQmxReset('Dev1');

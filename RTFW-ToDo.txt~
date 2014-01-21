@@ -1,8 +1,7 @@
 catSyncTracks.m
-Update mcam.m for gain AND shutter
 Fix length checking in outputPositions.m
 Fix probeGrid
 runLaserProtocol.m
-moveShutter1394 into mcam.m
-move testRGSpeed.m into reGen.m
+
+
 

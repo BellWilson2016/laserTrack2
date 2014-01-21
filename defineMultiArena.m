@@ -2,6 +2,8 @@ function defineMultiArena(varargin)
 
     global trackingParams;
 
+	oldBestLatency = trackingParams.bestLatency;
+	trackingParams.bestLatency = true;			  % Turn off updates to preempt preview display
 
     % Arena geometry specification (mm)
     c2cDist = 25;        % lane center to center distance
@@ -10,7 +12,7 @@ function defineMultiArena(varargin)
     lanePadding = 2;     % width to pad beyond lane
     topVtoBotVDist = 7*c2cDist + 0*c2VentDist; % Distance from top vent 1 to top vent 8
 
-   
+  
     showRawView();
 
     % Remove old graphics
@@ -134,6 +136,6 @@ function defineMultiArena(varargin)
 	end
     
     showFlyView();
-    
+    trackingParams.bestLatency = oldBestLatency;
 
 

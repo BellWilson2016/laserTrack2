@@ -15,10 +15,7 @@ function haltVideo(obj, event)
             delete(trackingParams.statusMonitorTimer);
         end
     end
-    
-    webPush = false;
-    updateWebStatus('RTFW Halted.', webPush);
-    
+        
     stop(vid);
     flushdata(vid);
     delete(gcf);
