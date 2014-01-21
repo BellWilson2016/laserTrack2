@@ -25,16 +25,16 @@ function defineMultiArena(varargin)
 	if (nargin == 0) 
 		% disp('Click lane 1 top vent');
 		%topVent = jGinput(1); 
-		topVent = [110 59];
+		topVent = [108 15];
 		% disp('Click lane 8 top vent');
 		%bottomVent = jGinput(1); 
-		bottomVent = [112 541];
+		bottomVent = [108 574];
 		% disp('Click left-bound');
 		%leftBound = jGinput(1);
-		leftBound = [39 384];
+		leftBound = [26 320];
 		% disp('Click right-bound');
 		%rightBound = jGinput(1);
-		rightBound = [182 384];
+		rightBound = [189 320];
 	elseif (nargin > 0)
 		topVent = trackingParams.calPoints.topVent;
 		bottomVent = trackingParams.calPoints.bottomVent;
@@ -52,6 +52,10 @@ function defineMultiArena(varargin)
 			case 4
 				rightBound(1) = rightBound(1) + calDir;
 		end
+		topVent
+		bottomVent
+		leftBound
+		rightBound
 	end
 	if (nargin > 2)
 		showBoundingBox = varargin{3};

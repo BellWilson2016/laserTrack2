@@ -1,7 +1,11 @@
 catSyncTracks.m
-Fix length checking in outputPositions.m
 Fix probeGrid
 runLaserProtocol.m
+
+Long term:
+	Object-oriented parameters
+	Fix outputPositions length==8 requirement
+
 
 
 

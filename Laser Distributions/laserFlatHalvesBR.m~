@@ -5,10 +5,10 @@ function [blueP, redP] = laserFlatHalvesBR(args)
 
 	global trackingParams;
     
-    leftBP  = args(1);
-    rightBP = args(2);
-	leftRP = args(3);
-	rightRP = args(4);
+    leftBP  = args(1); % Left blue
+    rightBP = args(2); % Right blue
+	leftRP = args(3);  % Left Red
+	rightRP = args(4); % Right Red
     
     blueP = (trackingParams.bodyX + trackingParams.headX < 0).*leftBP +...
 			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightBP;
@@ -16,5 +16,3 @@ function [blueP, redP] = laserFlatHalvesBR(args)
 			 (trackingParams.bodyX + trackingParams.headX >= 0).*rightRP;
 
 
-%	returnPower = [0,0,0,0,0,1,0,0].*leftP;
-%	returnPower = [1,1,1,1,1,1,1,1].*leftP;

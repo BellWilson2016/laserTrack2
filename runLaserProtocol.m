@@ -2,8 +2,6 @@ function runLaserProtocol(exp)
 
 	runString = ['Running protocol: ',func2str(exp.protocol)];
 	disp(runString);
-	pushNow = false;
-	updateWebStatus(runString,pushNow);
 
     global trackingParams;
 
@@ -38,14 +36,13 @@ function startEpoch(exp, epochN)
         % Execute all the commands in the list
         nCommands = (size(protocolFrame,2)-1)/2;
         for n = 1:nCommands
-            cmd = protocolFrame{2*(n-1)+2};
+            cmd  = protocolFrame{2*(n-1)+2};
             args = protocolFrame{2*(n-1)+3};
             feval(cmd,args);
         end
 
         % Set recording on.
 		trackingParams.recording = true;
-		trackingParams.recordingSerial = true;
      
         % Figure out how long to wait before finishing the epoch
         startTime = protocolFrame{1};
@@ -73,19 +70,18 @@ function finishEpoch(obj, event, exp, epochN)
 			% Log data outof the temporary buffer, clear it.
 		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
 			trackingParams.tempData = [];
-			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
 			trackingParams.serialRecord = [];
 
             % Do another epoch
             startEpoch(exp, epochN + 1);
+            
         else % Finish up     
 
 			% Stop updating the data buffers
-			% Log data outof the temporary buffer, clear it.
+			% Log data out of the temporary buffer, clear it.
 			trackingParams.recording = false;
 		    exp.epoch(epochN).rawTrack = trackingParams.tempData(1:end,1:6,:);
 			trackingParams.tempData = [];
-			% Wait to unload the serial buffer...
             
 			% Get the last frame of the protocol
 		    protocolFrame = exp.protocolDesign{epochN+1};
@@ -97,12 +93,6 @@ function finishEpoch(obj, event, exp, epochN)
 		    	feval(cmd,args);
 		    end
 
-			% Pause to allow serial buffers to empty
-			pause(.5);
-			trackingParams.recordingSerial = false;
-			exp.epoch(epochN).serialRecord = trackingParams.serialRecord;
-			trackingParams.serialRecord = [];  
-
 			% Notify of finish
 			disp('Finishing up protocol...');
 			disp(' ');
@@ -113,7 +103,6 @@ function finishEpoch(obj, event, exp, epochN)
 		    filename = ['RTFW',datestr(now,'yymmdd'),'/','RTFW', datestr(now,'yymmdd'),'-',datestr(now,'HHMMSS'),'.mat'];
 		    expName  = exp.experimentName;
 			% Use evalc to suppress commandline output
-
 			T = evalc('saveExperimentData(expName,filename, ''exp'')');
 
 			listRecent(0);
@@ -121,7 +110,6 @@ function finishEpoch(obj, event, exp, epochN)
 			% Update website
 			runString = ['Finished protocol, wrote: ',num2str(nextFileNumber() - 1)];
 			pushNow = false;
-			updateWebStatus(runString,pushNow);
 		end
 
 

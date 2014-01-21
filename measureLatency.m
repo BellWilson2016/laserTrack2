@@ -3,7 +3,7 @@ function measureLatency()
 	global trackingParams;
 	
 	latSpacing = .25;
-	nMeasures = 200;
+	nMeasures = 100;
 	
 	setLaserDistribution({@laserLatencyMeasure,[]});
 	disp('Set laser distribution to: @laserLatencyMeasure');
