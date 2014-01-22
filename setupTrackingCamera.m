@@ -44,7 +44,7 @@ function vid = setupTrackingCamera()
 		%	884 / 920		50
 		%	976				55
 		%	1060			60
-        set(vid.Source, 'BytesPerPacket',2724); 
+        set(vid.Source, 'BytesPerPacket', 2724); % Coriander uses max 2724
         set(trackingParams.previewFigure, 'Name', 'Live video...', ...
             'Position',[1064, 336, trackingParams.width, trackingParams.height],'Resize','off','MenuBar', ...
             'none','CloseRequestFcn','haltVideo','Units','pixels');
