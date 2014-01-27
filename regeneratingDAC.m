@@ -66,6 +66,9 @@ classdef regeneratingDAC < handle
 		scanStarts
 		beamTimeStarts
 		beamTimeEnds
+		
+		saneVector
+		updateVector
 
 
 	end
@@ -307,7 +310,9 @@ classdef regeneratingDAC < handle
 			DAQmx_Val_GroupByChannel = 0;
 			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
 			dataOut = [laser1wave(scanOrder),...
-					   laser2wave(scanOrder)];	
+					   laser2wave(scanOrder),...
+					   RG.saneVector,...
+					   RG.updateVector];	
 			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
 			autoStart = 0;
@@ -401,7 +406,7 @@ classdef regeneratingDAC < handle
 
 			% Add DO channels
 			DAQmx_Val_ChanPerLine = 0;
-			channelList = [RG.deviceName,'/port0/line0:1'];
+			channelList = [RG.deviceName,'/port0/line0:3'];
 			err = calllib(RG.libName, 'DAQmxCreateDOChan',RG.DOtaskHandle,...
 					channelList,'', DAQmx_Val_ChanPerLine);
 			RG.errorCheck(err);
@@ -428,7 +433,7 @@ classdef regeneratingDAC < handle
 			DAQmx_Val_OnBrdMemHalfFullOrLess = 10239;
 			DAQmx_Val_OnBrdMemNotFull = 10242;	
 			[err, chan] = calllib(RG.libName, 'DAQmxSetDODataXferReqCond',RG.DOtaskHandle,...
-						[RG.deviceName,'/port0/line0:1'], DAQmx_Val_OnBrdMemHalfFullOrLess);
+						[RG.deviceName,'/port0/line0:3'], DAQmx_Val_OnBrdMemHalfFullOrLess);
 			RG.errorCheck(err);	
 			
 
@@ -453,7 +458,14 @@ classdef regeneratingDAC < handle
 			% Write zeros to buffer
 			timeOut = 0;
 			DAQmx_Val_GroupByScanNumber = 1;
-			data = uint8(zeros(RG.sampPerRep,2)); data = data(:);
+			data = uint8(zeros(RG.sampPerRep,4)); 
+			RG.saneVector = ones(RG.sampPerRep,1);
+			RG.saneVector((end-200):end) = 0;
+			RG.updateVector = zeros(RG.sampPerRep,1);
+			RG.updateVector(1:200) = 1;
+			data(:,3) = RG.saneVector;
+			data(:,4) = RG.updateVector;
+			data = data';
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, samplesWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines',RG.DOtaskHandle,...
