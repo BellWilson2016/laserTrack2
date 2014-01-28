@@ -11,4 +11,6 @@ function checkWatchdog(obj, event)
 	trackingParams.watchdogStatus = WDS;
 	if (WDS.statusByte == 0)
 		disp(['Watchdog ok, Mirrors @ ',num2str(WDS.mirrorTemp,'% 10.2f'),' C, Room @ ',num2str(WDS.roomTemp,'% 10.2f'),' C']);
-	end	
+	elseif (WDS.statusByte == 16)
+		disp(['Lasers armed, Mirrors @ ',num2str(WDS.mirrorTemp,'% 10.2f'),' C, Room @ ',num2str(WDS.roomTemp,'% 10.2f'),' C']);
+	end
