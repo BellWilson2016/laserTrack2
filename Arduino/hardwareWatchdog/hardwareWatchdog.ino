@@ -7,6 +7,7 @@ int      lastMirrorTemp = (25 << 4); // Start these in range to prevent faults o
 int        lastRoomTemp = (25 << 4);
 volatile boolean   computerSane = true;
 volatile boolean      supplySane = true;
+boolean   lasersArmed = false;
 boolean          tempOK;
 int       highTempLimit = (35 << 4);
 int        lowTempLimit = (15 << 4);
@@ -81,12 +82,14 @@ void loop() {
         if (tempOK && computerSane && supplySane) {
           digitalWrite(LASERPOWERPIN, HIGH);
           digitalWrite(ARMLEDPIN,     HIGH);
+          lasersArmed = true;
         } else {
           lockdownDevice();
         }
     } else {
         digitalWrite(LASERPOWERPIN, LOW);
         digitalWrite(ARMLEDPIN,     LOW);
+        lasersArmed = false;
         if (tempOK && supplySane && computerSane) {
           digitalWrite(FAULTLEDPIN, LOW);
         } else {
@@ -104,7 +107,7 @@ void checkToTransmit() {
   
     if ((long) (millis() - (lastTransmitTime + transmitInterval)) > 0) {
       lastTransmitTime = millis();
-      statusByte = (deviceLocked << 0) + (!computerSane << 1) + (!supplySane << 2) + (!tempOK << 3);
+      statusByte = (deviceLocked << 0) + (!computerSane << 1) + (!supplySane << 2) + (!tempOK << 3) + (lasersArmed << 4);
       Serial.write(statusByte);
       Serial.write(lastMirrorTemp >> 8);
       Serial.write((lastMirrorTemp & 0x00FF));
@@ -122,6 +125,7 @@ void lockdownDevice() {
     digitalWrite(MUTEMIRRORSPIN, HIGH);
     digitalWrite(LASERPOWERPIN,   LOW);
     digitalWrite(FAULTLEDPIN, HIGH);
+    lasersArmed = false;
     
     if (debugMode) {
       Serial.print("Locked down.");

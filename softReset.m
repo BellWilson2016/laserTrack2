@@ -2,6 +2,7 @@
 
 	stopSoftwareWatchdog();	
 	
+	warning('off','MATLAB:timer:deleterunning');
     a = timerfindall;
     for n=1:size(a,1)
         if isvalid(a(n))

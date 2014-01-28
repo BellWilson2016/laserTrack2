@@ -1,7 +1,7 @@
 function notifyOfFault(message)
 
 	disp(['Fault Notification: ',message]);
-	return;
+	disp(' ');
 
     mail = 'rtfw.computer@gmail.com';
     password = 'ypkwdtvwxeoboehc';
@@ -23,4 +23,5 @@ function notifyOfFault(message)
     sendmail(toMail,'RTFW Fault',[message]);
 
     disp('Text and email messages sent.');
+    disp(' ');
 

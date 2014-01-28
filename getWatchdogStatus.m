@@ -29,6 +29,7 @@ function WDS = getWatchdogStatus()
 	WDS.computerSane = 1 - sign(bitand(statusByte,2));
 	WDS.supplySane   = 1 - sign(bitand(statusByte,4));
 	WDS.tempOK       = 1 - sign(bitand(statusByte,8));
+	WDS.lasersArmed  = sign(bitand(statusByte,16));
 	
 	if (WDS.deviceLocked)
 		WDS

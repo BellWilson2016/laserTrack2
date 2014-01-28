@@ -66,14 +66,12 @@ function trackingParams = initTrackingParams()
 
     % Video tracking data logging
 	trackingParams.recording = false;
-	trackingParams.tempData = [];	
 
 	% Mirror temp safety
     trackingParams.scanMirrors = true;
     trackingParams.calibrationSet = false;
     trackingParams.laseredZoneFcn = {@laserOff,[]};
-    trackingParams.tempFault = false;
-    trackingParams.mirrorTemp = 0;
+
 
 
 
