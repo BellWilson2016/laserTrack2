@@ -8,7 +8,7 @@ function runLaserProtocol(exp)
 	% Unpack the protocol by running its handle
     exp = feval(exp.protocol, exp);
 
-	% Store a copy of the tracking parameters
+	% Store a copy of the tracking parameters, this has the watchdog status in it.
     exp.trackingParams = trackingParams;     
   
 	% Clear the recording buffers

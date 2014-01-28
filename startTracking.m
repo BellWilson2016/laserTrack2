@@ -5,6 +5,7 @@
 global vid;				% Global video object
 global RG;				% Global regenerating DAQ object
 global trackingParams;	% Global tracking parameters
+global USBwatchdog;
 
 cd('~/Desktop/Code/laserTrack2');	% Change to laserTrack directory
 
@@ -16,6 +17,9 @@ end
 % setValve(0,0);
 % USBscanController =   initializeScanController();
 % USBshockController = initializeShockController();
+USBwatchdog = initializeHardwareWatchdog();
+USBwatchdogTimer = timer('ExecutionMode','fixedRate','Period',15,'TimerFcn',@checkWatchdog, 'StartDelay', 15);
+start(USBwatchdogTimer);
 
 RG = regeneratingDAC('Dev1');		% Setup regenerating DAC output
 RG.setupTiming();					% Set the clocks
@@ -40,6 +44,9 @@ showFlyView;
 loadLaserCal();
 setScanMirrors(true);
 setTrackHead(true);
+
+
+
 
 
 
