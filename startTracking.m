@@ -24,7 +24,7 @@ end
 softwareWatchdog = startSoftwareWatchdog(true);
 
 USBwatchdog = initializeHardwareWatchdog();
-USBwatchdogTimer = timer('ExecutionMode','fixedRate','Period',15,'TimerFcn',@checkWatchdog, 'StartDelay', 15);
+USBwatchdogTimer = timer('ExecutionMode','fixedRate','Period',15,'TimerFcn',@checkWatchdog, 'StartDelay', 15,'BusyMode','drop');
 start(USBwatchdogTimer);
 
 RG = regeneratingDAC('Dev1');		% Setup regenerating DAC output

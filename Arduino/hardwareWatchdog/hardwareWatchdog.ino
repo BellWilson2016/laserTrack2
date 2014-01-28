@@ -17,7 +17,7 @@ byte      debugCode;
 unsigned long lastTransmitTime;         // ms
 unsigned long transmitInterval = 5000;  // ms
 unsigned long lastDACUpdateTime;
-unsigned long maxDACInterval = 5000;    // ms
+unsigned long maxDACInterval = 10000;    // ms
 byte statusByte;
 
 void setup() {
