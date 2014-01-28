@@ -1,5 +1,7 @@
 function notifyOfFault(message)
 
+	return;
+
     mail = 'rtfw.computer@gmail.com';
     password = 'ypkwdtvwxeoboehc';
 
