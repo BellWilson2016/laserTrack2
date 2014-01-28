@@ -8,7 +8,7 @@ function checkWatchdog(obj, event)
 	end
 	
 	WDS = getWatchdogStatus();
-	trackingParams.WDS = WDS;
+	trackingParams.watchdogStatus = WDS;
 	if (WDS.statusByte == 0)
 		disp(['Watchdog ok, Mirrors @ ',num2str(WDS.mirrorTemp,'% 10.2f'),' C, Room @ ',num2str(WDS.roomTemp,'% 10.2f'),' C']);
 	end	

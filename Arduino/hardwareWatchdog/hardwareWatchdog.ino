@@ -13,6 +13,11 @@ int        lowTempLimit = (15 << 4);
 boolean   deviceLocked;
 boolean   debugMode = false;
 byte      debugCode;
+unsigned long lastTransmitTime;         // ms
+unsigned long transmitInterval = 5000;  // ms
+unsigned long lastDACUpdateTime;
+unsigned long maxDACInterval = 5000;    // ms
+byte statusByte;
 
 void setup() {
   
@@ -26,8 +31,8 @@ void setup() {
     Serial.println("Debug mode ON.");
   }
   
-  attachInterrupt(0,   supplyInsane, CHANGE);
-  attachInterrupt(1, computerInsane, CHANGE);
+  attachInterrupt(0,         supplyInsane, CHANGE);
+  attachInterrupt(1, computerInsaneToggle, CHANGE);
 
   deviceLocked = false;
   computerSane = digitalRead(  COMPSANEPIN);
@@ -39,6 +44,9 @@ void setup() {
     }
     lockdownDevice();
   }
+  
+  lastTransmitTime = millis();
+  lastDACUpdateTime = millis();
    
 }
 
@@ -66,7 +74,7 @@ void loop() {
     }
     
     // Check to make sure we don't need to reset the interrupts
-    computerInsane();
+    checkComputerSane();
     supplyInsane();   
 
     if (ARMSWITCHON) {
@@ -86,38 +94,27 @@ void loop() {
         }
     }
     
-    if (Serial.available() > 0) {
-      receiveCommunication();
-    }
+    checkToTransmit();
+    
 
 }
 
-void receiveCommunication() {
-      byte statusByte;
+// Transmits if it's time
+void checkToTransmit() {
+  
+    if ((long) (millis() - (lastTransmitTime + transmitInterval)) > 0) {
+      lastTransmitTime = millis();
       statusByte = (deviceLocked << 0) + (!computerSane << 1) + (!supplySane << 2) + (!tempOK << 3);
-      while (Serial.available() > 0) {
-            debugCode = Serial.read();
-      }
-      if (debugMode) {
-        Serial.println(debugCode);
-        // "0"
-        if (debugCode == 48) {
-          Serial.println("Debug temp read:");
-          printTemperature(MIRRORTHERMPIN, lastMirrorTemp);
-          printTemperature(  ROOMTHERMPIN,   lastRoomTemp);
-        } else if (debugCode == 49) {
-          Serial.println(statusByte);
-          Serial.println(lastMirrorTemp);
-          Serial.println(lastRoomTemp);
-        }
-      } else {
-        Serial.write(statusByte);
-        Serial.write(lastMirrorTemp >> 8);
-        Serial.write((lastMirrorTemp & 0x00FF));
-        Serial.write(lastRoomTemp >> 8);
-        Serial.write(lastRoomTemp & 0x00FF);
-      }
+      Serial.write(statusByte);
+      Serial.write(lastMirrorTemp >> 8);
+      Serial.write((lastMirrorTemp & 0x00FF));
+      Serial.write(lastRoomTemp >> 8);
+      Serial.write(lastRoomTemp & 0x00FF);
+    }
+  
 }
+
+
 
 void lockdownDevice() {
   
@@ -139,11 +136,9 @@ void lockdownDevice() {
         if (debugMode) {
           Serial.print(".");
         }
-        if (Serial.available() > 0) {
-          receiveCommunication();
-        }
+        checkToTransmit();
     }
-    computerInsane();
+    checkComputerSane();
     supplyInsane();
 
     digitalWrite(MUTEMIRRORSPIN, LOW);
@@ -156,15 +151,19 @@ void lockdownDevice() {
 }
 
 
-void computerInsane() {
-      if (digitalRead(COMPSANEPIN)) {
-        if (!ARMSWITCHON) {
-          computerSane = true;
-        } 
-      } else {
-        computerSane = false;
-      }  
+void computerInsaneToggle() {
+      lastDACUpdateTime = millis();
+      checkComputerSane();
 }
+
+void checkComputerSane() {
+      if ((long) (millis() - (lastDACUpdateTime + maxDACInterval)) > 0) {
+          computerSane = false;
+      } else if (!ARMSWITCHON) {
+          computerSane = true;
+      }
+}
+
 void supplyInsane() {
       if (digitalRead(SUPPLYSANEPIN)) {
         if (!ARMSWITCHON) {

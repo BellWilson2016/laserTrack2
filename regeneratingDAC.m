@@ -32,12 +32,13 @@ classdef regeneratingDAC < handle
 		AOtaskHandle
 		DOtaskHandle
 		COtaskHandle
-		repRate			= 20;	  % Hz
-		sampPerRep	    = 10000;
+		lastSanitySignal = 1;
+		repRate			 = 20;	  % Hz
+		sampPerRep	     = 10000;
 		sampleRate
-		lookAheadAO		= .03;
-		lookAheadDO		= .04;	  % Write to buffer this far ahead of current point in cycle
-		timeOut			= .005;	  % Abort output update in (sec.) 	
+		lookAheadAO		 = .03;
+		lookAheadDO		 = .04;	  % Write to buffer this far ahead of current point in cycle
+		timeOut			 = .005;  % Abort output update in (sec.) 	
 
 		videoRate  =  80;		  % Hz
 
@@ -309,9 +310,14 @@ classdef regeneratingDAC < handle
 			timeOut = RG.timeOut;	% Use -1 for indefinite, 0 to try once		
 			DAQmx_Val_GroupByChannel = 0;
 			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
+			if (RG.lastSanitySignal == 1)
+				RG.lastSanitySignal = 0;
+			else
+				RG.lastSanitySignal = 1;
+			end
 			dataOut = [laser1wave(scanOrder),...
-					   laser2wave(scanOrder),...
-					   RG.saneVector,...
+					   laser2wave(scanOrder),... 
+					   RG.lastSanitySignal.*RG.saneVector,...
 					   RG.updateVector];	
 			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
@@ -437,7 +443,6 @@ classdef regeneratingDAC < handle
 			RG.errorCheck(err);	
 			
 
-
 			% Configure regeneration
 			DAQmx_Val_AllowRegen = 10097;
 			err = calllib(RG.libName, 'DAQmxSetWriteRegenMode',RG.DOtaskHandle,...
@@ -458,9 +463,8 @@ classdef regeneratingDAC < handle
 			% Write zeros to buffer
 			timeOut = 0;
 			DAQmx_Val_GroupByScanNumber = 1;
-			data = uint8(zeros(RG.sampPerRep,4)); 
+			data = uint8(zeros(RG.sampPerRep,2));  % 4
 			RG.saneVector = ones(RG.sampPerRep,1);
-			RG.saneVector((end-100):end) = 0;
 			RG.updateVector = zeros(RG.sampPerRep,1);
 			RG.updateVector(1:200) = 1;
 			data(:,3) = RG.saneVector;
@@ -469,7 +473,7 @@ classdef regeneratingDAC < handle
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, samplesWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines',RG.DOtaskHandle,...
-				RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
+				RG.sampPerRep*2, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
 
 			% Start the task!
 			err = calllib(RG.libName, 'DAQmxStartTask', RG.DOtaskHandle);
@@ -479,7 +483,6 @@ classdef regeneratingDAC < handle
 		function setupCO(RG)
 		
 			
-
 			% Create the counter out task
 			taskName = ['CO-',datestr(now,'MMSS')];
 			RG.COtaskHandle = uint32(1);
@@ -509,11 +512,16 @@ classdef regeneratingDAC < handle
 
 			% Start the task immediately so camera is being triggered all the time.
 			err = calllib(RG.libName, 'DAQmxStartTask', RG.COtaskHandle);
-			RG.errorCheck(err);
+			RG.errorCheck(err);						
+						
 		end
+		
+		
+
 
 		% This should also trigger start of DO task; CO task is started on creation.
 		function start(RG)
+		
 			err = calllib(RG.libName, 'DAQmxStartTask', RG.AOtaskHandle);
 			RG.errorCheck(err);
 		end

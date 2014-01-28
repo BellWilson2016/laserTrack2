@@ -1,5 +1,6 @@
 function notifyOfFault(message)
 
+	disp(['Fault Notification: ',message]);
 	return;
 
     mail = 'rtfw.computer@gmail.com';

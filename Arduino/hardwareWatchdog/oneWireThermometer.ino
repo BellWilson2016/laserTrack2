@@ -108,6 +108,7 @@ void outNibble(int thermPin, byte aByte, byte half, boolean pullupOn) {
   
   byte n;
   
+  noInterrupts();
   for(n = half; n < (half + 4); n++) {
     THERMLO;
     THERMOUT;
@@ -126,6 +127,7 @@ void outNibble(int thermPin, byte aByte, byte half, boolean pullupOn) {
       delayMicroseconds(2);
     }
   } 
+  interrupts();
   delay(30);
 } 
 
@@ -136,6 +138,7 @@ byte inNibble(int thermPin, byte half) {
   byte b,n;
   byte retByte = 0;
   
+  noInterrupts();
   for (n=half; n < half + 4; n++) {
     THERMLO;
     THERMOUT;
@@ -146,6 +149,7 @@ byte inNibble(int thermPin, byte half) {
     delayMicroseconds(60);
     retByte += (b << n);
   }
+  interrupts();
   
   delay(30);
   return(retByte);  

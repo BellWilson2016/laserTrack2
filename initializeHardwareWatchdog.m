@@ -6,6 +6,7 @@ function USBwatchdog = initializeHardwareWatchdog()
 
     USBwatchdog = serial(portLocation);
     USBwatchdog.BaudRate=115200;   
+    set(USBwatchdog,'InputBufferSize',1024);
            
     fopen(USBwatchdog);
     pause(.5);

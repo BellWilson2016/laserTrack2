@@ -2,18 +2,20 @@ function WDS = getWatchdogStatus()
 
 	global USBwatchdog;
 	
-	
-	% Probe by sending a value
-	fwrite(USBwatchdog, uint8(0),  'uint8','async');
-	
-	% Wait for 5 bytes to come back
-	while (USBwatchdog.BytesAvailable < 5)
-		pause(.005);
+	% If there aren't bytes on the port we've lost connection with the watchdog.
+	if (USBwatchdog.BytesAvailable < 5)		
+		WDS = [];
+		notifyOfFault('RTFW Hardware Watchdog Not Transmitting. ResetDAQ. Cleared all timers.');
+		jDAQmx.jDAQmxReset('Dev1');
+		softReset();
+		return;
 	end
 	
-	tic();
+	% Get the most recent bytes on the port
+	while (USBwatchdog.BytesAvailable >= 5)
+		readBytes = fread(USBwatchdog,5);
+	end
 	
-	readBytes = fread(USBwatchdog,5);
 	statusByte = readBytes(1);
 	mirrorTempMSB = readBytes(2);
 	mirrorTempLSB = readBytes(3);
@@ -28,21 +30,11 @@ function WDS = getWatchdogStatus()
 	WDS.supplySane   = 1 - sign(bitand(statusByte,4));
 	WDS.tempOK       = 1 - sign(bitand(statusByte,8));
 	
-	
-	% Clear any errant bytes
-	while (USBwatchdog.BytesAvailable > 0)
-		a = fread(USBwatchdog,1);
-	end
-	
-	toc
-	
-	if (WDS.deviceLocked || ~WDS.computerSane || ~WDS.supplySane || ~WDS.tempOK)
+	if (WDS.deviceLocked)
 		WDS
-		return;	
 		notifyOfFault(['RTFW Hardware Watchdog detected fault. Status byte: ',num2str(WDS.statusByte),...
 					   ' Mirror temp: ', num2str(WDS.mirrorTemp), ' Room temp: ', num2str(WDS.roomTemp),...
-					   ' Reset DAQ. Cleared all timers.']);
-				   
+					   ' Reset DAQ. Cleared all timers.']);	   
 		jDAQmx.jDAQmxReset('Dev1');
 		softReset();
 	end
