@@ -12,5 +12,5 @@ function USBwatchdog = initializeHardwareWatchdog()
     % Need to pause for bootloader before MCU starts listening
     % Board resets on opening serial connections.
     
-    disp(['Hardware Watchdog initialized on ', portLocation]); 
+    disp(['USBwatchdog initialized on ', portLocation]); 
 

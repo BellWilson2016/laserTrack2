@@ -16,6 +16,7 @@ function WDS = getWatchdogStatus()
 	roomTempMSB = fread(USBwatchdog,1);
 	roomTempLSB = fread(USBwatchdog,1);
 	
+	WDS.statusByte = statusByte;
 	WDS.mirrorTemp = ((mirrorTempMSB*256) + mirrorTempLSB)/16;
 	WDS.roomTemp = ((roomTempMSB*256) + roomTempLSB)/16;
 	WDS.deviceLocked = sign(bitand(statusByte,1));
@@ -27,4 +28,14 @@ function WDS = getWatchdogStatus()
 	while (USBwatchdog.BytesAvailable > 0)
 		a = fread(USBwatchdog,1);
 	end
+	
+	if (WDS.deviceLocked || ~WDS.computerSane || ~WDS.supplySane || ~WDS.tempOK)
+		notifyOfFault(['RTFW Hardware Watchdog detected fault. Status byte: ',num2str(WDS.statusByte),...
+					   ' Mirror temp: ', num2str(WDS.mirrorTemp), ' Room temp: ', num2str(WDS.roomTemp),...
+					   ' Reset DAQ. Cleared all timers.']);
+		WDS			   
+		jDAQmx.jDAQmxReset('Dev1');
+		softReset();
+	end
 		
+	
