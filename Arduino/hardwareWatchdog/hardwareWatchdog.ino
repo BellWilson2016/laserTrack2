@@ -5,8 +5,8 @@ byte     thermPhase = 0;
 byte     nThermPhases = 15;
 int      lastMirrorTemp = (25 << 4); // Start these in range to prevent faults on boot.
 int        lastRoomTemp = (25 << 4);
-boolean    computerSane = true;
-boolean      supplySane = true;
+volatile boolean   computerSane = true;
+volatile boolean      supplySane = true;
 boolean          tempOK;
 int       highTempLimit = (35 << 4);
 int        lowTempLimit = (15 << 4);
@@ -26,7 +26,8 @@ void setup() {
     Serial.println("Debug mode ON.");
   }
   
-  attachInterrupt(0, computerInsane, FALLING);
+  attachInterrupt(0,   supplyInsane, CHANGE);
+  attachInterrupt(1, computerInsane, CHANGE);
 
   deviceLocked = false;
   computerSane = digitalRead(  COMPSANEPIN);
@@ -63,12 +64,11 @@ void loop() {
     } else {
       tempOK = true;
     }
-       
-    supplySane = digitalRead(SUPPLYSANEPIN);
-    if (!ARMSWITCHON) {
-      computerSane = digitalRead(COMPSANEPIN); 
-    }   
-       
+    
+    // Check to make sure we don't need to reset the interrupts
+    computerInsane();
+    supplyInsane();   
+
     if (ARMSWITCHON) {
         if (tempOK && computerSane && supplySane) {
           digitalWrite(LASERPOWERPIN, HIGH);
@@ -142,9 +142,9 @@ void lockdownDevice() {
         if (Serial.available() > 0) {
           receiveCommunication();
         }
-        supplySane = digitalRead(SUPPLYSANEPIN);
-        computerSane = digitalRead(  COMPSANEPIN);
     }
+    computerInsane();
+    supplyInsane();
 
     digitalWrite(MUTEMIRRORSPIN, LOW);
     digitalWrite(FAULTLEDPIN, LOW);
@@ -157,7 +157,21 @@ void lockdownDevice() {
 
 
 void computerInsane() {
-      computerSane = false;  
+      if (digitalRead(COMPSANEPIN)) {
+        if (!ARMSWITCHON) {
+          computerSane = true;
+        } 
+      } else {
+        computerSane = false;
+      }  
 }
-
+void supplyInsane() {
+      if (digitalRead(SUPPLYSANEPIN)) {
+        if (!ARMSWITCHON) {
+          supplySane = true; 
+        }
+      } else {
+        supplySane = false;
+      }  
+}
 

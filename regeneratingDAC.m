@@ -460,7 +460,7 @@ classdef regeneratingDAC < handle
 			DAQmx_Val_GroupByScanNumber = 1;
 			data = uint8(zeros(RG.sampPerRep,4)); 
 			RG.saneVector = ones(RG.sampPerRep,1);
-			RG.saneVector((end-200):end) = 0;
+			RG.saneVector((end-100):end) = 0;
 			RG.updateVector = zeros(RG.sampPerRep,1);
 			RG.updateVector(1:200) = 1;
 			data(:,3) = RG.saneVector;

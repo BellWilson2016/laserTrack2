@@ -6,7 +6,7 @@ function WDS = getWatchdogStatus()
 	fwrite(USBwatchdog, uint8(0),  'uint8','async');
 	
 	% Wait for 5 bytes to come back
-	while (USBwatchdog.BytesAvailable > 5)
+	while (USBwatchdog.BytesAvailable < 5)
 		pause(.05);
 	end
 	
