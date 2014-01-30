@@ -13,7 +13,7 @@ function singleSideSeriesShortRB()
     exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
 	exp.laserPowers    =  [0,1,2,4,8,16,32,64].*2;
-	exp.redMultiplier  = 3;
+	exp.redMultiplier  = 5;
 	exp.redPowers      =  exp.redMultiplier.*(max(exp.laserPowers) - exp.laserPowers);
 	exp.opposingBlue   =  zeros(1,8);
 	exp.opposingRed    =  exp.redMultiplier.*(max(exp.laserPowers) - exp.opposingBlue);
