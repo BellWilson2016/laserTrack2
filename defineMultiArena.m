@@ -139,7 +139,7 @@ function defineMultiArena(varargin)
 		end
 	end
     
-    showFlyView();
+    showRawView();
     trackingParams.bestLatency = oldBestLatency;
 
 
