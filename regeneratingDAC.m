@@ -50,7 +50,7 @@ classdef regeneratingDAC < handle
 		preBeam2  = .000025;
 		postBeam2 = .000100;
 		beamGap   = .000050;    %    Start                                   End
-		laserSequence = 0;   	% (0) |[CMD1start + CMD2start]                |
+		laserSequence = 1;   	% (0) |[CMD1start + CMD2start]                |
 								% (1) |[CMD1start].beamGap.[CMD2start]        |
 								% (2) |[CMD1start]    (beamGap)    [CMD2start]|
 								%% For seq. 0: CMD1,CMD2 <= 1182 
