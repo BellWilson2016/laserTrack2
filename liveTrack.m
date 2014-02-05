@@ -120,7 +120,7 @@ function liveTrack(obj, event)
 												1/trackingParams.velWindow * trackingParams.headYpix(regionN) * ...
 												(trackingParams.yTarget(regionN) - lastYtarget(regionN));
                 smoothVel = trackingParams.dXdT(regionN) + trackingParams.dYdT(regionN);
-                if (smoothVel < -2)
+                if (smoothVel < -1)
                     trackingParams.dXdT(regionN) = 0; trackingParams.dYdT(regionN) = 0;
                     trackingParams.headXpix(regionN) = -trackingParams.headXpix(regionN);
                     trackingParams.headYpix(regionN) = -trackingParams.headYpix(regionN);
