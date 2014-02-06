@@ -19,9 +19,9 @@ function singleSideSeriesShortRedBG()
 	exp.opposingBlue   =  zeros(1,8);
 	exp.opposingRed    =  exp.redPowers + exp.redMultiplier.*exp.laserPowers;
 	exp.laserFilter    = 1;
-	exp.nReps          = 8;
+	exp.nReps          = 4;
 	exp.comment		   = '20 Hz, red thermal compensation';	
-	exp.acclimationTime = 1; % Hours
+	exp.acclimationTime = 0; % Hours
 
 	nSched = 0;
 
