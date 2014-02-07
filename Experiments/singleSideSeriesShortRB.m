@@ -6,7 +6,7 @@ function singleSideSeriesShortRB()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Or83b-Gal4 ; + / +';
-    exp.flyAge         = 7;    % Days
+    exp.flyAge         = 8;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
@@ -14,9 +14,9 @@ function singleSideSeriesShortRB()
     exp.refSide        = [];		 % 1 is left, -1 is right
 	exp.laserPowers    =  [0,2,4,8,16,32,64,128];
 	exp.redMultiplier  = 2;
-	exp.redPowers      =  384 - exp.redMultiplier.*exp.laserPowers + [232,224,192,160,112,96,16,0];
+	exp.redPowers      =  256 - exp.redMultiplier.*exp.laserPowers;
 	exp.opposingBlue   =  zeros(1,8);
-	exp.opposingRed    =  384 + [232,224,192,160,112,96,16,0];
+	exp.opposingRed    =  256.*ones(1,8);
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, red thermal compensation';	
