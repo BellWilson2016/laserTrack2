@@ -5,7 +5,7 @@ function singleSideSeriesShortRB()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / + ; + / +';
+    exp.genotype       = 'NorpA[7]/y ; H134R / Bl ; Gr63a-Gal4 / +';
     exp.flyAge         = 6;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
@@ -45,7 +45,7 @@ function singleSideSeriesShortRB()
 			exp.refSide = onePass(5,order(seqN));
 			% Setup the protocol, laser distribution, and arguments
 			exp.protocol	 = @laser_1_halfL_1;
-			exp.protocolArgs = {@laserFlatHalvesBR, [blueL, blueR, redL, redR]};
+			exp.protocolArgs = {@laserFlatHalvesBRO, [blueL, blueR, redL, redR]};
 			cmd = {@runLaserProtocol,exp};
 			scheduleEvent(exp.acclimationTime*(60*60) + 15 + (3.5*60)*nSched, cmd);  
 			nSched = nSched + 1;
