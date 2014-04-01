@@ -1,17 +1,17 @@
 function calibrateLaser()
 
-    calibrationPower = 3;  % of 255
+    calibrationPower = 1;  % of 255
     averagingTime = 15;    % sec
-    stdLimit = 5.5;          % For rejecting reflections
+    stdLimit = 5.5;        % For rejecting reflections
     nPixThresh = 2;
-    A = ones(1,8);
+    A = ones(1,8);		   % Unit vector 8 wide
     
     global trackingParams;
 
     % Don't let the tracking program scan
     setScanMirrors(false);
-    calibrationScanParameters();
     trackingParams.getStd = true; 
+	trackingParams.calibrationSet = false;
     
     % Move the laser to center field
     % outputVxVy(2.5,2.5);
@@ -21,29 +21,33 @@ function calibrateLaser()
     trackingParams.trackThresh = 110;
     trackingParams.invert = true;
     
-    laserCam();
+    vcam(20000, 80);
 	showRawView();
-    updateScanDriver(A.*-(2^13)*.95,A.*-2^11,A.*calibrationPower*1);
+    outputPositions(A.*-1.5,A.*0,A.*calibrationPower*3,A.*0);
     disp('Click beam reflection zone');
     pts = jGinput(2);
-    updateScanDriver(A.*-(2^13),A.*0,A.*calibrationPower*0);
+    outputPositions(A.*0,A.*0,A.*0,A.*0);
     disp('Averaging out background');
     showAvgView;
     setAvg(true);
         pause(averagingTime);
     setAvg(false);
-        zoneOut(pts);
-        pause(2);
+    
+    % Set the running average high so points will never track here.
+    trackingParams.runningAvg((pts(1,1):pts(2,1)),(pts(1,2):pts(2,2))) = 255;
+    
+    pause(2);
     showFlyView;
     
+	%setColorSwitch(3*A);
 
     %% Generate a grid of points to fit to
     nStepsX = 10;
     nStepsY = 25;
-    minVx = -2^13*1.4;
-    maxVx = -2^13*.4;
-    minVy = -2^13*1.6;
-    maxVy = 2^13*1.6;
+    minVx = -3.5;
+    maxVx = -1;
+    minVy = -4;
+    maxVy = 4;
     spanVx = maxVx - minVx;
     spanVy = maxVy - minVy;
     n=1;
@@ -52,7 +56,7 @@ function calibrateLaser()
         for y = 1:nStepsY
             vX = (x - 1)*spanVx/(nStepsX - 1) + minVx;
             vY = (y - 1)*spanVy/(nStepsY - 1) + minVy;
-            updateScanDriver(A.*vX,A.*vY,A.*calibrationPower);
+            outputPositions(A.*vX,A.*vY,A.*calibrationPower*1,A.*0);
             pause(.35);
             % Only record the position if the laser is in frame
             m = 0;
@@ -108,7 +112,7 @@ function calibrateLaser()
         for y = testInterval:testInterval:(trackingParams.height-testInterval)
             vX = fX([x,y]);
             vY = fY([x,y]);
-            updateScanDriver(A.*vX,A.*vY,A.*calibrationPower);
+            outputPositions(A.*vX,A.*vY,A.*calibrationPower*1,A.*0);
             pause(.35);
             % Only record the position if the laser is in frame
             if trackingParams.nPixels(1) >  nPixThresh
@@ -156,12 +160,13 @@ function calibrateLaser()
     ylabel('Residual (px)');
     
     %% Turn laser off
-    updateScanDriver(A.*0,A.*0,A.*0);            
+    outputPositions(A.*0,A.*0,A.*0,A.*0);         
     
     % Save calibration data   
     save('laserCal.mat','fX','fY');
+    trackingParams.calibrationSet = true;
     
-    trackFly();
+    
     
     
     

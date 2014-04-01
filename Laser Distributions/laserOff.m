@@ -1,5 +1,6 @@
-function returnPower = laserOff(args)
+function [returnPowerB, returnPowerR] = laserOff(args)
 
-	returnPower = zeros(1,8);   
+	returnPowerB = zeros(1,8);  
+	returnPowerR = zeros(1,8); 
 
 

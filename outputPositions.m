@@ -1,24 +1,28 @@
 %%
-% This function outputs in terms of screen pixel position.
+% Converts positions to voltages, outputs to DAC.
 %
-%
-function transmissionID = outputPositions(xPos,yPos,powers)
+function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
 
     global trackingParams;
-	global gridDeviation;
-
-%	xPos(5) = 169 + gridDeviation.x;
-%	yPos(5) = 360 + gridDeviation.y;
-%	xPos(5)
-%	yPos(5)
+	global RG;
 
     if (trackingParams.calibrationSet)  
         xV = trackingParams.laserCal.fX([xPos',yPos']);
         yV = trackingParams.laserCal.fY([xPos',yPos']);
     else
-        xV = zeros(8,1);
-        yV = zeros(8,1);
+        % Just leave it as is.
+        xV = xPos;
+        yV = yPos;
     end
 
+	transmissionID = randi(64);
+	if length(xV) ~=8
+		xV = ones(1,8).*xV(1);
+		yV = ones(1,8).*yV(1);
+		powersB = ones(1,8).*powersB(1);
+		powersR = ones(1,8).*powersR(1);
+	end
+	
+	RG.updateOutput(xV, yV, powersR, powersB);  % Do the red pulse first
+	% resetSoftwareWatchdogTimer();				% If this doesn't happen, DAQ gets reset.
 
-    transmissionID = updateScanDriver(xV',yV',powers);

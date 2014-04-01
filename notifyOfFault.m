@@ -1,5 +1,8 @@
 function notifyOfFault(message)
 
+	disp(['Fault Notification: ',message]);
+	disp(' ');
+
     mail = 'rtfw.computer@gmail.com';
     password = 'ypkwdtvwxeoboehc';
 
@@ -16,8 +19,9 @@ function notifyOfFault(message)
     props.setProperty('mail.smtp.socketFactory.class', 'javax.net.ssl.SSLSocketFactory');
     props.setProperty('mail.smtp.socketFactory.port','465');
 
-    sendmail(toCell,'RTFW Fault',[message,'  http://wilson.med.harvard.edu/rtfw.html']);
-    sendmail(toMail,'RTFW Fault',[message,'  http://wilson.med.harvard.edu/rtfw.html']);
+    sendmail(toCell,'RTFW Fault',[message]);
+    sendmail(toMail,'RTFW Fault',[message]);
 
     disp('Text and email messages sent.');
+    disp(' ');
 

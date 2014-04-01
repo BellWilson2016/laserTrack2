@@ -1,0 +1,11 @@
+Fix probeGrid
+Let measureLatency trigger the laser onset asynchronously?
+	At least reduce the pause to 0-12 ms from 0-50 ms
+
+Long term:
+	Object-oriented parameters
+	Fix outputPositions length==8 requirement
+	Push output into thread-spawning MEX file
+
+
+

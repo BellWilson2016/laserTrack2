@@ -15,7 +15,6 @@ function trackingParams = initTrackingParams()
     trackingParams.height = 640;
 
      % Info for the tracking routine
-	trackingParams.busyLock = false;
     trackingParams.updateAvg = false;
     trackingParams.runningAvg = zeros(trackingParams.width,trackingParams.height); 
 	trackingParams.imageTau = 5;    % Image averaging time-constant (secs)
@@ -52,52 +51,28 @@ function trackingParams = initTrackingParams()
 		trackingParams.power = 0;
 		trackingParams.lastLine(region)    = line([0 0],[1 1]);
 	end
+	
+	% For measuring latency and frame rate
+	trackingParams.latencyMeasurePhase = 0;
+	trackingParams.measureFrameRate = false;
+	trackingParams.lastFrame = [];
+	trackingParams.bestLatency = false;
 
 	% Setup calibration marks
+	trackingParams.displayPhase = 0;
+	trackingParams.displayInterval = 20;	% Update display every Nth frame
 	trackingParams.calPoints = [];
 	trackingParams.calMarks = [];
 
-
     % Video tracking data logging
 	trackingParams.recording = false;
-	trackingParams.tempData = [];	
-
-	% Serial data logging
-    trackingParams.recordingSerial = false;
-    trackingParams.serialRecord = [];
-	trackingParams.queuedData = [];
 
 	% Mirror temp safety
     trackingParams.scanMirrors = true;
     trackingParams.calibrationSet = false;
     trackingParams.laseredZoneFcn = {@laserOff,[]};
-    trackingParams.tempFault = false;
-    trackingParams.mirrorTemp = 0;
-	   
-    % Write a new status file if the old one is too big
-	if (exist('statusData.mat'))
-    	load('statusData.mat');
-	else
-		messageList = [];
-	end
-    if (size(messageList,1) < 1200)
-        messageList{end+1,1} = datestr(now);
-        messageList{end,2} = 'RTFW Started.';
-    else
-        messageList = {};
-        messageList{1,1} = datestr(now);
-        messageList{1,2} = 'RTFW Started.';
-    end
-    save('statusData.mat','messageList');  
-    
-    % Start a status monitor timer
-    trackingParams.statusMonitorTimer = timer('ExecutionMode','fixedRate','Period',60,...
-        'TimerFcn',@webUpdateTimerFcn, 'StartDelay',60);
-    start(trackingParams.statusMonitorTimer);
 
-	% Start a timer to measure frame intervals    
-    trackingParams.intervalList = [];
-    trackingParams.intervalsLeft = 0;
+
 
 
 

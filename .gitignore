@@ -1,1 +1,7 @@
 .*.mat
+*.pdf
+*.m~
+*.swp
+rtfw.html
+statusData.mat
+

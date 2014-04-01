@@ -2,26 +2,58 @@
 %
 % JSB 11/2012
 
-global vid;
-global USBscanController;
-global USBshockController;
-global trackingParams;
+global vid;				% Global video object
+global RG;				% Global regenerating DAQ object
+global trackingParams;	% Global tracking parameters
+global USBwatchdog;
+global softwareWatchdog;
 
-clearPorts();
+cd('~/Desktop/Code/laserTrack2');	% Change to laserTrack directory
 
-%setupRemotePHP();   % Setup a remote PHP script that can pull data from
-%					 % the local webserver.
+warning('off','MATLAB:JavaEDTAutoDelegation');
+imaqreset();				% Closes and open video objects
+if (~isempty(instrfind))
+    fclose(instrfind);      % Closes any MATLAB open serial ports
+end
 
 % USBolfactometer = initializeArduino();
 % setValve(0,0);
-USBscanController =   initializeScanController();
-%USBshockController = initializeShockController();
+% USBscanController =   initializeScanController();
+% USBshockController = initializeShockController();
+
+softwareWatchdog = startSoftwareWatchdog(true);
+
+USBwatchdog = initializeHardwareWatchdog();
+USBwatchdogTimer = timer('ExecutionMode','fixedRate','Period',15,'TimerFcn',@checkWatchdog, 'StartDelay', 15,'BusyMode','drop');
+start(USBwatchdogTimer);
+
+RG = regeneratingDAC('Dev1');		% Setup regenerating DAC output
+RG.setupTiming();					% Set the clocks
+RG.start();							% Start the output running
 
 vid = setupTrackingCamera();
 
 showRawView();
-disp('Running trackFly()...');
-trackFly();
+
+trackingParams.getStd = false;
+trackingParams.trackThresh = 50;
+trackingParams.invert = false;
+     
+showAvgView;
+setAvg(true);
+disp('Averaging background...');
+pause(5);
+setAvg(false);
+showFlyView;
+    
+% Set tracking laser to fly
+loadLaserCal();
+setScanMirrors(true);
+setTrackHead(true);
+
+
+
+
 
 
 

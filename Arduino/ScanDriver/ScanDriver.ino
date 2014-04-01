@@ -21,7 +21,7 @@
 #include <Wire.h>                                      // Nb. We programatically sets the TWI speed to 400 kHz at DAC setup.
 
 // Video triggering
-#define VIDTRIGINTERVAL 3
+#define VIDTRIGINTERVAL 2
                                  
 // In-line assembly utilities
 #define NOP asm volatile("nop\n\t"::)
@@ -53,6 +53,8 @@
   
   byte vidTrigPhase;
   byte dropFrames;
+  byte colorSwitch[8] = {0,0,0,0,0,0,0,0};    // 1 for blue only, 2 for red only, 3 for both
+  byte colorSwitchBuffer[8] = {0,0,0,0,0,0,0,0};    
   
   
 // Variables updated for each fly, 40 byte transmission
@@ -209,9 +211,7 @@ void loop() {
       SETCURRENTZONE;  // Outputs current zone address
       // Do a video trigger
       if (currentZone == 0) {
-        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
-        if (vidTrigPhase == 0) {
-          if (dropFrames == 0) {
+         if (dropFrames == 0) {
             VIDTRIGPINON;
             SREG = sreg;
             queueSerialReturn(0x64, prevTimePoint);
@@ -220,11 +220,11 @@ void loop() {
             SREG = sreg;
             queueSerialReturn(0x65, prevTimePoint);
           }         
-        } else if (vidTrigPhase == 1) {
+       } else if (currentZone == 1) {
           VIDTRIGPINOFF;
           SREG = sreg;
-        }      
-      } 
+       } 
+ 
 //      if (currentZone == 0) {
 //        vidTrigPhase++; vidTrigPhase %= VIDTRIGINTERVAL;
 //        if (vidTrigPhase == 0) {
@@ -279,7 +279,12 @@ void loop() {
         // Short delay for alignment
         NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP; NOP;
         // Turn on the laser
-        LASERPINON;
+        if (colorSwitch[currentZone] & 2) {
+          REDPINON;
+        }
+        if (colorSwitch[currentZone] & 1) {
+          LASERPINON;
+        }
         // For long pulses, go back through the counter
         if (laserDuration > (85 << 4)) {         
             SREG = sreg;
@@ -338,7 +343,7 @@ void loop() {
         NOP; NOP; NOP; NOP;          
         // Turn off the laser
      LaserOff:   
-        LASERPINOFF;
+        BOTHLASEROFF;
         SREG = sreg;
         prevTimePoint += nextTimeGap;
         nextTimeGap = (((unsigned long) scanTime) << 4) - ((unsigned long) laserDuration);  // The amount of time left in the laser phase
@@ -355,7 +360,7 @@ void loop() {
     case 3:
         // Don't turn on the laser
         SREG = sreg;
-        LASERPINOFF;
+        BOTHLASEROFF;
         phase = 0;
         if (mode == 1) {
           mode = 0;   // Needed to recover from watchdog test mode

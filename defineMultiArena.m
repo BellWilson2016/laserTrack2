@@ -2,6 +2,8 @@ function defineMultiArena(varargin)
 
     global trackingParams;
 
+	oldBestLatency = trackingParams.bestLatency;
+	trackingParams.bestLatency = true;			  % Turn off updates to preempt preview display
 
     % Arena geometry specification (mm)
     c2cDist = 25;        % lane center to center distance
@@ -10,7 +12,7 @@ function defineMultiArena(varargin)
     lanePadding = 2;     % width to pad beyond lane
     topVtoBotVDist = 7*c2cDist + 0*c2VentDist; % Distance from top vent 1 to top vent 8
 
-   
+  
     showRawView();
 
     % Remove old graphics
@@ -21,14 +23,18 @@ function defineMultiArena(varargin)
 
     
 	if (nargin == 0) 
-		disp('Click lane 1 top vent');
-		topVent = jGinput(1); 
-		disp('Click lane 8 top vent');
-		bottomVent = jGinput(1); 
-		disp('Click left-bound');
-		leftBound = jGinput(1);
-		disp('Click right-bound');
-		rightBound = jGinput(1);
+		% disp('Click lane 1 top vent');
+		%topVent = jGinput(1); 
+		topVent = [108 15];
+		% disp('Click lane 8 top vent');
+		%bottomVent = jGinput(1); 
+		bottomVent = [108 574];
+		% disp('Click left-bound');
+		%leftBound = jGinput(1);
+		leftBound = [26 320];
+		% disp('Click right-bound');
+		%rightBound = jGinput(1);
+		rightBound = [189 320];
 	elseif (nargin > 0)
 		topVent = trackingParams.calPoints.topVent;
 		bottomVent = trackingParams.calPoints.bottomVent;
@@ -46,6 +52,10 @@ function defineMultiArena(varargin)
 			case 4
 				rightBound(1) = rightBound(1) + calDir;
 		end
+		topVent
+		bottomVent
+		leftBound
+		rightBound
 	end
 	if (nargin > 2)
 		showBoundingBox = varargin{3};
@@ -129,7 +139,7 @@ function defineMultiArena(varargin)
 		end
 	end
     
-    showFlyView();
-    
+    showRawView();
+    trackingParams.bestLatency = oldBestLatency;
 
 

@@ -1,8 +1,0 @@
-option echo off
-option batch abort
-option confirm off
-open sftp://jsb38:gHy78P53@orchestra.med.harvard.edu
-put ./rtfw.html /www/wilson.med.harvard.edu/docroot/
-close
-exit
- 

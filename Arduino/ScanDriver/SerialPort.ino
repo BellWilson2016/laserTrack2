@@ -1,6 +1,6 @@
 // Serial port parameters
 #define BAUDRATE 115200        // Serial baudrate
-#define POSPOWERSIZE 41        // Size of data transmissions blocks
+#define POSPOWERSIZE 43        // Size of data transmissions blocks
 #define SCANPARAMSIZE 27
 #define MODEPARAMSIZE 3        // Size of special mode parameters
 
@@ -55,6 +55,8 @@ void receiveSerial() {
   byte byte2;
   byte byte3;
   byte transmissionID;
+  byte CS14;
+  byte CS58;
  
   transmissionSize = Serial.read();
   
@@ -62,7 +64,13 @@ void receiveSerial() {
     transmissionID = Serial.read();
     Serial.readBytes(((char *) Xpositions), 16);
     Serial.readBytes(((char *) Ypositions), 16);
-    Serial.readBytes(((char *) LaserPowersBuffer),8);   
+    Serial.readBytes(((char *) LaserPowersBuffer),8);
+    CS14 = Serial.read(); 
+    CS58 = Serial.read();
+    for (i=0; i < 4; i++) {
+      colorSwitchBuffer[i]   = ((CS14 & (3 << 2*i)) >> 2*i);
+      colorSwitchBuffer[i+4] = ((CS58 & (3 << 2*i)) >> 2*i);
+    }  
     DACsLeftToUpdate = numZones;
     nextDACIndex = (zoneIndex + 2) % numZones;
     lastComputerContact = prevTimePoint;
