@@ -1,10 +1,10 @@
-function singleSideSeriesShortRB() 
+function singleSideSeriesShortRBO() 
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRBO'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Bl ; Gr63a-Gal4 / +';
     exp.flyAge         = 6;    % Days
     exp.sex            = 'M';
@@ -19,7 +19,7 @@ function singleSideSeriesShortRB()
 	exp.opposingRed    =  round(exp.redMultiplier*max(exp.laserPowers).*ones(1,8));
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = '20 Hz, red thermal compensation';	
+	exp.comment		   = '20 Hz, red thermal compensation, osmoSpot';	
 	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
@@ -45,7 +45,7 @@ function singleSideSeriesShortRB()
 			exp.refSide = onePass(5,order(seqN));
 			% Setup the protocol, laser distribution, and arguments
 			exp.protocol	 = @laser_1_halfL_1;
-			exp.protocolArgs = {@laserFlatHalvesBR, [blueL, blueR, redL, redR]};
+			exp.protocolArgs = {@laserFlatHalvesBRO, [blueL, blueR, redL, redR]};
 			cmd = {@runLaserProtocol,exp};
 			scheduleEvent(exp.acclimationTime*(60*60) + 15 + (3.5*60)*nSched, cmd);  
 			nSched = nSched + 1;
