@@ -10,7 +10,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 	leftRP  = args(3); % Left  red
 	rightRP = args(4); % Right red
 	
-	hystMM = 2; % mm
+	hystMM = 4; % mm
 	shiftMultiplier = .5;
 	xShift = zeros(1,8);
 	
@@ -28,7 +28,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 		trackingParams.xTarget = trackingParams.xTarget + shiftMultiplier*xShift;	
 		
 		blueP(ix) = leftBP;
-		redP(ix) = leftRP;
+		redP(ix) = leftRP; 
 					           
 	elseif rightBP > leftBP
 		% right epoch, keep laser on right
@@ -39,7 +39,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 		trackingParams.xTarget = trackingParams.xTarget + shiftMultiplier*xShift;	
 		
 		blueP(ix) = rightBP;
-		redP(ix) = rightRP;
+		redP(ix) = rightRP; 
 	end
 	
     
