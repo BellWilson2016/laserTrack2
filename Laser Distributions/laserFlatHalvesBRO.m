@@ -10,7 +10,8 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 	leftRP  = args(3); % Left  red
 	rightRP = args(4); % Right red
 	
-	hystMM = 3; % mm
+	hystMM = 2; % mm
+	shiftMultiplier = .5;
 	xShift = zeros(1,8);
 	
 	blueP = (trackingParams.bodyX + trackingParams.headX < 0).*leftBP +...
@@ -24,7 +25,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 		          ((trackingParams.bodyX + trackingParams.headX) < hystMM) & ...
 		          (trackingParams.nPixels > 1));
 		xShift(ix) = -(trackingParams.bodyX(ix) + trackingParams.headX(ix))*trackingParams.pxPerMM;
-		trackingParams.xTarget = trackingParams.xTarget + xShift;	
+		trackingParams.xTarget = trackingParams.xTarget + shiftMultiplier*xShift;	
 		
 		blueP(ix) = leftBP;
 		redP(ix) = leftRP;
@@ -35,7 +36,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 		          ((trackingParams.bodyX + trackingParams.headX) > -hystMM) & ...
 		          (trackingParams.nPixels > 1));
 		xShift(ix) = -(trackingParams.bodyX(ix) + trackingParams.headX(ix))*trackingParams.pxPerMM;
-		trackingParams.xTarget = trackingParams.xTarget + xShift;	
+		trackingParams.xTarget = trackingParams.xTarget + shiftMultiplier*xShift;	
 		
 		blueP(ix) = rightBP;
 		redP(ix) = rightRP;
