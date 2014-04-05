@@ -10,7 +10,7 @@ function [blueP, redP] = laserFlatHalvesBRO(args)
 	leftRP  = args(3); % Left  red
 	rightRP = args(4); % Right red
 	
-	hystMM = 4; % mm
+	hystMM = 3; % mm
 	shiftMultiplier = .5;
 	xShift = zeros(1,8);
 	
