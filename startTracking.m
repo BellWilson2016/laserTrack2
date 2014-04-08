@@ -36,7 +36,7 @@ vid = setupTrackingCamera();
 showRawView();
 
 trackingParams.getStd = false;
-trackingParams.trackThresh = 50;
+trackingParams.trackThresh = 45;
 trackingParams.invert = false;
      
 showAvgView;
