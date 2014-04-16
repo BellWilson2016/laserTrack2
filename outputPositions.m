@@ -5,6 +5,7 @@ function transmissionID = outputPositions(xPos, yPos, powersB, powersR)
 
     global trackingParams;
 	global RG;
+	
 
     if (trackingParams.calibrationSet)  
         xV = trackingParams.laserCal.fX([xPos',yPos']);
