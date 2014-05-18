@@ -1,10 +1,10 @@
-function singleSideSeriesShortRB() 
+function thermoTaxis1() 
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis1'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Or42b-Gal4 ; Or56a-Gal4 / +';
     exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
@@ -12,14 +12,14 @@ function singleSideSeriesShortRB()
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
-	exp.laserPowers    =  [0,2,4,8,12,16,32,64];
-	exp.redMultiplier  = 2.5;
-	exp.redPowers      =  round(exp.redMultiplier*max(exp.laserPowers) - exp.redMultiplier.*exp.laserPowers);
+	exp.laserPowers    =  zeros(1,8);
+	exp.redMultiplier  = 1;
+	exp.redPowers      =  [0,16,32,64,128,256,512,1024];
 	exp.opposingBlue   =  zeros(1,8);
-	exp.opposingRed    =  round(exp.redMultiplier*max(exp.laserPowers).*ones(1,8));
+	exp.opposingRed    =  zeros(1,8);
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = '20 Hz, red thermal compensation';	
+	exp.comment		   = '20 Hz';	
 	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
