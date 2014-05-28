@@ -5,16 +5,16 @@ function thermoTaxis2()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis2'];
-    exp.genotype       = 'NorpA[7]';
+    exp.genotype       = 'NorpA[7], arista[-]';
     exp.flyAge         = 1;    % Days
     exp.sex            = 'F';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
-	exp.laserPowers    =  [0,16,32,64,128,256,512,1024];
+	exp.laserPowers    =  [0,4,8,16,32,64,128,256];
 	exp.redMultiplier  = 1;
-	exp.redPowers      =  [0,16,32,64,128,256,512,1024];
+	exp.redPowers      =  [0,4,8,16,32,64,128,256];
 	exp.opposingBlue   =  zeros(1,8);
 	exp.opposingRed    =  zeros(1,8);
 	exp.laserFilter    = 1;
