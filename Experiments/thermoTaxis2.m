@@ -5,7 +5,7 @@ function thermoTaxis2()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis2'];
-    exp.genotype       = 'NorpA[7], arista[-]';
+    exp.genotype       = 'Gr28b.D';
     exp.flyAge         = 1;    % Days
     exp.sex            = 'F';
     exp.odor           = 'none';
