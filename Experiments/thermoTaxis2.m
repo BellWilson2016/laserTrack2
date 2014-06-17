@@ -14,7 +14,7 @@ function thermoTaxis2()
     exp.refSide        = [];		 % 1 is left, -1 is right
 	exp.laserPowers    =  [0,4,8,16,32,64,128,256];
 	exp.redMultiplier  = 1;
-	exp.redPowers      =  [0,4,8,16,32,64,128,256];
+	exp.redPowers      =  [0,16,32,64,128,256,512,1024];
 	exp.opposingBlue   =  zeros(1,8);
 	exp.opposingRed    =  zeros(1,8);
 	exp.laserFilter    = 1;
