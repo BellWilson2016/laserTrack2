@@ -33,8 +33,9 @@ classdef regeneratingDAC < handle
 		DOtaskHandle
 		COtaskHandle
 		lastSanitySignal = 1;
-		repRate			 = 20;	  % Hz
-		sampPerRep	     = 10000;
+		scanFactor       = 5;	          			  % # Times through mirrors per scan
+		repRate			 = 100;        % 20*scanFactor
+		sampPerRep	     = 2000;     % 10000/scanFactor
 		sampleRate
 		lookAheadAO		 = .03;
 		lookAheadDO		 = .04;	  % Write to buffer this far ahead of current point in cycle
@@ -237,7 +238,19 @@ classdef regeneratingDAC < handle
 				Xwave(RG.scanStarts(laneN):RG.beamTimeEnds(laneN)) = X(laneN);
 				Ywave(RG.scanStarts(laneN):RG.beamTimeEnds(laneN)) = Y(laneN);
 				laser1wave(beam1Starts(laneN):beam1Ends(laneN)) = 1;
-				laser2wave(beam2Starts(laneN):beam2Ends(laneN)) = 1;
+				laser2wave(beam2Starts(laneN):beam2Ends(laneN)) = 1;			
+			end
+			
+			% Make RG.scanFactor copies of the waveform...
+			XwaveWhole = zeros(RG.sampPerRep*RG.scanFactor,1);
+			YwaveWhole = zeros(RG.sampPerRep*RG.scanFactor,1);
+			laser1waveWhole = zeros(RG.sampPerRep*RG.scanFactor,1);
+			laser2waveWhole = zeros(RG.sampPerRep*RG.scanFactor,1);
+			for n=1:RG.scanFactor
+				XwaveWhole([1:RG.sampPerRep]+RG.sampPerRep*(n-1)) = Xwave;
+				YwaveWhole([1:RG.sampPerRep]+RG.sampPerRep*(n-1)) = Ywave;
+				laser1waveWhole([1:RG.sampPerRep]+RG.sampPerRep*(n-1)) = laser1wave;
+				laser2waveWhole([1:RG.sampPerRep]+RG.sampPerRep*(n-1)) = laser2wave;
 			end
 			
 
@@ -255,23 +268,23 @@ classdef regeneratingDAC < handle
 			RG.errorCheck(err);
 			
 			% Set write offset past the end of the available buffer	
-			writeStart = round(buffSize0 + RG.lookAheadAO*RG.sampPerRep);	
+			writeStart = round(buffSize0 + RG.lookAheadAO*RG.sampPerRep*RG.scanFactor);	
 			% Set offset ahead to maximize writing.
 			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.AOtaskHandle,...
 							writeStart);
 			RG.errorCheck(err);
-			writeStart = mod(writeStart,RG.sampPerRep) + 1;
+			writeStart = mod(writeStart,RG.sampPerRep*RG.scanFactor) + 1;
 					
 			timeOut = RG.timeOut;	% Use -1 for indefinite, 0 to try once	
 			DAQmx_Val_GroupByChannel = 0;
-			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
-			dataOut = [Xwave(scanOrder),...
-					   Ywave(scanOrder)];	
+			scanOrder = [writeStart:RG.sampPerRep*RG.scanFactor,1:(writeStart-1)];
+			dataOut = [XwaveWhole(scanOrder),...
+					   YwaveWhole(scanOrder)];	
 			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteAnalogF64', RG.AOtaskHandle,...
-					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
+					RG.sampPerRep*RG.scanFactor, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
 			% RG.errorCheck(err); % Don't throw an error, just return;
 			if err == -200292
 				disp('AO Timeout');
@@ -293,12 +306,12 @@ classdef regeneratingDAC < handle
 			RG.errorCheck(err);
 			
 			% Set write offset past the end of the available buffer	
-			writeStart = round(buffSize0 + RG.lookAheadDO*RG.sampPerRep);	
+			writeStart = round(buffSize0 + RG.lookAheadDO*RG.sampPerRep*RG.scanFactor);	
 			% Set offset ahead to maximize writing.
 			err = calllib(RG.libName, 'DAQmxSetWriteOffset',RG.DOtaskHandle,...
 							writeStart);
 			RG.errorCheck(err);
-			writeStart = mod(writeStart,RG.sampPerRep) + 1;
+			writeStart = mod(writeStart,RG.sampPerRep*RG.scanFactor) + 1;
 
 % Buffer size diagnostics			
 %			buffSizePost = int32(1);
@@ -309,21 +322,21 @@ classdef regeneratingDAC < handle
 			
 			timeOut = RG.timeOut;	% Use -1 for indefinite, 0 to try once		
 			DAQmx_Val_GroupByChannel = 0;
-			scanOrder = [writeStart:RG.sampPerRep,1:(writeStart-1)];
+			scanOrder = [writeStart:RG.sampPerRep*RG.scanFactor,1:(writeStart-1)];
 			if (RG.lastSanitySignal == 1)
 				RG.lastSanitySignal = 0;
 			else
 				RG.lastSanitySignal = 1;
 			end
-			dataOut = [laser1wave(scanOrder),...
-					   laser2wave(scanOrder),... 
+			dataOut = [laser1waveWhole(scanOrder),...
+					   laser2waveWhole(scanOrder),... 
 					   RG.lastSanitySignal.*RG.saneVector,...
 					   RG.updateVector];	
 			dataOut = dataOut(:); 
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines', RG.DOtaskHandle,...
-					RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
+					RG.sampPerRep*RG.scanFactor, autoStart, timeOut, DAQmx_Val_GroupByChannel, dataOut, sampsWritten, []);
 			% RG.errorCheck(err); % Don't throw an error, just return;
 			if err == -200292
 				disp('DO Timeout');
@@ -353,12 +366,12 @@ classdef regeneratingDAC < handle
 			DAQmx_Val_ContSamps = 10123;
 			err = calllib(RG.libName, 'DAQmxCfgSampClkTiming',RG.AOtaskHandle,...
 				'OnboardClock', RG.sampleRate, DAQmx_Val_Rising,...
-			   	DAQmx_Val_ContSamps, RG.sampPerRep);
+			   	DAQmx_Val_ContSamps, RG.sampPerRep*RG.scanFactor);
 			RG.errorCheck(err);
 
 			% Configure software buffer
 			err = calllib(RG.libName, 'DAQmxCfgOutputBuffer', RG.AOtaskHandle,...
-					RG.sampPerRep);
+					RG.sampPerRep*RG.scanFactor);
 			RG.errorCheck(err);	
 
 %			% Configure hardware FIFO - This is throwing an error -200077 for invalid value
@@ -393,11 +406,11 @@ classdef regeneratingDAC < handle
 			% Write zeros to buffer
 			timeOut = 0;
 			DAQmx_Val_GroupByScanNumber = 1;
-			data = zeros(RG.sampPerRep,2); data = data(:);
+			data = zeros(RG.sampPerRep*RG.scanFactor,2); data = data(:);
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, sampsWritten, d]  = calllib(RG.libName, 'DAQmxWriteAnalogF64', RG.AOtaskHandle,...
-				RG.sampPerRep, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
+				RG.sampPerRep*RG.scanFactor, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
 		end
 
 
@@ -422,12 +435,12 @@ classdef regeneratingDAC < handle
 			DAQmx_Val_ContSamps = 10123;
 			err = calllib(RG.libName, 'DAQmxCfgSampClkTiming',RG.DOtaskHandle,...
 				'ao/SampleClock', RG.sampleRate, DAQmx_Val_Rising,...
-			   	DAQmx_Val_ContSamps, RG.sampPerRep);
+			   	DAQmx_Val_ContSamps, RG.sampPerRep*RG.scanFactor);
 			RG.errorCheck(err);
 
 			% Configure software buffer
 			err = calllib(RG.libName, 'DAQmxCfgOutputBuffer', RG.DOtaskHandle,...
-					RG.sampPerRep);
+					RG.sampPerRep*RG.scanFactor);
 			RG.errorCheck(err);	
 
 			% Configure FIFO - Throwing error -200077
@@ -463,9 +476,9 @@ classdef regeneratingDAC < handle
 			% Write zeros to buffer
 			timeOut = 0;
 			DAQmx_Val_GroupByScanNumber = 1;
-			data = uint8(zeros(RG.sampPerRep,2));  % 4
-			RG.saneVector = ones(RG.sampPerRep,1);
-			RG.updateVector = zeros(RG.sampPerRep,1);
+			data = uint8(zeros(RG.sampPerRep*RG.scanFactor,2));  % 4
+			RG.saneVector = ones(RG.sampPerRep*RG.scanFactor,1);
+			RG.updateVector = zeros(RG.sampPerRep*RG.scanFactor,1);
 			RG.updateVector(1:200) = 1;
 			data(:,3) = RG.saneVector;
 			data(:,4) = RG.updateVector;
@@ -473,7 +486,7 @@ classdef regeneratingDAC < handle
 			sampsWritten = uint32(1);
 			autoStart = 0;
 			[err, dataOut, samplesWritten, d]  = calllib(RG.libName, 'DAQmxWriteDigitalLines',RG.DOtaskHandle,...
-				RG.sampPerRep*2, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
+				RG.sampPerRep*2*RG.scanFactor, autoStart, timeOut, DAQmx_Val_GroupByScanNumber, data, sampsWritten, []);
 
 			% Start the task!
 			err = calllib(RG.libName, 'DAQmxStartTask', RG.DOtaskHandle);
