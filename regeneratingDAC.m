@@ -33,9 +33,9 @@ classdef regeneratingDAC < handle
 		DOtaskHandle
 		COtaskHandle
 		lastSanitySignal = 1;
-		scanFactor       = 5;	          			  % # Times through mirrors per scan
-		repRate			 = 100;        % 20*scanFactor
-		sampPerRep	     = 2000;     % 10000/scanFactor
+		scanFactor       = 1;	          			  % # Times through mirrors per scan
+		repRate			 = 20;        % 20*scanFactor
+		sampPerRep	     = 10000;       % 10000/scanFactor
 		sampleRate
 		lookAheadAO		 = .03;
 		lookAheadDO		 = .04;	  % Write to buffer this far ahead of current point in cycle
