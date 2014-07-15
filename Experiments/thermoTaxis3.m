@@ -20,7 +20,7 @@ function thermoTaxis3()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, aristae removed';	
-	exp.acclimationTime = 1; % Hours
+	exp.acclimationTime = 0; % Hours
 
 	nSched = 0;
 
