@@ -5,9 +5,9 @@ function thermoTaxis3()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis3'];
-    exp.genotype       = 'NorpA[7]';
-    exp.flyAge         = 2;    % Days
-    exp.sex            = 'M';
+    exp.genotype       = 'NorpA[7] ; + / + ; CC-Gal4 / [TM3]';
+    exp.flyAge         = 1;    % Days
+    exp.sex            = 'F';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 0;       % mL/side
