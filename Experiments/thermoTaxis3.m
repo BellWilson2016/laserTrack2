@@ -2,6 +2,8 @@ function thermoTaxis3()
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
+	
+	listRecent(1);
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis3'];
@@ -20,7 +22,7 @@ function thermoTaxis3()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, aristae removed';	
-	exp.acclimationTime = 1; % Hours
+	exp.acclimationTime = 0; % Hours
 
 	nSched = 0;
 
