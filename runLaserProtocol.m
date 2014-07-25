@@ -48,7 +48,7 @@ function startEpoch(exp, epochN)
         startTime = protocolFrame{1};
         endFrame = exp.protocolDesign{epochN+1};
         endTime = endFrame{1};
-        lengthToRun = 60*(endTime - startTime);
+        lengthToRun = round(60*(endTime - startTime)*1000)/1000; % Keep to millisecond precision
         
 		% Start a timer to finish up the epoch
         finishEpochTimer = timer('ExecutionMode','singleShot',...
