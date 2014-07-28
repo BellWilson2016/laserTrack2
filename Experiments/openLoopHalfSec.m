@@ -8,7 +8,7 @@ function openLoopHalfSec()
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoopHalfSec'];
     exp.genotype       = 'NorpA[7] / y';
-    exp.flyAge         = 1;    % Days
+    exp.flyAge         = 2;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
