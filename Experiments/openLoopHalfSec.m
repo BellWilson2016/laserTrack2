@@ -21,7 +21,7 @@ function openLoopHalfSec()
 	exp.opposingRed    =  zeros(1,4);
 	exp.laserFilter    = 1;
 	exp.nReps          = 16;
-	exp.comment		   = '20 Hz, aristae removed';	
+	exp.comment		   = '20 Hz, a3 removed';	
 	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
