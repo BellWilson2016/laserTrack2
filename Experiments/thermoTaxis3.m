@@ -7,9 +7,9 @@ function thermoTaxis3()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'thermoTaxis3'];
-    exp.genotype       = 'NorpA[7] / y';
+    exp.genotype       = 'NorpA[7]';
     exp.flyAge         = 1;    % Days
-    exp.sex            = 'M';
+    exp.sex            = 'F';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
     exp.flowRate       = 0;       % mL/side
@@ -21,7 +21,7 @@ function thermoTaxis3()
 	exp.opposingRed    =  zeros(1,8);
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = '20 Hz, aristae removed';	
+	exp.comment		   = '20 Hz';	
 	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
