@@ -2,7 +2,7 @@ function exp = laser_OL_half_sec(exp)
    
 	laserDistribution = exp.protocolArgs{1};
 	laserParams       = exp.protocolArgs{2};
-	pulseDuration = .1; % sec
+	pulseDuration = .2; % sec
 
     exp.laserDistribution = laserDistribution;
     exp.laserParams       = laserParams;
