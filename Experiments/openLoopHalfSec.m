@@ -7,21 +7,21 @@ function openLoopHalfSec()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoopHalfSec'];
-    exp.genotype       = 'NorpA[7] / y';
-    exp.flyAge         = 2;    % Days
+    exp.genotype       = 'NorpA[7]/y ; H134R / Or42b-Gal4 ; + / +';
+    exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 0;       % mL/side
+    exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
-	exp.laserPowers    =  [0,64,256,1024];
-	exp.redMultiplier  = 0;
-	exp.redPowers      =  zeros(1,4);
-	exp.opposingBlue   =  [0,64,256,1024];
-	exp.opposingRed    =  zeros(1,4);
+    exp.laserPowers    =  [0,2,4,8,12,16,32,64];
+	exp.redMultiplier  = 2.5;
+	exp.redPowers      =  round(exp.redMultiplier*max(exp.laserPowers) - exp.redMultiplier.*exp.laserPowers);
+	exp.opposingBlue   =  exp.laserPowers;
+	exp.opposingRed    =  exp.redPowers;
 	exp.laserFilter    = 1;
-	exp.nReps          = 16;
-	exp.comment		   = '20 Hz, a3 removed';	
+	exp.nReps          = 8;
+	exp.comment		   = '20 Hz, red balanced';	
 	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
@@ -31,7 +31,7 @@ function openLoopHalfSec()
 		 	   exp.opposingBlue,   exp.laserPowers;...
 			   exp.redPowers,      exp.opposingRed;...
 			   exp.opposingRed,    exp.redPowers;...
-			   ones(1,4),          -1.*ones(1,4)];
+			   ones(1,8),          -1.*ones(1,8)];
 			   
 	setBestLatency(true);		   
 
