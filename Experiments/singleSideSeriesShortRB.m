@@ -7,7 +7,7 @@ function singleSideSeriesShortRB()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / + ; Or92a-Gal4 / Or22a-Gal4';
+    exp.genotype       = 'NorpA[7]/y ; H134R / + ; Gr63a-Gal4 / Or42b-Gal4';
     exp.flyAge         = 8;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
@@ -22,7 +22,7 @@ function singleSideSeriesShortRB()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, red thermal compensation';	
-	exp.acclimationTime = 0; % Hours
+	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
 
