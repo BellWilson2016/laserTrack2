@@ -7,7 +7,7 @@ function singleSideSeriesShortRB()
 
 	% Setup generic experimental info
 	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / Gr63a-Gal4 ; Or92a-Gal4 / TM2';
+    exp.genotype       = 'NorpA[7]/y ; H134R / Gr63a-Gal4 ; Or42b-Gal4 / TM2';
     exp.flyAge         = 8;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
