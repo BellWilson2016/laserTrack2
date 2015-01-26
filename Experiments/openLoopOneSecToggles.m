@@ -17,8 +17,8 @@ function openLoopOneSecToggles()
     exp.laserPowers    =  [0,2,4,8,12,16,32,64];
 	exp.redMultiplier  = 2.5;
 	exp.redPowers      =  round(exp.redMultiplier*max(exp.laserPowers) - exp.redMultiplier.*exp.laserPowers);
-	exp.opposingBlue   =  exp.laserPowers;
-	exp.opposingRed    =  exp.redPowers;
+	exp.opposingBlue   =  zeros(1,8);
+	exp.opposingRed    =  ones(1,8)*round(exp.laserPowers(8)*exp.redMultiplier);
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, red balanced';	
