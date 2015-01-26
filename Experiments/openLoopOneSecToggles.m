@@ -1,4 +1,4 @@
-function singleSideSeriesShortRB() 
+function openLoopOneSecToggles() 
 
 	global allScheduledEvents;
 	allScheduledEvents = [];	% Clear existing schedule
@@ -6,23 +6,23 @@ function singleSideSeriesShortRB()
 	listRecent(1);
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'singleSideSeriesShortRB'];
-    exp.genotype       = 'NorpA[7]/y ; H134R / Gr63a-Gal4 ; Ir64a-Gal4 / TM2';
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoopOneSecTogglesTESTEXP'];
+    exp.genotype       = 'NorpA[7]/y ; H134R / Or42a-Gal4 ; Or42b-Gal4 / +';
     exp.flyAge         = 7;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
-    exp.flowRate       = 1200;          % mL/side
+    exp.flowRate       = 1200;       % mL/side
     exp.refSide        = [];		 % 1 is left, -1 is right
-	exp.laserPowers    =  [0,2,4,8,12,16,32,64];
+    exp.laserPowers    =  [0,2,4,8,12,16,32,64];
 	exp.redMultiplier  = 2.5;
 	exp.redPowers      =  round(exp.redMultiplier*max(exp.laserPowers) - exp.redMultiplier.*exp.laserPowers);
-	exp.opposingBlue   =  zeros(1,8);
-	exp.opposingRed    =  round(exp.redMultiplier*max(exp.laserPowers).*ones(1,8));
+	exp.opposingBlue   =  exp.laserPowers;
+	exp.opposingRed    =  exp.redPowers;
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
-	exp.comment		   = '20 Hz, red thermal compensation';	
-	exp.acclimationTime = 0; % Hours
+	exp.comment		   = '20 Hz, red balanced';	
+	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
 
@@ -46,7 +46,7 @@ function singleSideSeriesShortRB()
 			redR  = onePass(4,order(seqN));
 			exp.refSide = onePass(5,order(seqN));
 			% Setup the protocol, laser distribution, and arguments
-			exp.protocol	 = @laser_1_halfL_1;
+			exp.protocol	 = @laser_OL_one_sec_toggles;
 			exp.protocolArgs = {@laserFlatHalvesBR, [blueL, blueR, redL, redR]};
 			cmd = {@runLaserProtocol,exp};
 			scheduleEvent(exp.acclimationTime*(60*60) + 15 + (3.5*60)*nSched, cmd);  
