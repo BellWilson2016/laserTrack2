@@ -6,9 +6,9 @@ function openLoopOneSecToggles()
 	listRecent(1);
 
 	% Setup generic experimental info
-	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoopOneSecTogglesTESTEXP'];
+	exp.experimentName = [datestr(now,'YYmmDD-HHMMss-'),'openLoopOneSecToggles'];
     exp.genotype       = 'NorpA[7]/y ; H134R / Or42a-Gal4 ; Or42b-Gal4 / +';
-    exp.flyAge         = 7;    % Days
+    exp.flyAge         = 8;    % Days
     exp.sex            = 'M';
     exp.odor           = 'none';
     exp.odorConc       = 0;          % log10
@@ -22,7 +22,7 @@ function openLoopOneSecToggles()
 	exp.laserFilter    = 1;
 	exp.nReps          = 8;
 	exp.comment		   = '20 Hz, red balanced';	
-	exp.acclimationTime = 0; % Hours
+	exp.acclimationTime = 1; % Hours
 
 	nSched = 0;
 
