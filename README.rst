@@ -13,11 +13,17 @@ Tracking is done by background subtracting and thresholding to yield an ellipse 
 
 Example Usage:
 --------------
-From the command line to start tracking do:: >> startTracking;
+From the command line to start tracking do:: 
 
-To define the current behavioral arena do:: >> defineMultiArena();
+    >> startTracking;
 
-To show raw video do:: >> showRawView();
+To define the current behavioral arena do::
+
+    >> defineMultiArena();
+
+To show raw video do:: 
+
+    >> showRawView();
 
 To show an annotated view of the current tracking do:: >> showFlyView();
 
